@@ -1,0 +1,3 @@
+[submodule "butanoEngine"]
+	path = butanoEngine
+	url = https://github.com/GValiente/butano.git
