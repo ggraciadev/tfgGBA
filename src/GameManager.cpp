@@ -12,7 +12,9 @@ GameManager::GameManager() {
 }
 
 GameManager::~GameManager() {
-
+    if(scene != nullptr) {
+        delete(scene);
+    }
 }
 
 GameManager* GameManager::GetInstance() {
@@ -24,8 +26,8 @@ GameManager* GameManager::GetInstance() {
 }
 
 void GameManager::Init() {
-    scene = Scene();
-    scene.Start();
+    scene = new Scene();
+    scene->Start();
 
 }
 
@@ -40,13 +42,15 @@ bn::string<64> SetText(bn::sprite_text_generator& t) {
     return string;
 }
 
-void GameManager::Update(bn::sprite_text_generator& t) {
-    
-    scene.Update();
+void GameManager::Update() {
+    scene->Update();
+}
+
+void GameManager::Render(bn::sprite_text_generator& t) {
+    scene->Render();
     bn::vector<bn::sprite_ptr, 32> text_sprites;
     bn::string<64> string = SetText(t);
     t.generate(0, 0, string, text_sprites);
     bn::core::update();
-
 }
 

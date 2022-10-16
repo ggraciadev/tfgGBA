@@ -16,6 +16,7 @@ int main()
 
     while(true)
     {
-        gameManager->Update(textGenerator);
+        gameManager->Update();
+        gameManager->Render(textGenerator);
     }
 }

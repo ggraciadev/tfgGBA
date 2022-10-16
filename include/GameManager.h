@@ -7,6 +7,7 @@
 
 #include "common_info.h"
 #include "common_variable_8x16_sprite_font.h"
+#include "bn_sprite_text_generator.h"
 
 class GameManager { //Singleton
 
@@ -14,7 +15,7 @@ protected:
 
     GameManager();
     static GameManager* instance;
-    Scene scene;
+    Scene* scene;
 
     bn::sprite_text_generator* textGen;
 
@@ -25,7 +26,8 @@ public:
 
     void Init();
 
-    void Update(bn::sprite_text_generator& t);
+    void Update();
+    void Render(bn::sprite_text_generator& t);
 
 
 };
