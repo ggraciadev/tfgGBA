@@ -45,6 +45,8 @@ public:
     const bn::fixed_point GetVelocity() { return velocity; }
     void CalcVelocity();
     void CheckCollisions();
+
+    virtual void SetLayerDepth(int depth) override;
     
     void SetGravityValue(bn::fixed g) { gravityValue = g; }
     const bn::fixed GetGravityValue() { return gravityValue; }

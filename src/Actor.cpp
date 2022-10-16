@@ -53,3 +53,14 @@ void Actor::Render() {
     sprite->set_position(GetScreenPosition());
 }
 
+void Actor::SetLayerDepth(int layer) {
+    if(layer < 0) {
+        sprite->set_z_order(0);
+        sprite->set_bg_priority(0);
+    }
+    else {
+        sprite->set_z_order(2);
+        sprite->set_bg_priority(layer);
+    }
+}
+

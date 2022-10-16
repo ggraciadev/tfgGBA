@@ -3,7 +3,13 @@
 
 #include "bn_sprite_items_character.h"
 #include "bn_sprite_items_bolardo.h"
+#include "bn_sprite_items_farola.h"
 #include "bn_sprite_items_train.h"
+
+#include "bn_regular_bg_items_back.h"
+#include "bn_regular_bg_items_b0.h"
+#include "bn_regular_bg_items_b1.h"
+#include "bn_regular_bg_items_b2.h"
 
 #include "Actor.h"
 #include "GameManager.h"
@@ -30,7 +36,21 @@ void Scene::Start() {
     PlayerController* playerController = new PlayerController();
 
     mainCamera = new Camera();
-    Player* player = new Player(50,0);
+
+    foreGround = new Layer();
+    foreGround->SetCamera(mainCamera);
+    layer2 = new Layer();
+    layer2->SetBackground(bn::regular_bg_items::b2.create_bg(0, 0), 2);
+    layer2->SetCamera(mainCamera);
+    layer1 = new Layer();
+    layer1->SetBackground(bn::regular_bg_items::b1.create_bg(0, 0), 1);
+    layer1->SetCamera(mainCamera);
+    layer0 = new Layer();
+    layer0->SetBackground(bn::regular_bg_items::b0.create_bg(0, 0), 0);
+    layer0->SetCamera(mainCamera);
+
+
+    Player* player = new Player(50,0, layer0);
     player->SetSprite(bn::sprite_items::character.create_sprite(0, 0));
     player->SetCurrentMovementSpeed(1);
     player->SetInputMovement(-0.5f, 0);
@@ -42,21 +62,27 @@ void Scene::Start() {
     
     Actor* obj;
 
-    gameObjectList.push_back(new Actor(50,0));
+    gameObjectList.push_back(new Actor(50,0, layer1));
     obj = (Actor*)gameObjectList[1];
     obj->SetSprite(bn::sprite_items::bolardo.create_sprite(0, 0));
-    //obj->SetCamera(followCamera);
+    obj->SetCamera(mainCamera);
 
-    gameObjectList.push_back(new Actor(0,-50));
+    gameObjectList.push_back(new Actor(0,-50, layer2));
     obj = (Actor*)gameObjectList[2];
-    obj->SetSprite(bn::sprite_items::train.create_sprite(0, 0));
-    obj->SetSprite(bn::sprite_items::bolardo.create_sprite(0, 0));
-    obj->SetCurrentMovementSpeed(1);
-    obj->SetInputMovement(-0.5f, 0);
-    obj->SetGrounded(true);
+    obj->SetSprite(bn::sprite_items::train.create_sprite(0,0));
+    obj->SetCamera(mainCamera);
+
+    gameObjectList.push_back(new Actor(0,0, foreGround));
+    obj = (Actor*)gameObjectList[3];
+    obj->SetSprite(bn::sprite_items::farola.create_sprite(0, 0));
     obj->SetCamera(mainCamera);
 
     gameObjectListSize = gameObjectList.size();
+
+    foreGround->SetLayerDepth(-1);
+    layer0->SetLayerDepth(0);
+    layer1->SetLayerDepth(1);
+    layer2->SetLayerDepth(2);
 
 }
 
@@ -67,6 +93,11 @@ void Scene::Update() {
         }
     }
     mainCamera->Update();
+
+    foreGround->Update();
+    layer0->Update();
+    layer1->Update();
+    layer2->Update();
 }
 
 void Scene::Render() {
@@ -75,4 +106,8 @@ void Scene::Render() {
             gameObjectList[i]->Render();
         }
     }
+    foreGround->Render();
+    layer0->Render();
+    layer1->Render();
+    layer2->Render();
 }

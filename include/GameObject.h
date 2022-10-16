@@ -13,7 +13,7 @@ public:
     GameObject(const int posX, const int posY, GameObject* _parent = nullptr);
 
     GameObject* parent;
-    bn::vector<GameObject*, 16> childList;
+    bn::vector<GameObject*, 256> childList;
 
     virtual ~GameObject();
 
@@ -36,9 +36,11 @@ public:
     bool HasParent();
     GameObject* GetParent();
 
-    virtual bn::fixed_point GetRelativePosition() { return relativePosition; }
+    bn::fixed_point GetRelativePosition() { return relativePosition; }
     virtual bn::fixed_point GetWorldPosition();
     virtual bn::fixed_point GetScreenPosition();
+
+    virtual void SetLayerDepth(int depth) { };
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
@@ -46,9 +48,9 @@ public:
     void AddLocalOffset(const int deltaX, const int deltaY);
 
     void SetParent(GameObject* p);
-    virtual void AddChild(GameObject* child);
-    virtual void RemoveChild(GameObject* child);
-    virtual void RemoveAllChilds();
+    void AddChild(GameObject* child);
+    void RemoveChild(GameObject* child);
+    void RemoveAllChilds();
 
     bool Equals(GameObject* other) {return id == other->id;}
 

@@ -2,8 +2,7 @@
 #define BF_SCENE_H
 
 #include "GameObject.h"
-#include <bn_regular_bg_ptr.h>
-#include "bn_regular_bg_items_back.h"
+#include "Layer.h"
 
 #include "bn_vector.h"
 #include "Camera.h"
@@ -20,6 +19,11 @@ protected:
     int gameObjectListSize;
     bn::optional<bn::regular_bg_ptr> back;
     Camera* mainCamera;
+
+    Layer* foreGround;
+    Layer* layer0;
+    Layer* layer1;
+    Layer* layer2;
 
 public:
 
