@@ -1,11 +1,12 @@
 #ifndef BF_SCENE_H
 #define BF_SCENE_H
 
-#include "GameObject.h"
+#include "Character.h"
 #include "Layer.h"
 
 #include "bn_vector.h"
 #include "Camera.h"
+#include "Factory.h"
 
 class Scene {
 
@@ -14,16 +15,11 @@ public:
     virtual ~Scene();
 
 protected:
-
-    bn::vector<GameObject*, 16> gameObjectList;
+    Factory<Character> characterFactory;
+    bn::vector<GameObject*, 1000> objects;
     int gameObjectListSize;
-    bn::optional<bn::regular_bg_ptr> back;
-    Camera* mainCamera;
-
-    Layer* foreGround;
-    Layer* layer0;
-    Layer* layer1;
-    Layer* layer2;
+    //bn::optional<bn::regular_bg_ptr> back;
+    //bn::optional<Camera> mainCamera;
 
 public:
 

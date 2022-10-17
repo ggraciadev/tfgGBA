@@ -17,6 +17,8 @@ protected:
     static GameManager* instance;
     Scene* scene;
 
+    bn::string<64> printString;
+
     bn::sprite_text_generator* textGen;
 
 

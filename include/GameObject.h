@@ -5,36 +5,38 @@
 #include <bn_fixed_point.h>
 #include <bn_optional.h>
 #include "bn_vector.h"
+#include "GameObjectComponent.h"
+#include "bn_string.h"
+
+#define MAX_CHILDS 16
+
+//class GameObjectComponent;
 
 class GameObject {
 
 public:
     GameObject();
-    GameObject(const int posX, const int posY, GameObject* _parent = nullptr);
-
-    GameObject* parent;
-    bn::vector<GameObject*, 256> childList;
-
+    //GameObject(const int posX, const int posY, GameObject& _parent);
     virtual ~GameObject();
 
 protected:
+    BN_DATA_EWRAM static int CURRENT_ID;
 
-    static int CURRENT_ID;
+    GameObject* parent;
 
     bn::fixed_point relativePosition;
-    GameObject* camera;
     int id;
 
 public:
 
-    void SetCamera(GameObject* cam) { camera = cam; }
+    // void SetCamera(GameObject& cam) { camera = cam; }
 
     virtual void Start();
     virtual void Update();
     virtual void Render();
 
-    bool HasParent();
-    GameObject* GetParent();
+    // bool HasParent();
+    // GameObject& GetParent();
 
     bn::fixed_point GetRelativePosition() { return relativePosition; }
     virtual bn::fixed_point GetWorldPosition();
@@ -47,12 +49,12 @@ public:
     void AddLocalOffset(const bn::fixed_point& delta);
     void AddLocalOffset(const int deltaX, const int deltaY);
 
-    void SetParent(GameObject* p);
-    void AddChild(GameObject* child);
-    void RemoveChild(GameObject* child);
-    void RemoveAllChilds();
+    // void SetParent(GameObject& p);
+    // void AddChild(GameObject& child);
+    // void RemoveChild(GameObject& child);
+    // void RemoveAllChilds();
 
-    bool Equals(GameObject* other) {return id == other->id;}
+    bool Equals(GameObject& other) {return id == other.id;}
 
 };
 
