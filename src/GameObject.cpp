@@ -6,7 +6,6 @@ int GameObject::CURRENT_ID = 0;
 GameObject::GameObject() {
     relativePosition = bn::fixed_point(0,0);
     //parent = nullptr;
-    id = CURRENT_ID++;
 }
 
 // GameObject::GameObject(const int posX, const int posY, GameObject& _parent) {
@@ -22,7 +21,7 @@ GameObject::~GameObject() {
 }
 
 void GameObject::Start() {
-
+    id = CURRENT_ID++;
 }
 
 void GameObject::Update() {

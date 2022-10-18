@@ -35,6 +35,12 @@ void Scene::Start() {
 
     int n = 128;
     for (int i = 0; i < n; ++i) {
+        Character* temp = characterFactory.Create();
+        temp->Start();
+        characterFactory.Destroy(temp);
+    }
+
+    for (int i = 0; i < n; ++i) {
         objects.push_back(characterFactory.Create());
         objects[i]->Start();
         //characters.push_back(Character());
