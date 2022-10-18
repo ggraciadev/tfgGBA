@@ -31,14 +31,9 @@ Scene::~Scene() {
 }
 
 void Scene::Start() {
+    layer.Start();
 
-
-    int n = 128;
-    for (int i = 0; i < n; ++i) {
-        Character* temp = characterFactory.Create();
-        temp->Start();
-        characterFactory.Destroy(temp);
-    }
+    int n = 1;
 
     for (int i = 0; i < n; ++i) {
         objects.push_back(characterFactory.Create());
@@ -47,7 +42,7 @@ void Scene::Start() {
         //objects.push_back(characterFactory.Get(i));
         objects[i]->AddLocalOffset(i * 10, 0);
     }
-    gameObjectListSize = 128;
+    gameObjectListSize = objects.size();
 //     PlayerController* playerController = new PlayerController();
 
 //    mainCamera = Camera();
@@ -107,6 +102,7 @@ void Scene::Update() {
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->Update();
     }
+    layer.Update();
     //mainCamera->Update();
 
     // foreGround->Update();
@@ -119,6 +115,7 @@ void Scene::Render() {
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->Render();
     }
+    layer.Render();
     // for (int i = 0; i < gameObjectListSize; ++i) {
     //     if(gameObjectList[i].has_value()) {
     //         gameObjectList[i]->Render();

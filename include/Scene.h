@@ -3,9 +3,11 @@
 
 #include "Character.h"
 #include "Layer.h"
+#include <bn_regular_bg_ptr.h>
 
 #include "bn_vector.h"
 #include "Camera.h"
+#include "Layer.h"
 #include "Factory.h"
 
 class Scene {
@@ -15,7 +17,8 @@ public:
     virtual ~Scene();
 
 protected:
-    Factory<Character> characterFactory;
+    Layer layer;
+    Factory<Character, 10> characterFactory;
     bn::vector<GameObject*, 1000> objects;
     int gameObjectListSize;
     //bn::optional<bn::regular_bg_ptr> back;

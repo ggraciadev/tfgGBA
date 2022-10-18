@@ -10,13 +10,15 @@ MovementComponent::~MovementComponent() {
 
 void MovementComponent::Start() {
     GameObjectComponent::Start();
+    velocity = bn::fixed_point(0,0);
+    gravityValue = 0;
 }
 
 void MovementComponent::Update() {
     GameObjectComponent::Update();
     CalcVelocity();
     CheckCollisions();
-    gameObject->AddLocalOffset(1, 0);
+    gameObject->AddLocalOffset(velocity);
 }
 
 void MovementComponent::CalcVelocity() {

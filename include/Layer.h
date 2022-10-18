@@ -1,31 +1,58 @@
-// #ifndef BF_LAYER_H
-// #define BF_LAYER_H
+#ifndef BF_LAYER_H
+#define BF_LAYER_H
 
-// #include "GameObject.h"
+#include "GameObject.h"
 
-// #include <bn_regular_bg_ptr.h>
 
-// class Layer : public GameObject {
-// public:
-//     Layer();
-//     Layer(const int posX, const int posY, GameObject* _parent = nullptr);
-//     virtual ~Layer();
+#include "bn_regular_bg_ptr.h"
+#include "bn_regular_bg_map_ptr.h"
+#include "bn_regular_bg_map_cell_info.h"
 
-// protected:
-//     int layerDepth;
-//     bn::fixed layerMovementAlpha;
-//     bn::optional<bn::regular_bg_ptr> back;
+#include <bn_regular_bg_map_item.h>
+#include <bn_regular_bg_item.h>
 
-// public:
+#define CELLS_X 64
+#define CELLS_Y 32
+#define CELLS_COUNT CELLS_X * CELLS_Y
 
-//     virtual void Start() override;
-//     virtual void Update() override;
-//     virtual void Render() override;
+#define LAYER_HEIGHT 6
+#define START_Y_POSITION 20
 
-//     // virtual bn::fixed_point GetScreenPosition();
+#define BLOCK_WIDTH 3
+#define EMPTY_TILE 0
+#define START_TOP_TILES 1
+#define END_TOP_TILES 3
+#define START_MID_TILES 4
+#define END_MID_TILES 9
+#define START_BOT_TILES 10
+#define END_BOT_TILES 15
 
-//     void SetBackground(bn::regular_bg_ptr b, int layer = 0);
-//     virtual void SetLayerDepth(int depth) override;
-// };
 
-// #endif
+
+class Layer : public GameObject {
+public:
+    Layer();
+    virtual ~Layer();
+
+protected:
+    int layerDepth;
+    bn::fixed layerMovementAlpha;
+    bn::optional<bn::regular_bg_ptr> back;
+
+    alignas(int) bn::regular_bg_map_cell cells[CELLS_COUNT];
+    bn::optional<bn::regular_bg_map_item> map_item;
+    bn::optional<bn::regular_bg_ptr> bg;
+    bn::optional<bn::regular_bg_map_ptr> bg_map;
+
+
+public:
+
+    virtual void Start() override;
+    virtual void Update() override;
+    virtual void Render() override;
+
+    void SetBackground(bn::regular_bg_ptr b, int layer = 0);
+    virtual void SetLayerDepth(int depth) override;
+};
+
+#endif

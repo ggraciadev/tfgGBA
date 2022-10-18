@@ -26,7 +26,7 @@ public:
     void SetCurrentMovementSpeed(bn::fixed s) {currentMovementSpeed = s;}
     const bn::fixed GetCurrentMovementSpeed() {return currentMovementSpeed;}
 
-    //void SetInputMovement(bn::fixed_point md) {inputMovement = md;}
+    void SetInputMovement(bn::fixed_point md) {inputMovement = md;}
     void SetInputMovementX(bn::fixed x) {inputMovement.set_x(x);}
     void SetInputMovementY(bn::fixed y) {inputMovement.set_y(y);}
     //void SetInputMovement(bn::fixed x, bn::fixed y) {SetInputMovement(bn::fixed_point(x, y));}

@@ -4,9 +4,8 @@
 #include "bn_core.h"
 #include "bn_vector.h"
 
-#define MAX_INSTANCES 1000
 
-template <class T>
+template <class T, int MAX_INSTANCES>
 class Factory {
 public:
     Factory() {

@@ -4,6 +4,7 @@
 #include <bn_sprite_ptr.h>
 #include "GameObject.h"
 #include "MovementComponent.h"
+#include "InputComponent.h"
 #include "bn_sprite_items_character.h"
 
 class Character : public GameObject {
@@ -15,7 +16,9 @@ public:
 protected:
 
     MovementComponent movement;
+    InputComponent input;
     bn::optional<bn::sprite_ptr> sprite;
+    
 
 public:
     virtual void Start() override;

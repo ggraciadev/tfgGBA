@@ -22,14 +22,26 @@ GameObject::~GameObject() {
 
 void GameObject::Start() {
     id = CURRENT_ID++;
+    int size = components.size();
+    for(int i = 0; i < size; ++i) {
+        components[i]->SetGameObject(this);
+        components[i]->Start();
+    }
 }
 
 void GameObject::Update() {
-
+    int size = components.size();
+    for(int i = 0; i < size; ++i) {
+        components[i]->Update();
+    }
 }
 
 void GameObject::Render() {
     
+}
+
+void GameObject::AddComponent(GameObjectComponent* component) {
+    components.push_back(component);
 }
 
 // bool GameObject::HasParent() {
