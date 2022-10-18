@@ -8,7 +8,6 @@
 #include "GameObjectComponent.h"
 #include "bn_string.h"
 
-#define MAX_CHILDS 16
 #define MAX_COMPONENTS 8
 
 //class GameObjectComponent;
@@ -29,22 +28,22 @@ protected:
     bn::fixed_point relativePosition;
     int id;
 
+    char layerDepth;
+    char zOrder;
+
+    GameObject* camera;
+
 public:
 
-    // void SetCamera(GameObject& cam) { camera = cam; }
+    void SetCamera(GameObject* cam) { camera = cam; }
 
     virtual void Start();
     virtual void Update();
     virtual void Render();
 
-    // bool HasParent();
-    // GameObject& GetParent();
-
     bn::fixed_point GetRelativePosition() { return relativePosition; }
     virtual bn::fixed_point GetWorldPosition();
     virtual bn::fixed_point GetScreenPosition();
-
-    virtual void SetLayerDepth(int depth) { };
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
@@ -53,12 +52,19 @@ public:
 
     void AddComponent(GameObjectComponent* component);
 
-    // void SetParent(GameObject& p);
-    // void AddChild(GameObject& child);
-    // void RemoveChild(GameObject& child);
-    // void RemoveAllChilds();
+    bool HasParent();
+    GameObject* GetParent();
+    void SetParent(GameObject* p);
 
     bool Equals(GameObject& other) {return id == other.id;}
+    bool Equals(GameObject* other) {return id == other->id;}
+
+    char GetLayerDepth() { return layerDepth; }
+    void UpdateLayer();
+
+    virtual char GetBackgroundLayer();
+    virtual void SetLayerDepth(int depth);
+    virtual void SetZOrder(char z_order);
 
 };
 

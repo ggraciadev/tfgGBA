@@ -35,9 +35,8 @@ public:
     virtual ~Layer();
 
 protected:
-    int layerDepth;
+
     bn::fixed layerMovementAlpha;
-    bn::optional<bn::regular_bg_ptr> back;
 
     alignas(int) bn::regular_bg_map_cell cells[CELLS_COUNT];
     bn::optional<bn::regular_bg_map_item> map_item;
@@ -51,8 +50,9 @@ public:
     virtual void Update() override;
     virtual void Render() override;
 
-    void SetBackground(bn::regular_bg_ptr b, int layer = 0);
-    virtual void SetLayerDepth(int depth) override;
+    virtual char GetBackgroundLayer();
+    virtual void SetLayerDepth(int depth);
+    virtual void SetZOrder(char z_order);
 };
 
 #endif

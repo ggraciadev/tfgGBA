@@ -5,7 +5,9 @@ int GameObject::CURRENT_ID = 0;
 
 GameObject::GameObject() {
     relativePosition = bn::fixed_point(0,0);
-    //parent = nullptr;
+    parent = nullptr;
+    camera = nullptr;
+    layerDepth = 0;
 }
 
 // GameObject::GameObject(const int posX, const int posY, GameObject& _parent) {
@@ -22,6 +24,9 @@ GameObject::~GameObject() {
 
 void GameObject::Start() {
     id = CURRENT_ID++;
+
+    UpdateLayer();
+
     int size = components.size();
     for(int i = 0; i < size; ++i) {
         components[i]->SetGameObject(this);
@@ -44,59 +49,32 @@ void GameObject::AddComponent(GameObjectComponent* component) {
     components.push_back(component);
 }
 
-// bool GameObject::HasParent() {
-//     return parent.has_value();
-// }
+bool GameObject::HasParent() {
+    return parent != nullptr;
+}
 
-// GameObject* GameObject::GetParent() {
-//     return &(*parent);
-// }
+GameObject* GameObject::GetParent() {
+    return parent;
+}
 
-// void GameObject::SetParent(GameObject* p) {
-//     //recalc local position 
-//     parent = p;
-//     if(parent != nullptr) {
-//         (*parent).AddChild(this);
-//     }
-// }
-
-// void GameObject::AddChild(GameObject* child) {
-//     int size = childList.size();
-//     for(int i = 0; i < size; ++i) {
-//         if(childList[i]->Equals(child)) {
-//             return;
-//         }
-//     }
-//     childList.push_back(child);
-// }
-
-// void GameObject::RemoveChild(GameObject* child) {
-//     int size = childList.size();
-//     for(int i = 0; i < size; ++i) {
-//         if(childList[i]->Equals(child)) {
-//             //childList.erase(i);
-//             return;
-//         }
-//     }
-// }
-
-// void GameObject::RemoveAllChilds() {
-//     childList.clear();
-// }
+void GameObject::SetParent(GameObject* p) {
+    //recalc local position 
+    parent = p;
+}
 
 bn::fixed_point GameObject::GetWorldPosition() {
     bn::fixed_point worldLocation = relativePosition;
-    // if(parent != nullptr) {
-    //     worldLocation += parent->GetWorldPosition();
-    // }
+    if(parent != nullptr) {
+        worldLocation += parent->GetWorldPosition();
+    }
     return worldLocation;
 }
 
 bn::fixed_point GameObject::GetScreenPosition() {
     bn::fixed_point screenLocation = GetWorldPosition();
-    // if(camera.has_value()) {
-    //     screenLocation -= camera->GetWorldPosition();
-    // }
+    if(camera != nullptr) {
+        screenLocation -= camera->GetWorldPosition();
+    }
     return screenLocation;
 }
 
@@ -114,4 +92,30 @@ void GameObject::SetLocalPosition(const bn::fixed_point& pos) {
 }
 void GameObject::SetLocalPosition(const int posX, const int posY) {
     AddLocalOffset(bn::fixed_point(posX, posY));
+}
+
+char GameObject::GetBackgroundLayer() {
+    if(parent == nullptr) {
+        return 0;
+    }
+    else {
+        return parent->GetBackgroundLayer();
+    }
+}
+
+void GameObject::SetLayerDepth(int depth) {
+    if(depth == -1) {
+        depth = 0;
+        SetZOrder(0);
+    }
+
+    layerDepth = depth;
+}
+
+void GameObject::UpdateLayer() {
+    SetLayerDepth(GetBackgroundLayer());
+}
+
+void GameObject::SetZOrder(char z_order) {
+
 }

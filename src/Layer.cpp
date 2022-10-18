@@ -5,7 +5,13 @@
 #include "bn_regular_bg_items_ground_b0.h"
 
 Layer::Layer() : GameObject::GameObject() {
-    layerDepth = 0;
+
+    map_item = bn::regular_bg_map_item (cells[0], bn::size(CELLS_X, CELLS_Y));
+
+    bn::regular_bg_item bg_item (bn::regular_bg_items::ground_b0.tiles_item(), bn::regular_bg_items::ground_b0.palette_item(), *map_item);
+
+    bg = bg_item.create_bg(0, 0);
+    bg_map = bg->map();
 }
 
 Layer::~Layer() {
@@ -15,12 +21,6 @@ Layer::~Layer() {
 void Layer::Start() {
     GameObject::Start();
 
-    map_item = bn::regular_bg_map_item (cells[0], bn::size(CELLS_X, CELLS_Y));
-
-    bn::regular_bg_item bg_item (bn::regular_bg_items::ground_b0.tiles_item(), bn::regular_bg_items::ground_b0.palette_item(), *map_item);
-
-    bg = bg_item.create_bg(0, 0);
-    bg_map = bg->map();
 
     bn::regular_bg_map_cell* current_cell;
 
@@ -53,8 +53,9 @@ void Layer::Start() {
 
 void Layer::Update() {
     GameObject::Update();
-    //AddLocalOffset(0, 1);
-    //SetLocalPosition(camera->GetWorldPosition() * layerMovementAlpha);
+    if(camera != nullptr) {
+        SetLocalPosition(camera->GetWorldPosition() * layerMovementAlpha);
+    }
 }   
 
 void Layer::Render() {
@@ -65,33 +66,29 @@ void Layer::Render() {
 }
 
 void Layer::SetLayerDepth(int depth) {
-    layerDepth = depth;
     bn::fixed speed = 1;
     
-    if(depth == -1) {
-        depth = 0;
-        if(back.has_value()) {
-            back->set_z_order(0);
-        }
+    GameObject::SetLayerDepth(depth);
+    if(layerDepth == -1) {
         speed = -1.0f;
     }
     else {
         speed = 1 - 1.0f/(layerDepth+1);
+        SetZOrder(3);
     }
-    if(back.has_value()) {
-        back->set_priority(depth);
-        back->set_z_order(3);
-    }
-
-    // int size = childList.size();
-    // for(int i = 0; i < size; ++i) {
-    //     childList[i]->SetLayerDepth(layerDepth);
-    // }
-    
     layerMovementAlpha = speed;
+    if(bg.has_value()) {
+        bg->set_priority(layerDepth);
+    }
 }
 
-void Layer::SetBackground(bn::regular_bg_ptr b, int layer) {
-    back = b;
-    SetLayerDepth(layer);
+char Layer::GetBackgroundLayer() {
+    return layerDepth;
+}
+
+void Layer::SetZOrder(char z_order) {
+    GameObject::SetZOrder(z_order);
+    if(bg.has_value()) {
+        bg->set_z_order(z_order);
+    }
 }

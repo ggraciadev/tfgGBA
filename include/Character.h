@@ -27,6 +27,9 @@ public:
 
     static Character* CreateCharacter();
 
+    virtual void SetLayerDepth(int depth) override;
+    virtual void SetZOrder(char z_order) override;
+
 };
 
 #endif

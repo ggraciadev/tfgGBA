@@ -14,7 +14,7 @@ void Character::Start() {
     }
     movement.SetCurrentMovementSpeed(1);
     input.SetMovementComponent(&movement);
-    
+
     AddComponent(&movement);
     AddComponent(&input);
 
@@ -29,4 +29,15 @@ void Character::Update() {
 void Character::Render() {
     GameObject::Render();
     sprite->set_position(GetScreenPosition());
+}
+
+void Character::SetLayerDepth(int depth) {
+    SetZOrder(1);
+    GameObject::SetLayerDepth(depth);
+    sprite->set_bg_priority(layerDepth);
+}
+
+void Character::SetZOrder(char z_order) {
+    GameObject::SetZOrder(z_order);
+    sprite->set_z_order(z_order);
 }

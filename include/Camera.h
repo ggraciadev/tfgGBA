@@ -1,28 +1,26 @@
-// #ifndef BF_CAMERA_H
-// #define BF_CAMERA_H
+#ifndef BF_CAMERA_H
+#define BF_CAMERA_H
 
-// #include "GameObject.h"
-// #include "Actor.h"
-// #include "bn_camera_actions.h"
+#include "GameObject.h"
+#include "bn_camera_actions.h"
 
-// class Camera : public GameObject {
+class Camera : public GameObject {
 
-// public:
-//     Camera();
-//     Camera(const int posX, const int posY, GameObject* _parent = nullptr, Actor* follow = nullptr);
-//     virtual ~Camera();
+public:
+    Camera();
+    virtual ~Camera();
 
-// protected:
-//     Actor* followActor;
+protected:
+    GameObject* followObject;
 
-// public:
-//     virtual void Start() override;
-//     virtual void Update() override;
-//     virtual void Render() override;
+public:
+    virtual void Start() override;
+    virtual void Update() override;
+    virtual void Render() override;
 
-//     virtual void SetFollowActor(Actor* _followActor);
-//     Actor* GetFollowActor() { return followActor; }
+    virtual void SetFollowObject(GameObject* _followObject);
+    GameObject* GetFollowObject() { return followObject; }
 
-// };
+};
 
-// #endif
+#endif

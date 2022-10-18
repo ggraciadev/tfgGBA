@@ -17,6 +17,7 @@ public:
     virtual ~Scene();
 
 protected:
+    Camera camera;
     Layer layer;
     Factory<Character, 10> characterFactory;
     bn::vector<GameObject*, 1000> objects;
