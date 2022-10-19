@@ -18,7 +18,9 @@ public:
 
 protected:
     Camera camera;
-    Layer layer;
+    Layer<64,32> layer;
+    Layer<64,32> layer1;
+    Layer<64,32> layer2;
     Factory<Character, 10> characterFactory;
     bn::vector<GameObject*, 1000> objects;
     int gameObjectListSize;

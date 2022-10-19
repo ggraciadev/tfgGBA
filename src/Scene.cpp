@@ -34,13 +34,23 @@ void Scene::Start() {
     camera.Start();
     objects.push_back(&camera);
     
-    layer.Start();
+    layer.Start(LayerType::CITY_LAYER_0);
     layer.SetLayerDepth(0);
     layer.SetCamera(&camera);
     objects.push_back(&layer);
 
+    layer1.Start(LayerType::CITY_LAYER_1);
+    layer1.SetLayerDepth(1);
+    layer1.SetCamera(&camera);
+    objects.push_back(&layer1);
+
+    layer2.Start(LayerType::CITY_LAYER_2);
+    layer2.SetLayerDepth(2);
+    layer2.SetCamera(&camera);
+    objects.push_back(&layer2);
+
     int n = 1;
-    int start = 2;
+    int start = 4;
     int end = n + start;
 
     for (int i = start; i < end; ++i) {
