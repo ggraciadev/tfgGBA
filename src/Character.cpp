@@ -36,6 +36,15 @@ void Character::PhysicsUpdate() {
     GameObject::PhysicsUpdate();
     boxCollision.PhysicsUpdate();
     movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+    if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
+        movement.SetVelocityY(0);
+    }
+    if(boxCollision.GetContact(RIGHT_COLLISION) && movement.GetVelocity().x() > 0) {
+        movement.SetVelocityX(0);
+    }
+    else if(boxCollision.GetContact(LEFT_COLLISION) && movement.GetVelocity().x() < 0) {
+        movement.SetVelocityX(0);
+    }
 }
 
 void Character::Render() {
@@ -55,5 +64,5 @@ void Character::SetZOrder(char z_order) {
 }
 
 void Character::Jump() {
-    movement.AddImpulse(0, JUMP_SPEED);
+    movement.SetVelocityY(JUMP_SPEED);
 }

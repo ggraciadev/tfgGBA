@@ -8,12 +8,12 @@
 #include "BoxCollision.h"
 #include "bn_sprite_items_character.h"
 
-#define COLLISION_OFFSET_X 0
-#define COLLISION_OFFSET_Y 0
-#define COLLISION_WIDTH 1
-#define COLLISION_HEIGHT 1
+#define COLLISION_OFFSET_X -13
+#define COLLISION_OFFSET_Y -26
+#define COLLISION_WIDTH 26
+#define COLLISION_HEIGHT 52
 
-#define JUMP_SPEED -5
+#define JUMP_SPEED -4
 
 class Character : public GameObject {
 public:

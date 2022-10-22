@@ -26,7 +26,6 @@ void BoxCollision::Start() {
 
 void BoxCollision::Update() {
     updatedPosition = false;
-    lastPosition = currentPosition;
     GameObjectComponent::Update();
 }
 
@@ -37,13 +36,15 @@ void BoxCollision::PhysicsUpdate() {
     if(mapCollision != nullptr) {
         CheckCollisionWithMap();
         UpdateContacts();
-        gameObject->SetLocalPosition(currentPosition);
+        gameObject->SetLocalPosition(currentPosition - boxOffset);
     
     }
 }
 
 void BoxCollision::UpdateCurrentPosition() {
+    lastPosition = currentPosition;
     currentPosition = gameObject->GetWorldPosition() + boxOffset;
+    movementDirection = currentPosition - lastPosition;
     updatedPosition = true;
 }
 
@@ -76,57 +77,33 @@ MapCollisionType BoxCollision::CheckCollisionWithMapEdge(int startX, int startY,
 }
 
 void BoxCollision::UpdateContacts() {
-    bn::fixed_point movement = currentPosition - lastPosition;
 
-    if(movement.x() > 0) {
+    if(movementDirection.x() > 0) {
         collisionContacts[LEFT_COLLISION] = false;
     }
-    else if(movement.x() < 0) {
+    else if(movementDirection.x() < 0) {
         collisionContacts[RIGHT_COLLISION] = false;
     }
 
-    if(movement.y() > 0) {
+    if(movementDirection.y() > 0) {
         collisionContacts[TOP_COLLISION] = false;
     }
-    else if(movement.y() < 0) {
+    else if(movementDirection.y() < 0) {
         collisionContacts[BOT_COLLISION] = false;
     }
 }
 
 void BoxCollision::CheckCollisionWithMap() {
-    bn::fixed_point movement = currentPosition - lastPosition;
     int startX = currentPosition.x().floor_integer();
     int startY = currentPosition.y().floor_integer();
 
     int endX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
     int endY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
 
-    if(movement.x() > 0) {
-        int tempStartX = endX;
-        int tempStartY = startY;
-        int tempEndX = endX;
-        int tempEndY = endY;
-        MapCollisionType col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::NONE) {
-            currentPosition.set_x(currentPosition.x().floor_integer() / TILE_WIDTH * TILE_WIDTH);
-            collisionContacts[RIGHT_COLLISION] = true;
-        }
-    }
-    else if(movement.x() < 0) {
-        int tempStartX = startX;
-        int tempStartY = startY;
-        int tempEndX = startX;
-        int tempEndY = endY;
-        MapCollisionType col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::NONE) {
-            currentPosition.set_x(currentPosition.x().floor_integer() / TILE_WIDTH * TILE_WIDTH + TILE_WIDTH);
-            collisionContacts[LEFT_COLLISION] = true;
-        }
-    }
-
-    if(movement.y() > 0) {
+    if(movementDirection.y() >= 0) {
         
         MapCollisionType col;
+        int times = 0;
         do {
             int tempStartX = currentPosition.x().floor_integer();
             int tempStartY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
@@ -134,20 +111,59 @@ void BoxCollision::CheckCollisionWithMap() {
             int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
             col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
             if(col != MapCollisionType::NONE) {
-                currentPosition.set_y(currentPosition.y().floor_integer() / TILE_HEIGHT * TILE_HEIGHT);
+                currentPosition.set_y(currentPosition.y().floor_integer()-1);
+                collisionContacts[BOT_COLLISION] = true;
+                ++times;
+            }
+        } while (col != MapCollisionType::NONE);
+        if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer(), currentPosition.y().floor_integer() + boxSize.y().floor_integer() + TILE_HEIGHT, 
+            currentPosition.x().floor_integer() + boxSize.x().floor_integer(), currentPosition.y().floor_integer() + boxSize.y().floor_integer() + TILE_HEIGHT)) {
+            collisionContacts[BOT_COLLISION] = false;
+        }
+    }
+    else if(movementDirection.y() < 0) {
+        MapCollisionType col;
+        int times = 0;
+        do {
+            int tempStartX = currentPosition.x().floor_integer();
+            int tempStartY = currentPosition.y().floor_integer();
+            int tempEndX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
+            int tempEndY = currentPosition.y().floor_integer();
+            col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
+            if(col != MapCollisionType::NONE) {
+                currentPosition.set_y(currentPosition.y().floor_integer()+1);
+                collisionContacts[BOT_COLLISION] = true;
+                ++times;
+            }
+        } while (col != MapCollisionType::NONE);        
+    }
+    if(movementDirection.x() > 0) {
+        MapCollisionType col;
+        do {
+            int tempStartX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
+            int tempStartY = currentPosition.y().floor_integer();
+            int tempEndX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
+            int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+            col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
+            if(col != MapCollisionType::NONE) {
+                currentPosition.set_x((currentPosition.x().floor_integer()) - 1);
                 collisionContacts[BOT_COLLISION] = true;
             }
         } while (col != MapCollisionType::NONE);
     }
-    else if(movement.y() < 0) {
-        int tempStartX = startX;
-        int tempStartY = endY;
-        int tempEndX = endX;
-        int tempEndY = endY;
-        MapCollisionType col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::NONE) {
-            currentPosition.set_y(currentPosition.y().floor_integer() / TILE_HEIGHT * TILE_HEIGHT);
-            collisionContacts[TOP_COLLISION] = true;
-        }
+    else if(movementDirection.x() < 0) {
+        MapCollisionType col;
+        do {
+            int tempStartX = currentPosition.x().floor_integer();
+            int tempStartY = currentPosition.y().floor_integer();
+            int tempEndX = currentPosition.x().floor_integer();
+            int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+            col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
+            if(col != MapCollisionType::NONE) {
+                currentPosition.set_x(currentPosition.x().floor_integer() + 1);
+                collisionContacts[BOT_COLLISION] = true;
+            }
+        } while (col != MapCollisionType::NONE);
     }
+
 }

@@ -14,18 +14,13 @@ void MapCollision::Start() {
     const int end = MAP_HEIGHT;
     
     gameObject->SetLocalPosition(15,0);
-    for(int i = begin; i < end; ++i) {
-        for(int j = 0; j < MAP_WIDTH; ++j) {
-            collisions[j + i * MAP_WIDTH] = COLLISION;
-        }
-    }
     for(int i = 0; i < end; ++i) {
         for(int j = 0; j < MAP_WIDTH; ++j) {
-            if(i < begin) {
-                collisions[j + i * MAP_WIDTH] = NONE;
+            if(i >= begin || i == 0 || i == MAP_HEIGHT - 1 || j == 0 || j == MAP_WIDTH - 1) {
+                collisions[j + i * MAP_WIDTH] = COLLISION;
             }
             else {
-                collisions[j + i * MAP_WIDTH] = COLLISION;
+                collisions[j + i * MAP_WIDTH] = NONE;
             }
         }
     }
@@ -34,4 +29,13 @@ void MapCollision::Start() {
 
 void MapCollision::Update() {
 
+}
+
+MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) { 
+    MapCollisionType result = MapCollisionType::NONE;
+    if(cellX >= 0 && cellX < MAP_WIDTH && cellY >= 0 && cellY < MAP_HEIGHT) {
+        result = collisions[cellX + MAP_WIDTH * cellY]; 
+    }
+    return result;
+    // return collisions[cellX + MAP_WIDTH * cellY];
 }

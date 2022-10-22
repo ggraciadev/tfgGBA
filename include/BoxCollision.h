@@ -27,6 +27,7 @@ protected:
     MapCollision* mapCollision;  
 
     bn::fixed_point lastPosition;
+    bn::fixed_point movementDirection;
     bn::fixed_point currentPosition;
 
     bn::fixed_point boxOffset;
