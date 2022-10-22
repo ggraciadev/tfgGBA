@@ -58,7 +58,7 @@ void Scene::Start() {
         //characters.push_back(Character());
         //objects.push_back(characterFactory.Get(i));
         objects[i]->SetParent(&mapLayer);
-        objects[i]->SetLocalPosition((i-start) * 10, -120);
+        objects[i]->SetLocalPosition((i-start) * 10, -20);
         objects[i]->Start();
         objects[i]->SetLayerDepth(0);
         objects[i]->SetCamera(&camera);

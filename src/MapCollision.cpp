@@ -10,7 +10,7 @@ MapCollision::~MapCollision() {
 }
 
 void MapCollision::Start() {
-    const int begin = 20;
+    const int begin = 21;
     const int end = MAP_HEIGHT;
     
     gameObject->SetLocalPosition(15,0);
@@ -32,7 +32,7 @@ void MapCollision::Update() {
 }
 
 MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) { 
-    MapCollisionType result = MapCollisionType::NONE;
+    MapCollisionType result = MapCollisionType::COLLISION;
     if(cellX >= 0 && cellX < MAP_WIDTH && cellY >= 0 && cellY < MAP_HEIGHT) {
         result = collisions[cellX + MAP_WIDTH * cellY]; 
     }

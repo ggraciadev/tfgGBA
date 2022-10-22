@@ -50,7 +50,8 @@ public:
     void UpdateCurrentPosition();
 
     void UpdateContacts();
-
+    MapCollisionType CheckHorizontalCollisions();
+    MapCollisionType CheckVerticalCollisions();
     void CheckCollisionWithMap();
     MapCollisionType CheckCollisionWithMapEdge(int startX, int startY, int endX, int endY);
 
