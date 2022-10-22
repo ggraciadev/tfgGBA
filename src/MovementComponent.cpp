@@ -11,7 +11,7 @@ MovementComponent::~MovementComponent() {
 void MovementComponent::Start() {
     GameObjectComponent::Start();
     velocity = bn::fixed_point(0,0);
-    gravityValue = 0;
+    gravityValue = 0.1f;
 }
 
 void MovementComponent::Update() {
@@ -38,10 +38,12 @@ void MovementComponent::CheckCollisions() {
 }
 
 void MovementComponent::SetGrounded(bool g) {
-    isGrounded = g;
-    velocity.set_y(0);
+    if(g != isGrounded) {
+        isGrounded = g;
+        velocity.set_y(0);
+    }
 }
 
-// void MovementComponent::AddImpulse(bn::fixed_point impulse) {
-//     velocity += impulse;
-// }
+void MovementComponent::AddImpulse(bn::fixed_point impulse) {
+    velocity += impulse;
+}

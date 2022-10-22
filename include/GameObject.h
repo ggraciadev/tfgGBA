@@ -12,6 +12,8 @@
 
 //class GameObjectComponent;
 
+class MapCollision;
+
 class GameObject {
 
 public:
@@ -39,7 +41,10 @@ public:
 
     virtual void Start();
     virtual void Update();
+    virtual void PhysicsUpdate();
     virtual void Render();
+
+    virtual void SetMapCollision(MapCollision* mc) {}
 
     bn::fixed_point GetRelativePosition() { return relativePosition; }
     virtual bn::fixed_point GetWorldPosition();
@@ -65,6 +70,14 @@ public:
     virtual char GetBackgroundLayer();
     virtual void SetLayerDepth(int depth);
     virtual void SetZOrder(char z_order);
+
+    virtual void OnCollisionEnter(GameObject* other) {}
+    virtual void OnCollisionStay(GameObject* other) {}
+    virtual void OnCollisionExit(GameObject* other) {}
+
+    virtual void OnTriggerEnter(GameObject* other) {}
+    virtual void OnTriggerStay(GameObject* other) {}
+    virtual void OnTriggerExit(GameObject* other) {}
 
 };
 

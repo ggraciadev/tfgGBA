@@ -17,6 +17,7 @@ int main()
     while(true)
     {
         gameManager->Update();
+        gameManager->PhysicsUpdate();
         gameManager->Render(textGenerator);
     }
 }

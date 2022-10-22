@@ -39,6 +39,10 @@ void GameManager::Update() {
     scene->Update();
 }
 
+void GameManager::PhysicsUpdate() {
+    scene->PhysicsUpdate();
+}
+
 void GameManager::Render(bn::sprite_text_generator& t) {
     scene->Render();
     

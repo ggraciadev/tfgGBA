@@ -29,6 +29,7 @@ public:
     void Init();
 
     void Update();
+    void PhysicsUpdate();
     void Render(bn::sprite_text_generator& t);
 
 

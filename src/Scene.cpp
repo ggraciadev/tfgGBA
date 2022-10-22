@@ -34,10 +34,10 @@ void Scene::Start() {
     camera.Start();
     objects.push_back(&camera);
     
-    layer.Start(LayerType::CITY_LAYER_0);
-    layer.SetLayerDepth(0);
-    layer.SetCamera(&camera);
-    objects.push_back(&layer);
+    mapLayer.Start(LayerType::CITY_LAYER_0);
+    mapLayer.SetLayerDepth(0);
+    mapLayer.SetCamera(&camera);
+    objects.push_back(&mapLayer);
 
     layer1.Start(LayerType::CITY_LAYER_1);
     layer1.SetLayerDepth(1);
@@ -55,12 +55,14 @@ void Scene::Start() {
 
     for (int i = start; i < end; ++i) {
         objects.push_back(characterFactory.Create());
-        objects[i]->Start();
         //characters.push_back(Character());
         //objects.push_back(characterFactory.Get(i));
-        objects[i]->AddLocalOffset(i * 10, 0);
+        objects[i]->SetParent(&mapLayer);
+        objects[i]->SetLocalPosition((i-start) * 10, -120);
+        objects[i]->Start();
         objects[i]->SetLayerDepth(0);
         objects[i]->SetCamera(&camera);
+        objects[i]->SetMapCollision(mapLayer.GetMapCollision());
     }
     camera.SetFollowObject(objects[start]);
 
@@ -71,6 +73,12 @@ void Scene::Start() {
 void Scene::Update() {
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->Update();
+    }
+}
+
+void Scene::PhysicsUpdate() {
+    for (int i = 0; i < gameObjectListSize; ++i) {
+        objects[i]->PhysicsUpdate();
     }
 }
 

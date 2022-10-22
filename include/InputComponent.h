@@ -1,8 +1,11 @@
 #ifndef BF_INPUT_COMPONENT_H
 #define BF_INPUT_COMPONENT_H
 
-#include "MovementComponent.h"
+#include "GameObjectComponent.h"
+
 #include <bn_fixed_point.h>
+
+class Character;
 
 class InputComponent : public GameObjectComponent{
 public:
@@ -11,14 +14,14 @@ public:
     virtual ~InputComponent();
 
 protected:
-    MovementComponent* movementComponent;
+    Character* character;
     bn::fixed_point inputMovement;
 
 public:
     virtual void Start() override;
     virtual void Update() override;
 
-    void SetMovementComponent(MovementComponent* mC) { movementComponent = mC;}
+    void SetCharacter(Character* c) { character= c;}
 
 };
 

@@ -1,6 +1,5 @@
 #ifndef BF_LAYER_H
 #define BF_LAYER_H
-
 #include "GameObject.h"
 
 #include <bn_regular_bg_item.h>
@@ -14,6 +13,8 @@
 #include <bn_regular_bg_item.h>
 
 #define EMPTY_TILE 0
+#define TILE_WIDTH 8
+#define TILE_HEIGHT 8
 
 enum LayerType {CITY_LAYER_0, CITY_LAYER_1, CITY_LAYER_2};
 
@@ -55,7 +56,6 @@ protected:
 
 
 public:
-
 
     virtual void Start(LayerType _layerType);
     virtual void Update() override;
@@ -144,7 +144,9 @@ void Layer<CELLS_X, CELLS_Y>::Update() {
     if(camera != nullptr) {
         SetLocalPosition(camera->GetWorldPosition() * layerMovementAlpha);
     }
-}   
+}  
+
+
 
 template <int CELLS_X, int CELLS_Y>
 void Layer<CELLS_X, CELLS_Y>::Render() {

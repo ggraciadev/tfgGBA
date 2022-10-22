@@ -41,6 +41,10 @@ void GameObject::Update() {
     }
 }
 
+void GameObject::PhysicsUpdate() {
+    
+}
+
 void GameObject::Render() {
     
 }

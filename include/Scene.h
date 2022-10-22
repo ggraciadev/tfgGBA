@@ -2,7 +2,7 @@
 #define BF_SCENE_H
 
 #include "Character.h"
-#include "Layer.h"
+#include "MapLayer.h"
 #include <bn_regular_bg_ptr.h>
 
 #include "bn_vector.h"
@@ -18,7 +18,7 @@ public:
 
 protected:
     Camera camera;
-    Layer<64,32> layer;
+    MapLayer mapLayer;
     Layer<64,32> layer1;
     Layer<64,32> layer2;
     Factory<Character, 10> characterFactory;
@@ -32,6 +32,8 @@ public:
     virtual void Start();
 
     virtual void Update();
+
+    virtual void PhysicsUpdate();
 
     virtual void Render();
     

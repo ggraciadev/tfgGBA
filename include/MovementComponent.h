@@ -16,7 +16,7 @@ protected:
     bn::fixed_point inputMovement;
     bn::fixed_point velocity;
     bn::fixed currentMovementSpeed;
-    bn::fixed gravityValue = 9.8f / 120.0f;
+    bn::fixed gravityValue = 9.8f / (10*120.0f);
     bool isGrounded = false;
 
 public:
@@ -29,12 +29,15 @@ public:
     void SetInputMovement(bn::fixed_point md) {inputMovement = md;}
     void SetInputMovementX(bn::fixed x) {inputMovement.set_x(x);}
     void SetInputMovementY(bn::fixed y) {inputMovement.set_y(y);}
+
+    void SetVelocityX(bn::fixed x) { velocity.set_x(x);}
+    void SetVelocityY(bn::fixed y) { velocity.set_y(y);}
     //void SetInputMovement(bn::fixed x, bn::fixed y) {SetInputMovement(bn::fixed_point(x, y));}
     //void SetVelocity(bn::fixed_point v) {velocity = v;}
     //void SetVelocity(bn::fixed x, bn::fixed y) {SetVelocity(bn::fixed_point(x, y));}
 
-    //void AddImpulse(bn::fixed_point impulse);
-    //void AddImpulse(bn::fixed x, bn::fixed y) {AddImpulse(bn::fixed_point(x, y));}
+    void AddImpulse(bn::fixed_point impulse);
+    void AddImpulse(bn::fixed x, bn::fixed y) {AddImpulse(bn::fixed_point(x, y));}
 
     const bn::fixed_point GetInputMovement() { return inputMovement; }
     const bn::fixed_point GetVelocity() { return velocity; }

@@ -1,6 +1,7 @@
 #include "InputComponent.h"
 
 #include "bn_keypad.h"
+#include "Character.h"
 
 InputComponent::InputComponent() : GameObjectComponent::GameObjectComponent() {
 }
@@ -16,6 +17,10 @@ void InputComponent::Start() {
 void InputComponent::Update() {
     GameObjectComponent::Update();
 
+    if(bn::keypad::a_pressed()) {
+        character->Jump();
+    }
+
     inputMovement = bn::fixed_point(0,0);
     if(bn::keypad::left_held()) {
         inputMovement.set_x(-1);
@@ -29,7 +34,8 @@ void InputComponent::Update() {
     else if(bn::keypad::down_held()) {
         inputMovement.set_y(1);
     }
-    movementComponent->SetInputMovement(inputMovement);
+    character->SetInputMovement(inputMovement);
+
 }
 
 // void InputComponent::AddImpulse(bn::fixed_point impulse) {
