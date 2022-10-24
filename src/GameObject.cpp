@@ -46,7 +46,6 @@ void GameObject::PhysicsUpdate() {
 }
 
 void GameObject::Render() {
-    
 }
 
 void GameObject::AddComponent(GameObjectComponent* component) {

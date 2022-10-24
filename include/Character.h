@@ -1,12 +1,12 @@
 #ifndef BF_CHARACTER_H
 #define BF_CHARACTER_H
 
-#include <bn_sprite_ptr.h>
 #include "GameObject.h"
+#include "Animator.h"
 #include "MovementComponent.h"
 #include "InputComponent.h"
 #include "BoxCollision.h"
-#include "bn_sprite_items_character.h"
+
 
 #define COLLISION_OFFSET_X -13
 #define COLLISION_OFFSET_Y -26
@@ -26,7 +26,7 @@ protected:
     MovementComponent movement;
     InputComponent input;
     BoxCollision boxCollision;
-    bn::optional<bn::sprite_ptr> sprite;
+    Animator animator;
     
 
 public:
@@ -42,9 +42,9 @@ public:
     virtual void SetLayerDepth(int depth) override;
     virtual void SetZOrder(char z_order) override;
 
-    void SetInputMovement(bn::fixed_point md) {movement.SetInputMovement(md);}
-    void SetInputMovementX(bn::fixed x) {movement.SetInputMovementX(x);}
-    void SetInputMovementY(bn::fixed y) {movement.SetInputMovementY(y);}
+    void SetInputMovement(bn::fixed_point md);
+    void SetInputMovementX(bn::fixed x);
+    void SetInputMovementY(bn::fixed y);
 
     void Jump();
 

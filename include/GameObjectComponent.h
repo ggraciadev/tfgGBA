@@ -20,6 +20,7 @@ protected:
 public:
     virtual void Start() {}
     virtual void Update();
+    virtual void Render() {}
     virtual void PhysicsUpdate() {}
 
     static bn::string<32> GetClassName() { return "GameObjectComponent"; }

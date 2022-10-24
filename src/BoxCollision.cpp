@@ -93,7 +93,7 @@ void BoxCollision::UpdateContacts() {
     }
 }
 
-MapCollisionType BoxCollision::CheckVerticalCollisions() {
+MapCollisionType BoxCollision::CheckHorizontalCollisions() {
     MapCollisionType col = MapCollisionType::NONE;
     if(movementDirection.x() > 0) {
         MapCollisionType col;
@@ -121,7 +121,7 @@ MapCollisionType BoxCollision::CheckVerticalCollisions() {
     return col;
 }
 
-MapCollisionType BoxCollision::CheckHorizontalCollisions() {
+MapCollisionType BoxCollision::CheckVerticalCollisions() {
     MapCollisionType col = MapCollisionType::NONE;
     if(movementDirection.y() >= 0) {
         
@@ -164,8 +164,10 @@ void BoxCollision::CheckCollisionWithMap() {
     MapCollisionType colX, colY;
     int times = 0;
     do {
-        CheckVerticalCollisions();
-        CheckHorizontalCollisions();
-    } while (colX != MapCollisionType::NONE || colY != MapCollisionType::NONE);
+        colX = CheckHorizontalCollisions();
+    } while (colX != MapCollisionType::NONE);
+    do {
+        colY = CheckVerticalCollisions();
+    } while (colY != MapCollisionType::NONE);
 
 }
