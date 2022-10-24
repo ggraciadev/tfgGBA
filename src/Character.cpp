@@ -10,7 +10,7 @@ Character::~Character() {
 }
 
 void Character::Start() {   
-    movement.SetCurrentMovementSpeed(2);
+    movement.SetCurrentMovementSpeed(1.5);
     input.SetCharacter(this);
     boxCollision.Setup(COLLISION_OFFSET_X, COLLISION_OFFSET_Y, COLLISION_WIDTH, COLLISION_HEIGHT);
 
@@ -60,17 +60,18 @@ void Character::Jump() {
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {
-    movement.SetInputMovement(md);
-    if(boxCollision.GetContact(RIGHT_COLLISION) && movement.GetVelocity().x() > 0) {
-        movement.SetVelocityX(0);
-    }
-    else if(boxCollision.GetContact(LEFT_COLLISION) && movement.GetVelocity().x() < 0) {
-        movement.SetVelocityX(0);
-    }
     if(md.x() > 0.0f) {
+        if(boxCollision.GetContact(RIGHT_COLLISION)) {
+            md.set_x(0);
+            movement.SetVelocityX(0);
+        }
         animator.SetFlipped(false);
     }
     else if (md.x() < 0.0f) {
+        if(boxCollision.GetContact(LEFT_COLLISION)) {
+            md.set_x(0);
+            movement.SetVelocityX(0);
+        }
         animator.SetFlipped(true);
     }
     
@@ -80,6 +81,7 @@ void Character::SetInputMovement(bn::fixed_point md) {
     else {
         animator.SetCurrentAnimation(1);
     }
+    movement.SetInputMovement(md);
 }
 
 void Character::SetInputMovementX(bn::fixed x) {
