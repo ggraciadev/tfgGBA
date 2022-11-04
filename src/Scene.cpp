@@ -11,6 +11,15 @@
 #include "bn_regular_bg_items_b1.h"
 #include "bn_regular_bg_items_b2.h"
 
+#include "bn_sprite_items_shop_b0.h"
+#define SPRITE_SHEET_SHOP bn::sprite_items::shop_b0
+
+#include "bn_sprite_items_ai_house_b1.h"
+#define SPRITE_SHEET_HOUSE_B1 bn::sprite_items::ai_house_b1
+
+#include "bn_sprite_items_ai_house_b2.h"
+#define SPRITE_SHEET_HOUSE_B2 bn::sprite_items::ai_house_b2
+
 //#include "Actor.h"
 #include "GameManager.h"
 #include "Character.h"
@@ -49,22 +58,54 @@ void Scene::Start() {
     layer2.SetCamera(&camera);
     objects.push_back(&layer2);
 
-    int n = 1;
-    int start = 4;
-    int end = n + start;
 
-    for (int i = start; i < end; ++i) {
-        objects.push_back(characterFactory.Create());
-        //characters.push_back(Character());
-        //objects.push_back(characterFactory.Get(i));
-        objects[i]->SetParent(&mapLayer);
-        objects[i]->SetLocalPosition((i-start) * 10, -20);
+    objects.push_back(characterFactory.Create());
+    objects[4]->SetParent(&mapLayer);
+    objects[4]->SetLocalPosition(0, -20);
+    objects[4]->Start();
+    objects[4]->SetLayerDepth(0);
+    objects[4]->SetCamera(&camera);
+    objects[4]->SetMapCollision(mapLayer.GetMapCollision());
+
+    int start = 5;
+    int end = start + 1;
+
+    // for(int i = start; i < end; ++i) {
+    //     objects.push_back(bg0ElementsFactory.Create());
+    //     objects[i]->SetSpriteItem(SPRITE_SHEET_SHOP);
+    //     objects[i]->SetParent(&mapLayer);
+    //     objects[i]->SetLocalPosition(0,0);
+    //     objects[i]->Start();
+    //     objects[i]->SetLayerDepth(0);
+    //     objects[i]->SetCamera(&camera);
+    // }
+
+    // start = end;
+    end = start + 2;
+
+    for(int i = start; i < end; ++i) {
+        objects.push_back(bg1ElementsFactory.Create());
+        objects[i]->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
+        objects[i]->SetParent(&layer1);
+        objects[i]->SetLocalPosition((i-start-1) * 200,-80);
         objects[i]->Start();
-        objects[i]->SetLayerDepth(0);
+        objects[i]->SetLayerDepth(1);
         objects[i]->SetCamera(&camera);
-        objects[i]->SetMapCollision(mapLayer.GetMapCollision());
     }
-    camera.SetFollowObject(objects[start]);
+    start = end;
+    end = start + 5;
+
+    for(int i = start; i < end; ++i) {
+        objects.push_back(bg2ElementsFactory.Create());
+        objects[i]->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
+        objects[i]->SetParent(&layer2);
+        objects[i]->SetLocalPosition((i-start-2) * 90,-50);
+        objects[i]->Start();
+        objects[i]->SetLayerDepth(2);
+        objects[i]->SetCamera(&camera);
+    }
+    
+    camera.SetFollowObject(objects[4]);
 
 
     gameObjectListSize = objects.size();

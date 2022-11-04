@@ -10,16 +10,20 @@ Animator::~Animator() {
 }
 
 void Animator::Start() {
-    sprite = SPRITE_SHEET.create_sprite(0, 0);
     
     GameObjectComponent::Start();
+}
+
+void Animator::SetSpriteItem(const bn::sprite_item& s){ 
+    spriteItem = s; 
+    sprite = spriteItem->create_sprite(0, 0);
 }
 
 void Animator::UpdateAnimation() {
     if(currentTime >= FRAME_SPEED) {
         currentFrame = (currentFrame + 1) % animationsLenght[currentAnimation];
     }
-    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(animations[currentAnimation][currentFrame]));
+    sprite->set_tiles(spriteItem->tiles_item().create_tiles(animations[currentAnimation][currentFrame]));
     currentTime = 0;
 }
 
@@ -60,6 +64,6 @@ void Animator::SetCurrentAnimation(char anim) {
         currentAnimation = anim;
         currentFrame = 0;
         currentTime = 0;
-        sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(animations[currentAnimation][currentFrame]));
+        //sprite->set_tiles(spriteItem->tiles_item().create_tiles(animations[currentAnimation][currentFrame]));
     }
 }

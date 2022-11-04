@@ -37,8 +37,6 @@ public:
 
     virtual void SetMapCollision(MapCollision* mc);
 
-    static Character* CreateCharacter();
-
     virtual void SetLayerDepth(int depth) override;
     virtual void SetZOrder(char z_order) override;
 

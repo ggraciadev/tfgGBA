@@ -7,6 +7,7 @@
 #include "bn_vector.h"
 #include "GameObjectComponent.h"
 #include "bn_string.h"
+#include <bn_sprite_item.h>
 
 #define MAX_COMPONENTS 8
 
@@ -78,6 +79,8 @@ public:
     virtual void OnTriggerEnter(GameObject* other) {}
     virtual void OnTriggerStay(GameObject* other) {}
     virtual void OnTriggerExit(GameObject* other) {}
+
+    virtual void SetSpriteItem(const bn::sprite_item& s) {}
 
 };
 

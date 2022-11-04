@@ -4,11 +4,9 @@
 #include "GameObjectComponent.h"
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_tiles_ptr.h>
+#include <bn_sprite_item.h>
 
 #define FRAME_SPEED 4
-#define SPRITE_SHEET_INCLUDE "bn_sprite_items_character.h"
-#include SPRITE_SHEET_INCLUDE
-#define SPRITE_SHEET bn::sprite_items::character
 
 class Animator : public GameObjectComponent {
 public:
@@ -22,11 +20,13 @@ protected:
     char currentTime;
     char currentAnimation;
 
-    char animations[2][16] = {{0,1,2,3,4,5,6}, {7,8,9,10,11,12,13,14,15,16,12}};
-    char animationsLenght[2] = {7,11};
+    char animations[2][16] = {{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, {7,8,9,10,11,12,13,14,15,16,12}};
+    char animationsLenght[2] = {14,11};
 
     bn::optional<bn::sprite_ptr> sprite;
+    bn::optional<bn::sprite_item> spriteItem;
 public:
+    virtual void SetSpriteItem(const bn::sprite_item& s);
 
     virtual void UpdateAnimation();
     virtual void UpdateAnimationTimer();
