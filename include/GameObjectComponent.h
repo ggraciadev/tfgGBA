@@ -6,6 +6,8 @@
 
 class GameObject;
 
+enum UpdateType { PHYSICS_UPDATE, LOGIC_UPDATE, RENDER };
+
 class GameObjectComponent {
 public:
     
@@ -16,12 +18,13 @@ public:
 
 protected:
     GameObject* gameObject;
+    UpdateType updateType = UpdateType::LOGIC_UPDATE;
 
 public:
     virtual void Start() {}
-    virtual void Update();
-    virtual void Render() {}
-    virtual void PhysicsUpdate() {}
+    virtual void Update() {}
+
+    UpdateType GetUpdateType() const { return updateType; }
 
     static bn::string<32> GetClassName() { return "GameObjectComponent"; }
 };

@@ -11,6 +11,7 @@ InputComponent::~InputComponent() {
 }
 
 void InputComponent::Start() {
+    updateType = UpdateType::LOGIC_UPDATE;
     GameObjectComponent::Start();
 }
 

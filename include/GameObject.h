@@ -20,7 +20,7 @@ class GameObject {
 public:
     GameObject();
     //GameObject(const int posX, const int posY, GameObject& _parent);
-    virtual ~GameObject();
+    ~GameObject();
 
 protected:
     BN_DATA_EWRAM static int CURRENT_ID;
@@ -29,27 +29,37 @@ protected:
     bn::vector<GameObjectComponent*, MAX_COMPONENTS> components;
 
     bn::fixed_point relativePosition;
+    bn::fixed_point worldPosition;
+    bool worldPositionDirty;
     int id;
 
     char layerDepth;
     char zOrder;
 
+    char firtsLogicUpdateIndex;
+    char firstRenderIndex;
+    char componentsSize;
     GameObject* camera;
 
 public:
 
     void SetCamera(GameObject* cam) { camera = cam; }
 
-    virtual void Start();
-    virtual void Update();
-    virtual void PhysicsUpdate();
-    virtual void Render();
+    void Start();
+    void PhysicsUpdate();
+    void Update();
+    void Render();
 
-    virtual void SetMapCollision(MapCollision* mc) {}
+    void SwapComponents(GameObjectComponent* c1, GameObjectComponent* c2) { 
+        GameObjectComponent* t = c1; 
+        c1 = c2; 
+        c2 = t;
+    }
+    void SortComponentsRender();
 
-    bn::fixed_point GetRelativePosition() { return relativePosition; }
-    virtual bn::fixed_point GetWorldPosition();
-    virtual bn::fixed_point GetScreenPosition();
+    const bn::fixed_point GetRelativePosition() { return relativePosition; }
+    bn::fixed_point GetWorldPosition();
+    bn::fixed_point GetScreenPosition();
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
@@ -58,29 +68,19 @@ public:
 
     void AddComponent(GameObjectComponent* component);
 
-    bool HasParent();
-    GameObject* GetParent();
-    void SetParent(GameObject* p);
+    bool HasParent() const { return parent != nullptr; }
+    GameObject* GetParent() const { return parent; }
+    void SetParent(GameObject* p) { parent = p; }
 
-    bool Equals(GameObject& other) {return id == other.id;}
-    bool Equals(GameObject* other) {return id == other->id;}
+    bool Equals(const GameObject& other) const {return id == other.id;}
+    bool Equals(const GameObject* other) const {return id == other->id;}
 
-    char GetLayerDepth() { return layerDepth; }
-    void UpdateLayer();
+    char GetLayerDepth() const { return layerDepth; }
 
-    virtual char GetBackgroundLayer();
-    virtual void SetLayerDepth(int depth);
-    virtual void SetZOrder(char z_order);
+    void SetLayerDepth(const int depth);
+    void SetZOrder(const char z_order) { zOrder = z_order; }
 
-    virtual void OnCollisionEnter(GameObject* other) {}
-    virtual void OnCollisionStay(GameObject* other) {}
-    virtual void OnCollisionExit(GameObject* other) {}
-
-    virtual void OnTriggerEnter(GameObject* other) {}
-    virtual void OnTriggerStay(GameObject* other) {}
-    virtual void OnTriggerExit(GameObject* other) {}
-
-    virtual void SetSpriteItem(const bn::sprite_item& s) {}
+    bool GetWorldPositionDirty() {if(parent != nullptr) worldPositionDirty = parent->GetWorldPositionDirty(); return worldPositionDirty;}
 
 };
 

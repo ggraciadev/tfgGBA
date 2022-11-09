@@ -10,7 +10,7 @@ Animator::~Animator() {
 }
 
 void Animator::Start() {
-    
+    updateType = UpdateType::RENDER;
     GameObjectComponent::Start();
 }
 
@@ -31,8 +31,7 @@ void Animator::UpdateAnimationTimer() {
 
 }
 
-void Animator::Render() {
-    GameObjectComponent::Render();
+void Animator::Update() {
     currentTime ++;
     if(currentTime >= FRAME_SPEED) {
         UpdateAnimation();

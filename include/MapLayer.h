@@ -15,7 +15,7 @@ protected:
     
 
 public:
-    virtual void Start(LayerType _layerType) override;
+    void Start(LayerType _layerType);
 
     MapCollision* GetMapCollision() { return &mapCollision; }
     

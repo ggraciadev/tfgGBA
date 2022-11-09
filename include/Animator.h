@@ -33,7 +33,7 @@ public:
     virtual void SetCurrentAnimation(char anim);
 
     virtual void Start() override;
-    virtual void Render() override;
+    virtual void Update() override;
 
     virtual void SetLayerDepth(int depth);
     virtual void SetZOrder(char z_order);

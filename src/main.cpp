@@ -1,7 +1,6 @@
 #include "bn_core.h"
 #include "GameManager.h"
 
-
 int main()
 {
     bn::core::init();

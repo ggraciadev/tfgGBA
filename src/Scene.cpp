@@ -41,89 +41,98 @@ Scene::~Scene() {
 
 void Scene::Start() {
     camera.Start();
-    objects.push_back(&camera);
     
-    mapLayer.Start(LayerType::CITY_LAYER_0);
-    mapLayer.SetLayerDepth(0);
     mapLayer.SetCamera(&camera);
-    objects.push_back(&mapLayer);
+    mapLayer.SetLayerDepth(0);
+    mapLayer.Start(LayerType::CITY_LAYER_0);
 
-    layer1.Start(LayerType::CITY_LAYER_1);
     layer1.SetLayerDepth(1);
     layer1.SetCamera(&camera);
-    objects.push_back(&layer1);
+    layer1.Start(LayerType::CITY_LAYER_1);
 
-    layer2.Start(LayerType::CITY_LAYER_2);
     layer2.SetLayerDepth(2);
     layer2.SetCamera(&camera);
-    objects.push_back(&layer2);
+    layer2.Start(LayerType::CITY_LAYER_2);
 
 
-    objects.push_back(characterFactory.Create());
-    objects[4]->SetParent(&mapLayer);
-    objects[4]->SetLocalPosition(0, -20);
-    objects[4]->Start();
-    objects[4]->SetLayerDepth(0);
-    objects[4]->SetCamera(&camera);
-    objects[4]->SetMapCollision(mapLayer.GetMapCollision());
+    Character* tmpCharacter = characterFactory.Create();
+    
+    tmpCharacter->SetParent(&mapLayer);
+    tmpCharacter->SetLocalPosition(0, -20);
+    tmpCharacter->Start();
+    tmpCharacter->SetLayerDepth(0);
+    tmpCharacter->SetCamera(&camera);
+    tmpCharacter->SetMapCollision(mapLayer.GetMapCollision());
+    camera.SetFollowObject(tmpCharacter);
 
-    int start = 5;
+    objects.push_back(tmpCharacter);
+
+    int start = 1;
     int end = start + 1;
 
     // for(int i = start; i < end; ++i) {
     //     objects.push_back(bg0ElementsFactory.Create());
-    //     objects[i]->SetSpriteItem(SPRITE_SHEET_SHOP);
-    //     objects[i]->SetParent(&mapLayer);
-    //     objects[i]->SetLocalPosition(0,0);
-    //     objects[i]->Start();
-    //     objects[i]->SetLayerDepth(0);
-    //     objects[i]->SetCamera(&camera);
+    //     bgEl->SetSpriteItem(SPRITE_SHEET_SHOP);
+    //     bgEl->SetParent(&mapLayer);
+    //     bgEl->SetLocalPosition(0,0);
+    //     bgEl->Start();
+    //     bgEl->SetLayerDepth(0);
+    //     bgEl->SetCamera(&camera);
     // }
 
     // start = end;
     end = start + 2;
 
     for(int i = start; i < end; ++i) {
-        objects.push_back(bg1ElementsFactory.Create());
-        objects[i]->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
-        objects[i]->SetParent(&layer1);
-        objects[i]->SetLocalPosition((i-start-1) * 200,-80);
-        objects[i]->Start();
-        objects[i]->SetLayerDepth(1);
-        objects[i]->SetCamera(&camera);
+        BackgroundElement<2,2>* bgEl = bg1ElementsFactory.Create();
+        bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
+        bgEl->SetParent(&layer1);
+        bgEl->SetLocalPosition((i-start-1) * 200,-80);
+        bgEl->Start();
+        bgEl->SetLayerDepth(1);
+        bgEl->SetCamera(&camera);
+        objects.push_back(bgEl);
     }
     start = end;
     end = start + 5;
 
     for(int i = start; i < end; ++i) {
-        objects.push_back(bg2ElementsFactory.Create());
-        objects[i]->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
-        objects[i]->SetParent(&layer2);
-        objects[i]->SetLocalPosition((i-start-2) * 90,-50);
-        objects[i]->Start();
-        objects[i]->SetLayerDepth(2);
-        objects[i]->SetCamera(&camera);
+        BackgroundElement<1,1>* bgEl = bg2ElementsFactory.Create();
+        bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
+        bgEl->SetParent(&layer2);
+        bgEl->SetLocalPosition((i-start-2) * 90,-50);
+        bgEl->Start();
+        bgEl->SetLayerDepth(2);
+        bgEl->SetCamera(&camera);
+        objects.push_back(bgEl);
     }
     
-    camera.SetFollowObject(objects[4]);
 
 
     gameObjectListSize = objects.size();
 }
 
 void Scene::Update() {
+    camera.Update();
+    mapLayer.Update();
+    layer1.Update();
+    layer2.Update();
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->Update();
     }
 }
 
 void Scene::PhysicsUpdate() {
+
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->PhysicsUpdate();
     }
 }
 
 void Scene::Render() {
+    mapLayer.Render();
+    layer1.Render();
+    layer2.Render();
     for (int i = 0; i < gameObjectListSize; ++i) {
         objects[i]->Render();
     }

@@ -8,6 +8,3 @@ GameObjectComponent::GameObjectComponent() {
 GameObjectComponent::~GameObjectComponent() {
 
 }
-
-void GameObjectComponent::Update() {
-}

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 
 BoxCollision::BoxCollision() : GameObjectComponent::GameObjectComponent(){
-
+    
 }
 
 BoxCollision::~BoxCollision() {
@@ -20,24 +20,17 @@ void BoxCollision::Setup(int offX, int offY, int width, int height) {
 }
 
 void BoxCollision::Start() {
+    updateType = UpdateType::PHYSICS_UPDATE;
     GameObjectComponent::Start();
     currentPosition = gameObject->GetWorldPosition();
 }
 
 void BoxCollision::Update() {
-    updatedPosition = false;
-    GameObjectComponent::Update();
-}
-
-void BoxCollision::PhysicsUpdate() {
-    if(!updatedPosition) {
-        UpdateCurrentPosition();
-    }
+    UpdateCurrentPosition();
     if(mapCollision != nullptr) {
         CheckCollisionWithMap();
         UpdateContacts();
         gameObject->SetLocalPosition(currentPosition - boxOffset);
-    
     }
 }
 

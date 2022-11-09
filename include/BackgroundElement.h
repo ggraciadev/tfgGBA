@@ -16,15 +16,14 @@ protected:
     MultiSprite<tilesX, tilesY> multiSprite;
 
 public:
-    virtual void Start() override;
-    virtual void Update() override;
-    virtual void Render() override;
+    void Start();
+    virtual void Update();
 
-    virtual void SetSpriteItem(const bn::sprite_item& s) override;
+    void SetSpriteItem(const bn::sprite_item& s);
 
-    virtual void SetLayerDepth(int depth) override;
-    virtual void SetZOrder(char z_order) override;
-    virtual void SetFlipped(bool flip) { multiSprite.SetFlipped(flip); }
+    void SetLayerDepth(int depth);
+    void SetZOrder(char z_order);
+    void SetFlipped(bool flip) { multiSprite.SetFlipped(flip); }
 
 };
 
@@ -48,12 +47,6 @@ void BackgroundElement<tilesX, tilesY>::Start() {
 template <int tilesX, int tilesY>
 void BackgroundElement<tilesX, tilesY>::Update() {
     GameObject::Update();
-}
-
-template <int tilesX, int tilesY>
-void BackgroundElement<tilesX, tilesY>::Render() {
-    GameObject::Render();
-    multiSprite.Render();
 }
 
 template <int tilesX, int tilesY>

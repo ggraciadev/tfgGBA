@@ -30,15 +30,12 @@ protected:
     
 
 public:
-    virtual void Start() override;
-    virtual void Update() override;
-    virtual void PhysicsUpdate() override;
-    virtual void Render() override;
+    void Start();
 
-    virtual void SetMapCollision(MapCollision* mc);
+    void SetMapCollision(MapCollision* mc);
 
-    virtual void SetLayerDepth(int depth) override;
-    virtual void SetZOrder(char z_order) override;
+    void SetLayerDepth(int depth);
+    void SetZOrder(char z_order);
 
     void SetInputMovement(bn::fixed_point md);
     void SetInputMovementX(bn::fixed x);

@@ -40,7 +40,6 @@ public:
 
     virtual void Start() override;
     virtual void Update() override;
-    virtual void PhysicsUpdate() override;
 
     void Setup(bn::fixed_point offset, bn::fixed_point size);
     void SetMapCollision(MapCollision* mc) {mapCollision = mc;}

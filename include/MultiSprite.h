@@ -24,7 +24,7 @@ public:
     virtual void SetSpriteItem(const bn::sprite_item& s);
 
     virtual void Start() override;
-    virtual void Render() override;
+    virtual void Update() override;
 
     virtual void SetLayerDepth(int depth);
     virtual void SetZOrder(char z_order);
@@ -35,7 +35,6 @@ public:
 
 template <int tilesX, int tilesY>
 MultiSprite<tilesX, tilesY>::MultiSprite() : GameObjectComponent::GameObjectComponent() {
-
 }
 
 template <int tilesX, int tilesY>
@@ -44,7 +43,8 @@ MultiSprite<tilesX, tilesY>::~MultiSprite() {
 }
 
 template <int tilesX, int tilesY>
-void MultiSprite<tilesX, tilesY>::Start() {    
+void MultiSprite<tilesX, tilesY>::Start() {  
+    updateType = UpdateType::RENDER;  
     GameObjectComponent::Start();
 }
 
@@ -65,8 +65,7 @@ void MultiSprite<tilesX, tilesY>::SetSpriteItem(const bn::sprite_item& s){
 
 
 template <int tilesX, int tilesY>
-void MultiSprite<tilesX, tilesY>::Render() {
-    GameObjectComponent::Render();
+void MultiSprite<tilesX, tilesY>::Update() {
 
     for(int i = 0; i < tilesY; ++i) {
         for(int j = 0; j < tilesX; ++j) {

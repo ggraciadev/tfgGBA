@@ -25,44 +25,67 @@ GameObject::~GameObject() {
 void GameObject::Start() {
     id = CURRENT_ID++;
 
-    UpdateLayer();
-
     int size = components.size();
     for(int i = 0; i < size; ++i) {
         components[i]->SetGameObject(this);
         components[i]->Start();
     }
+    componentsSize = components.size();
+    SortComponentsRender();
 }
 
-void GameObject::Update() {
-    int size = components.size();
-    for(int i = 0; i < size; ++i) {
-        components[i]->Update();
+void GameObject::SortComponentsRender() {
+    int i, j;
+    for(i = 0; i < componentsSize-1; ++i) {
+        bool swapped = false;
+        for(j = 0; j < componentsSize-i-1; ++j) {
+            if(components[j]->GetUpdateType() > components[j+1]->GetUpdateType()) {
+                SwapComponents(components[j], components[j+1]);
+                swapped = true;
+            }
+        }
+        if(!swapped) {
+            break;
+        }
+    }
+    firtsLogicUpdateIndex = 0;
+    firstRenderIndex = componentsSize;
+    bool passPh = false;
+    bool passLogic = false;
+    for(i = 0; i < componentsSize; ++i) {
+        if(!passLogic && components[i]->GetUpdateType() == UpdateType::RENDER) {
+            passPh = true;
+            passLogic = true;
+            firstRenderIndex = i;
+            break;
+        }
+        else if(!passPh && components[i]->GetUpdateType() == UpdateType::LOGIC_UPDATE) {
+            passPh = true;
+            firtsLogicUpdateIndex = i;
+        }
     }
 }
 
 void GameObject::PhysicsUpdate() {
-    
+    for(int i = 0; i < firtsLogicUpdateIndex; ++i) {
+        components[i]->Update();
+    }
+}
+
+void GameObject::Update() {
+    for(int i = firtsLogicUpdateIndex; i < firstRenderIndex; ++i) {
+        components[i]->Update();
+    }
 }
 
 void GameObject::Render() {
+    for(int i = firstRenderIndex; i < componentsSize; ++i) {
+        components[i]->Update();
+    }
 }
 
 void GameObject::AddComponent(GameObjectComponent* component) {
     components.push_back(component);
-}
-
-bool GameObject::HasParent() {
-    return parent != nullptr;
-}
-
-GameObject* GameObject::GetParent() {
-    return parent;
-}
-
-void GameObject::SetParent(GameObject* p) {
-    //recalc local position 
-    parent = p;
 }
 
 bn::fixed_point GameObject::GetWorldPosition() {
@@ -97,28 +120,13 @@ void GameObject::SetLocalPosition(const int posX, const int posY) {
     AddLocalOffset(bn::fixed_point(posX, posY));
 }
 
-char GameObject::GetBackgroundLayer() {
-    if(parent == nullptr) {
-        return 0;
-    }
-    else {
-        return parent->GetBackgroundLayer();
-    }
-}
-
-void GameObject::SetLayerDepth(int depth) {
+void GameObject::SetLayerDepth(const int depth) {
     if(depth == -1) {
-        depth = 0;
+        layerDepth = 0;
         SetZOrder(0);
     }
-
-    layerDepth = depth;
-}
-
-void GameObject::UpdateLayer() {
-    SetLayerDepth(GetBackgroundLayer());
-}
-
-void GameObject::SetZOrder(char z_order) {
+    else {
+        layerDepth = depth;
+    }
 
 }

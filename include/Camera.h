@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "bn_camera_actions.h"
+#include "FollowComponent.h"
 
 class Camera : public GameObject {
 
@@ -11,15 +12,11 @@ public:
     virtual ~Camera();
 
 protected:
-    GameObject* followObject;
+    FollowComponent followComponent;
 
 public:
-    virtual void Start() override;
-    virtual void Update() override;
-    virtual void Render() override;
-
-    virtual void SetFollowObject(GameObject* _followObject);
-    GameObject* GetFollowObject() { return followObject; }
+    void Start();
+    void SetFollowObject(GameObject* _followObject) { followComponent.SetFollowObject(_followObject); }
 
 };
 

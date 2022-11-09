@@ -10,6 +10,7 @@ MapCollision::~MapCollision() {
 }
 
 void MapCollision::Start() {
+    updateType = UpdateType::PHYSICS_UPDATE;
     const int begin = 21;
     const int end = MAP_HEIGHT;
     
@@ -25,10 +26,6 @@ void MapCollision::Start() {
         }
     }
     GameObjectComponent::Start();
-}
-
-void MapCollision::Update() {
-
 }
 
 MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) { 

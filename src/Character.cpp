@@ -16,9 +16,10 @@ void Character::Start() {
     input.SetCharacter(this);
     boxCollision.Setup(COLLISION_OFFSET_X, COLLISION_OFFSET_Y, COLLISION_WIDTH, COLLISION_HEIGHT);
     animator.SetSpriteItem(SPRITE_SHEET);
-    AddComponent(&movement);
-    AddComponent(&input);
+
     AddComponent(&boxCollision);
+    AddComponent(&input);
+    AddComponent(&movement);
     AddComponent(&animator);
 
     GameObject::Start();
@@ -26,24 +27,6 @@ void Character::Start() {
 
 void Character::SetMapCollision(MapCollision* mc) {
     boxCollision.SetMapCollision(mc);
-}
-
-void Character::Update() {
-    GameObject::Update();
-}
-
-void Character::PhysicsUpdate() {
-    GameObject::PhysicsUpdate();
-    boxCollision.PhysicsUpdate();
-    movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
-    if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
-        movement.SetVelocityY(0);
-    }
-}
-
-void Character::Render() {
-    GameObject::Render();
-    animator.Render();
 }
 
 void Character::SetLayerDepth(int depth) {
@@ -84,6 +67,12 @@ void Character::SetInputMovement(bn::fixed_point md) {
         animator.SetCurrentAnimation(1);
     }
     movement.SetInputMovement(md);
+
+    movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+    if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
+        movement.SetVelocityY(0);
+    }
+
 }
 
 void Character::SetInputMovementX(bn::fixed x) {
@@ -105,6 +94,10 @@ void Character::SetInputMovementX(bn::fixed x) {
     }
     else {
         animator.SetCurrentAnimation(1);
+    }
+    movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+    if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
+        movement.SetVelocityY(0);
     }
 }
 
