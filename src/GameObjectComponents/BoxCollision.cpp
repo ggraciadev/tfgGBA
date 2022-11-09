@@ -1,6 +1,6 @@
-#include "BoxCollision.h"
-#include "MapCollision.h"
-#include "GameObject.h"
+#include "GameObjectComponents/BoxCollision.h"
+#include "GameObjectComponents/MapCollision.h"
+#include "GameObjects/GameObject.h"
 
 BoxCollision::BoxCollision() : GameObjectComponent::GameObjectComponent(){
     

@@ -1,11 +1,11 @@
 #ifndef BF_CHARACTER_H
 #define BF_CHARACTER_H
 
-#include "GameObject.h"
-#include "Animator.h"
-#include "MovementComponent.h"
-#include "InputComponent.h"
-#include "BoxCollision.h"
+#include "GameObjects/GameObject.h"
+#include "GameObjectComponents/Animator.h"
+#include "GameObjectComponents/MovementComponent.h"
+#include "GameObjectComponents/InputComponent.h"
+#include "GameObjectComponents/BoxCollision.h"
 
 
 #define COLLISION_OFFSET_X -13

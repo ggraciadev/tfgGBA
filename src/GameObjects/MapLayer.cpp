@@ -1,4 +1,4 @@
-#include "MapLayer.h"
+#include "GameObjects/MapLayer.h"
 
 MapLayer::MapLayer() : Layer<MAP_WIDTH,MAP_HEIGHT>::Layer(){
 

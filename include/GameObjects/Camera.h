@@ -1,9 +1,9 @@
 #ifndef BF_CAMERA_H
 #define BF_CAMERA_H
 
-#include "GameObject.h"
+#include "GameObjects/GameObject.h"
 #include "bn_camera_actions.h"
-#include "FollowComponent.h"
+#include "GameObjectComponents/FollowComponent.h"
 
 class Camera : public GameObject {
 

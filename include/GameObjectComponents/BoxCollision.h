@@ -1,7 +1,7 @@
 #ifndef BF_BOX_COLLISION_H
 #define BF_BOX_COLLISION_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include "MapCollision.h"
 #include "bn_vector.h"
 #include <bn_fixed_point.h>

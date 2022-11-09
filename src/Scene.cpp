@@ -22,7 +22,7 @@
 
 //#include "Actor.h"
 #include "GameManager.h"
-#include "Character.h"
+#include "GameObjects/Character.h"
 // #include "PlayerController.h"
 // #include "Player.h"
 

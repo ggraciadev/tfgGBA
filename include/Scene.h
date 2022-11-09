@@ -1,15 +1,15 @@
 #ifndef BF_SCENE_H
 #define BF_SCENE_H
 
-#include "Character.h"
-#include "BackgroundElement.h"
-#include "MapLayer.h"
-#include <bn_regular_bg_ptr.h>
-
-#include "bn_vector.h"
-#include "Camera.h"
-#include "Layer.h"
+#include "GameObjects/Character.h"
+#include "GameObjects/BackgroundElement.h"
+#include "GameObjects/MapLayer.h"
+#include "GameObjects/Camera.h"
+#include "GameObjects/Layer.h"
 #include "Factory.h"
+
+#include <bn_regular_bg_ptr.h>
+#include "bn_vector.h"
 
 class Scene {
 

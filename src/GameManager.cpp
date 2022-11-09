@@ -2,7 +2,6 @@
 #include "bn_core.h"
 #include "GameManager.h"
 #include "bn_string.h"
-#include "MovementComponent.h"
 
 
 GameManager* GameManager::instance;

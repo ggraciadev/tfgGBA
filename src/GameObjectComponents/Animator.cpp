@@ -1,5 +1,5 @@
-#include "Animator.h"
-#include "GameObject.h"
+#include "GameObjectComponents/Animator.h"
+#include "GameObjects/GameObject.h"
 
 Animator::Animator() : GameObjectComponent::GameObjectComponent() {
 

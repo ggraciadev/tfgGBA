@@ -1,5 +1,5 @@
-#include "MapCollision.h"
-#include "GameObject.h"
+#include "GameObjectComponents/MapCollision.h"
+#include "GameObjects/GameObject.h"
 
 MapCollision::MapCollision() : GameObjectComponent::GameObjectComponent() {
     

@@ -1,7 +1,7 @@
 #ifndef BF_MULTI_SPRITE_H
 #define BF_MULTI_SPRITE_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_sprite_ptr.h>
 #include <bn_vector.h>
 #include <bn_sprite_tiles_ptr.h>

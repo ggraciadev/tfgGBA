@@ -1,8 +1,8 @@
 #ifndef BF_LAYER_H
 #define BF_LAYER_H
-#include "GameObject.h"
-#include "FollowComponent.h"
-#include "BackgroundLayerComponent.h"
+#include "GameObjects/GameObject.h"
+#include "GameObjectComponents/FollowComponent.h"
+#include "GameObjectComponents/BackgroundLayerComponent.h"
 
 #define TILE_WIDTH 8
 #define TILE_HEIGHT 8

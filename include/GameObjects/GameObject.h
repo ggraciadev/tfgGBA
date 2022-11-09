@@ -5,7 +5,7 @@
 #include <bn_fixed_point.h>
 #include <bn_optional.h>
 #include "bn_vector.h"
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include "bn_string.h"
 #include <bn_sprite_item.h>
 

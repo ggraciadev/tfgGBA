@@ -1,7 +1,7 @@
 #ifndef BF_ANIMATOR_H
 #define BF_ANIMATOR_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_tiles_ptr.h>
 #include <bn_sprite_item.h>

@@ -6,7 +6,7 @@
 #define TILE_WIDTH 8
 #define TILE_HEIGHT 8
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_fixed_point.h>
 #include <bn_regular_bg_item.h>
 #include "bn_regular_bg_items_ground_b0.h"

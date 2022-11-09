@@ -1,4 +1,4 @@
-#include "InputComponent.h"
+#include "GameObjectComponents/InputComponent.h"
 
 #include "bn_keypad.h"
 #include "Character.h"

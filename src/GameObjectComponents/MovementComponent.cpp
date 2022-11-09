@@ -1,5 +1,5 @@
-#include "MovementComponent.h"
-#include "GameObject.h"
+#include "GameObjectComponents/MovementComponent.h"
+#include "GameObjects/GameObject.h"
 
 MovementComponent::MovementComponent() : GameObjectComponent::GameObjectComponent() {
 }

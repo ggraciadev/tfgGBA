@@ -1,7 +1,7 @@
 #ifndef BF_FOLLOW_COMPONENT_H
 #define BF_FOLLOW_COMPONENT_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_fixed_point.h>
 
 

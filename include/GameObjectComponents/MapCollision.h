@@ -1,7 +1,7 @@
 #ifndef BF_MAP_COLLISION_H
 #define BF_MAP_COLLISION_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_fixed_point.h>
 
 #define MAX_COMPONENTS_COLLISONS 8

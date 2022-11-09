@@ -1,7 +1,7 @@
 #ifndef BF_INPUT_COMPONENT_H
 #define BF_INPUT_COMPONENT_H
 
-#include "GameObjectComponent.h"
+#include "GameObjectComponents/GameObjectComponent.h"
 
 #include <bn_fixed_point.h>
 

@@ -1,8 +1,8 @@
 #ifndef BF_BACKGROUND_ELEMENT_H
 #define BF_BACKGROUND_ELEMENT_H
 
-#include "GameObject.h"
-#include "MultiSprite.h"
+#include "GameObjects/GameObject.h"
+#include "GameObjectComponents/MultiSprite.h"
 
 template <int tilesX, int tilesY>
 class BackgroundElement : public GameObject {

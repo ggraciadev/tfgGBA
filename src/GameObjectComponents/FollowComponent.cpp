@@ -1,5 +1,5 @@
-#include "FollowComponent.h"
-#include "GameObject.h"
+#include "GameObjectComponents/FollowComponent.h"
+#include "GameObjects/GameObject.h"
 
 FollowComponent::FollowComponent() {
 

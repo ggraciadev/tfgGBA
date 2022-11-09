@@ -1,5 +1,5 @@
-#include "Character.h"
-#include "MapCollision.h"
+#include "GameObjects/Character.h" 
+#include "GameObjectComponents/MapCollision.h"
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
 
@@ -12,7 +12,7 @@ Character::~Character() {
 }
 
 void Character::Start() {   
-    movement.SetCurrentMovementSpeed(1.5);
+    movement.SetCurrentMovementSpeed(1.5); 
     input.SetCharacter(this);
     boxCollision.Setup(COLLISION_OFFSET_X, COLLISION_OFFSET_Y, COLLISION_WIDTH, COLLISION_HEIGHT);
     animator.SetSpriteItem(SPRITE_SHEET);
