@@ -28,11 +28,10 @@ void MapCollision::Start() {
     GameObjectComponent::Start();
 }
 
-MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) { 
+MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) const { 
     MapCollisionType result = MapCollisionType::COLLISION;
     if(cellX >= 0 && cellX < MAP_WIDTH && cellY >= 0 && cellY < MAP_HEIGHT) {
         result = collisions[cellX + MAP_WIDTH * cellY]; 
     }
     return result;
-    // return collisions[cellX + MAP_WIDTH * cellY];
 }

@@ -61,14 +61,14 @@ public:
     virtual void Start();
     virtual void Update();
 
-    void SetLayerType(LayerType _layerType) { layerType = _layerType; }
+    inline void SetLayerType(LayerType _layerType) { layerType = _layerType; }
 
-    virtual void SetLayerDepth(int depth) {
+    inline virtual void SetLayerDepth(int depth) {
         if(bg.has_value()) {
             bg->set_priority(depth);
         }
     }
-    virtual void SetZOrder(char z_order) {
+    inline virtual void SetZOrder(char z_order) {
         if(bg.has_value()) {
             bg->set_z_order(z_order);
         }

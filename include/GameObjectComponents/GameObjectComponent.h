@@ -12,7 +12,7 @@ class GameObjectComponent {
 public:
     
     GameObjectComponent();
-    void SetGameObject(GameObject* go) { gameObject = go; }
+    inline void SetGameObject(GameObject* go) { gameObject = go; }
     virtual ~GameObjectComponent();
 
 
@@ -24,9 +24,7 @@ public:
     virtual void Start() {}
     virtual void Update() {}
 
-    UpdateType GetUpdateType() const { return updateType; }
-
-    static bn::string<32> GetClassName() { return "GameObjectComponent"; }
+    inline UpdateType GetUpdateType() const { return updateType; }
 };
 
 #endif

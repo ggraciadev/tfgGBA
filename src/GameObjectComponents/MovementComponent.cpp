@@ -33,7 +33,7 @@ void MovementComponent::CalcVelocity() {
     }
 }
 
-void MovementComponent::CheckCollisions() {
+void MovementComponent::CheckCollisions() const {
 
 }
 

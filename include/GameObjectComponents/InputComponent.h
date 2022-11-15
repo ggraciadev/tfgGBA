@@ -21,7 +21,7 @@ public:
     virtual void Start() override;
     virtual void Update() override;
 
-    void SetCharacter(Character* c) { character= c;}
+    inline void SetCharacter(Character* c) { character= c;}
 
 };
 

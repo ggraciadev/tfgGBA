@@ -20,8 +20,8 @@ protected:
     char currentTime;
     char currentAnimation;
 
-    char animations[2][16] = {{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, {7,8,9,10,11,12,13,14,15,16,12}};
-    char animationsLenght[2] = {14,11};
+    const char animations[2][16] = {{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, {7,8,9,10,11,12,13,14,15,16,12}};
+    const char animationsLenght[2] = {14,11};
 
     bn::optional<bn::sprite_ptr> sprite;
     bn::optional<bn::sprite_item> spriteItem;
@@ -39,7 +39,7 @@ public:
     virtual void SetZOrder(char z_order);
 
     void SetFlipped(bool flip);
-    bool GetFlipped() {return flipped;}
+    inline bool GetFlipped() {return flipped;}
 };
 
 #endif

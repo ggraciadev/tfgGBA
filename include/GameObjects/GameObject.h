@@ -41,23 +41,19 @@ protected:
     char componentsSize;
     GameObject* camera;
 
+private:
+    void SortComponentsByUpdates();
+
 public:
 
-    void SetCamera(GameObject* cam) { camera = cam; }
+    inline void SetCamera(GameObject* cam) { camera = cam; }
 
     void Start();
     void PhysicsUpdate();
     void Update();
     void Render();
 
-    void SwapComponents(GameObjectComponent* c1, GameObjectComponent* c2) { 
-        GameObjectComponent* t = c1; 
-        c1 = c2; 
-        c2 = t;
-    }
-    void SortComponentsRender();
-
-    const bn::fixed_point GetRelativePosition() { return relativePosition; }
+    inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
     bn::fixed_point GetWorldPosition();
     bn::fixed_point GetScreenPosition();
 
@@ -68,19 +64,19 @@ public:
 
     void AddComponent(GameObjectComponent* component);
 
-    bool HasParent() const { return parent != nullptr; }
-    GameObject* GetParent() const { return parent; }
-    void SetParent(GameObject* p) { parent = p; }
+    inline bool HasParent() const { return parent != nullptr; }
+    inline GameObject* GetParent() const { return parent; }
+    inline void SetParent(GameObject* p) { parent = p; }
 
-    bool Equals(const GameObject& other) const {return id == other.id;}
-    bool Equals(const GameObject* other) const {return id == other->id;}
+    inline bool Equals(const GameObject& other) const {return id == other.id;}
+    inline bool Equals(const GameObject* other) const {return id == other->id;}
 
-    char GetLayerDepth() const { return layerDepth; }
+    inline char GetLayerDepth() const { return layerDepth; }
 
     void SetLayerDepth(const int depth);
-    void SetZOrder(const char z_order) { zOrder = z_order; }
+    inline void SetZOrder(const char z_order) { zOrder = z_order; }
 
-    bool GetWorldPositionDirty() {if(parent != nullptr) worldPositionDirty = parent->GetWorldPositionDirty(); return worldPositionDirty;}
+    bool GetWorldPositionDirty();
 
 };
 

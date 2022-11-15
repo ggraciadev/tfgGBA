@@ -31,16 +31,16 @@ void GameObject::Start() {
         components[i]->Start();
     }
     componentsSize = components.size();
-    SortComponentsRender();
+    SortComponentsByUpdates();
 }
 
-void GameObject::SortComponentsRender() {
+void GameObject::SortComponentsByUpdates() {
     int i, j;
     for(i = 0; i < componentsSize-1; ++i) {
         bool swapped = false;
         for(j = 0; j < componentsSize-i-1; ++j) {
             if(components[j]->GetUpdateType() > components[j+1]->GetUpdateType()) {
-                SwapComponents(components[j], components[j+1]);
+                bn::swap(components[j], components[j+1]);
                 swapped = true;
             }
         }
@@ -129,4 +129,10 @@ void GameObject::SetLayerDepth(const int depth) {
         layerDepth = depth;
     }
 
+}
+
+bool GameObject::GetWorldPositionDirty() {
+    if(parent != nullptr) 
+        worldPositionDirty = parent->GetWorldPositionDirty(); 
+    return worldPositionDirty;
 }

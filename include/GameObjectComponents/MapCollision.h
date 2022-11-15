@@ -29,9 +29,9 @@ public:
 
     void Start();
 
-    MapCollisionType GetCollisionByCell(int cellX, int cellY);
+    MapCollisionType GetCollisionByCell(int cellX, int cellY) const;
 
-    MapCollisionType GetCollisionByPosition(int posX, int posY) { return GetCollisionByCell((OFFSET_X + posX) / TILE_WIDTH, (OFFSET_Y + posY) / TILE_HEIGHT); }
+    inline MapCollisionType GetCollisionByPosition(int posX, int posY) const { return GetCollisionByCell((OFFSET_X + posX) / TILE_WIDTH, (OFFSET_Y + posY) / TILE_HEIGHT); }
 
 };
 

@@ -23,33 +23,31 @@ public:
     virtual void Start() override;
     virtual void Update() override;
 
-    void SetCurrentMovementSpeed(bn::fixed s) {currentMovementSpeed = s;}
-    const bn::fixed GetCurrentMovementSpeed() {return currentMovementSpeed;}
+    inline void SetCurrentMovementSpeed(bn::fixed s) {currentMovementSpeed = s;}
+    inline bn::fixed GetCurrentMovementSpeed() const {return currentMovementSpeed;}
 
-    void SetInputMovement(bn::fixed_point md) {inputMovement = md;}
-    void SetInputMovementX(bn::fixed x) {inputMovement.set_x(x);}
-    void SetInputMovementY(bn::fixed y) {inputMovement.set_y(y);}
+    inline void SetInputMovement(bn::fixed_point md) {inputMovement = md;}
+    inline void SetInputMovementX(bn::fixed x) {inputMovement.set_x(x);}
+    inline void SetInputMovementY(bn::fixed y) {inputMovement.set_y(y);}
 
-    void SetVelocityX(bn::fixed x) { velocity.set_x(x);}
-    void SetVelocityY(bn::fixed y) { velocity.set_y(y);}
+    inline void SetVelocityX(bn::fixed x) { velocity.set_x(x);}
+    inline void SetVelocityY(bn::fixed y) { velocity.set_y(y);}
     //void SetInputMovement(bn::fixed x, bn::fixed y) {SetInputMovement(bn::fixed_point(x, y));}
     //void SetVelocity(bn::fixed_point v) {velocity = v;}
     //void SetVelocity(bn::fixed x, bn::fixed y) {SetVelocity(bn::fixed_point(x, y));}
 
     void AddImpulse(bn::fixed_point impulse);
-    void AddImpulse(bn::fixed x, bn::fixed y) {AddImpulse(bn::fixed_point(x, y));}
+    inline void AddImpulse(bn::fixed x, bn::fixed y) { AddImpulse(bn::fixed_point(x, y)); }
 
-    const bn::fixed_point GetInputMovement() { return inputMovement; }
-    const bn::fixed_point GetVelocity() { return velocity; }
+    inline  bn::fixed_point GetInputMovement() const { return inputMovement; }
+    inline bn::fixed_point GetVelocity() const { return velocity; }
     void CalcVelocity();
-    void CheckCollisions();
+    void CheckCollisions() const;
     
-    void SetGravityValue(bn::fixed g) { gravityValue = g; }
-    const bn::fixed GetGravityValue() { return gravityValue; }
+    inline void SetGravityValue(bn::fixed g) { gravityValue = g; }
+    inline bn::fixed GetGravityValue() const { return gravityValue; }
 
     void SetGrounded(bool g);
-
-    static bn::string<32> GetClassName() { return "MovementComponent"; }
 };
 
 #endif

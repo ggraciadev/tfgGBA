@@ -19,11 +19,11 @@ protected:
 
 public:
 
-    void SetFollowObject(GameObject* _followObject) { followObject = _followObject; }
+    inline void SetFollowObject(GameObject* _followObject) { followObject = _followObject; }
     //virtual void Start() override {}
     virtual void Update() override;
 
-    void SetAlphaOffset(const bn::fixed& ao) { alphaOffset = ao;}
+    inline void SetAlphaOffset(const bn::fixed& ao) { alphaOffset = ao;}
 };
 
 #endif

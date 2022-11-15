@@ -42,7 +42,7 @@ public:
     virtual void Update() override;
 
     void Setup(bn::fixed_point offset, bn::fixed_point size);
-    void SetMapCollision(MapCollision* mc) {mapCollision = mc;}
+    inline void SetMapCollision(MapCollision* mc) {mapCollision = mc;}
     void Setup(int offX, int offY, int width, int height);
 
 
@@ -58,9 +58,9 @@ public:
 
     bn::fixed_point GetCurrentPosition();
 
-    bn::fixed_point GetSize() {return boxSize;}
+    inline bn::fixed_point GetSize() const {return boxSize;}
 
-    bool GetContact(CollisionPositions pos) { 
+    inline bool GetContact(CollisionPositions pos) const { 
         return collisionContacts[pos];
     }
 
