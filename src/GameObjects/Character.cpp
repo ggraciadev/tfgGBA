@@ -3,13 +3,6 @@
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
 
-Character::Character() {
-    
-}
-
-Character::~Character() {
-
-}
 
 void Character::Start() {   
     movement.SetCurrentMovementSpeed(1.5); 

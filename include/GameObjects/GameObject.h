@@ -25,21 +25,23 @@ public:
 protected:
     BN_DATA_EWRAM static int CURRENT_ID;
 
-    GameObject* parent;
     bn::vector<GameObjectComponent*, MAX_COMPONENTS> components;
-
+    GameObject* parent;
+    GameObject* camera;
     bn::fixed_point relativePosition;
     bn::fixed_point worldPosition;
-    bool worldPositionDirty;
-    int id;
-
-    char layerDepth;
-    char zOrder;
-
-    char firtsLogicUpdateIndex;
-    char firstRenderIndex;
-    char componentsSize;
-    GameObject* camera;
+    
+    struct Data
+    {
+        int id : 6;
+        char layerDepth: 2;
+        char zOrder : 4;
+        char firtsLogicUpdateIndex : 3;
+        char firstRenderIndex : 3;
+        char componentsSize : 3;
+        bool worldPositionDirty : 1;
+    }  data;
+    
 
 private:
     void SortComponentsByUpdates();
@@ -53,15 +55,17 @@ public:
     void Update();
     void Render();
 
-    inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
-    bn::fixed_point GetWorldPosition();
-    bn::fixed_point GetScreenPosition();
+    inline const bn::fixed_point GetRelativePosition() const { return relativePosition; }
+    bn::fixed_point GetWorldPosition() const;
+    bn::fixed_point GetScreenPosition() const;
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
     void AddLocalOffset(const bn::fixed_point& delta);
     void AddLocalOffset(const int deltaX, const int deltaY);
 
+    void AddComponent(GameObjectComponent&& component);
+    void AddComponent(GameObjectComponent& component);
     void AddComponent(GameObjectComponent* component);
 
     inline bool HasParent() const { return parent != nullptr; }

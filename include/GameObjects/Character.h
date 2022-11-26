@@ -7,8 +7,7 @@
 #include "GameObjectComponents/InputComponent.h"
 #include "GameObjectComponents/BoxCollision.h"
 
-
-#define COLLISION_OFFSET_X -13
+static const int COLLISION_OFFSET_X -13
 #define COLLISION_OFFSET_Y -26
 #define COLLISION_WIDTH 26
 #define COLLISION_HEIGHT 52
@@ -19,7 +18,7 @@ class Character : public GameObject {
 public:
     Character();
     //Character(const int posX, const int posY, GameObject* _parent = nullptr);
-    virtual ~Character();
+    virtual ~Character() = default;
 
 protected:
 

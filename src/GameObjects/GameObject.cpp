@@ -3,11 +3,13 @@
 
 int GameObject::CURRENT_ID = 0;
 
-GameObject::GameObject() {
-    relativePosition = bn::fixed_point(0,0);
-    parent = nullptr;
-    camera = nullptr;
-    layerDepth = 0;
+GameObject::GameObject()
+    : relativePosition(0,0)
+    , parent(nullptr)
+    , camera(nullptr)
+    , layerDepth(0)
+{
+
 }
 
 // GameObject::GameObject(const int posX, const int posY, GameObject& _parent) {
@@ -26,33 +28,27 @@ void GameObject::Start() {
     id = CURRENT_ID++;
 
     int size = components.size();
-    for(int i = 0; i < size; ++i) {
-        components[i]->SetGameObject(this);
-        components[i]->Start();
+    for(auto& element : components) 
+    {
+        element->SetGameObject(this);
+        element->Start();
     }
     componentsSize = components.size();
     SortComponentsByUpdates();
 }
 
 void GameObject::SortComponentsByUpdates() {
-    int i, j;
-    for(i = 0; i < componentsSize-1; ++i) {
-        bool swapped = false;
-        for(j = 0; j < componentsSize-i-1; ++j) {
-            if(components[j]->GetUpdateType() > components[j+1]->GetUpdateType()) {
-                bn::swap(components[j], components[j+1]);
-                swapped = true;
-            }
-        }
-        if(!swapped) {
-            break;
-        }
-    }
+    
+    bn::sort(components.begin(), components.end(), 
+    [](auto i_left, auto i_right) { 
+        return i_left->GetUpdateType() < i_right->GetUpdateType();
+        });
+    
     firtsLogicUpdateIndex = 0;
     firstRenderIndex = componentsSize;
     bool passPh = false;
     bool passLogic = false;
-    for(i = 0; i < componentsSize; ++i) {
+    for(int i = 0; i < componentsSize; ++i) {
         if(!passLogic && components[i]->GetUpdateType() == UpdateType::RENDER) {
             passPh = true;
             passLogic = true;
@@ -85,10 +81,10 @@ void GameObject::Render() {
 }
 
 void GameObject::AddComponent(GameObjectComponent* component) {
-    components.push_back(component);
+    components.emplace_back(component);
 }
 
-bn::fixed_point GameObject::GetWorldPosition() {
+bn::fixed_point GameObject::GetWorldPosition() const {
     bn::fixed_point worldLocation = relativePosition;
     if(parent != nullptr) {
         worldLocation += parent->GetWorldPosition();
@@ -96,7 +92,7 @@ bn::fixed_point GameObject::GetWorldPosition() {
     return worldLocation;
 }
 
-bn::fixed_point GameObject::GetScreenPosition() {
+bn::fixed_point GameObject::GetScreenPosition() const {
     bn::fixed_point screenLocation = GetWorldPosition();
     if(camera != nullptr) {
         screenLocation -= camera->GetWorldPosition();
