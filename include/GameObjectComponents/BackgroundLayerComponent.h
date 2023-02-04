@@ -58,8 +58,8 @@ protected:
     
 
 public:
-    virtual void Start() override;
-    virtual void Update() override;
+    virtual void Start();
+    virtual void Update();
 
     inline void SetLayerType(LayerType _layerType) { layerType = _layerType; }
 

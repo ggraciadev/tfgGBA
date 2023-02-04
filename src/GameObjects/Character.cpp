@@ -24,7 +24,7 @@ void Character::SetMapCollision(MapCollision* mc) {
 void Character::SetLayerDepth(int depth) {
     SetZOrder(1);
     GameObject::SetLayerDepth(depth);
-    animator.SetLayerDepth(data.layerDepth);
+    animator.SetLayerDepth(layerDepth);
 }
 
 void Character::SetZOrder(char z_order) {
