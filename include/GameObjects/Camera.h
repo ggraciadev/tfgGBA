@@ -8,8 +8,8 @@
 class Camera : public GameObject {
 
 public:
-    Camera();
-    virtual ~Camera();
+    Camera() = default;
+    virtual ~Camera() = default;
 
 protected:
     FollowComponent followComponent;

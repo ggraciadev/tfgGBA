@@ -57,13 +57,13 @@ void BackgroundElement<tilesX, tilesY>::SetSpriteItem(const bn::sprite_item& s) 
 template <int tilesX, int tilesY>
 void BackgroundElement<tilesX, tilesY>::SetLayerDepth(int depth) {
     GameObject::SetLayerDepth(depth);
-    multiSprite.SetLayerDepth(layerDepth);
+    multiSprite.SetLayerDepth(data.layerDepth);
 }
 
 template <int tilesX, int tilesY>
 void BackgroundElement<tilesX, tilesY>::SetZOrder(char z_order) {
     GameObject::SetZOrder(z_order);
-    multiSprite.SetZOrder(z_order);
+    multiSprite.SetZOrder(data.zOrder);
 }
 
 #endif

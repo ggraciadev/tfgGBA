@@ -8,8 +8,8 @@
 class FollowComponent : public GameObjectComponent{
 public:
     
-    FollowComponent();
-    virtual ~FollowComponent();
+    FollowComponent() = default;
+    virtual ~FollowComponent() = default;
 
 protected:
 
@@ -18,7 +18,7 @@ protected:
     bn::fixed alphaOffset = 1;
 
 public:
-
+    virtual void Start() override {}
     inline void SetFollowObject(GameObject* _followObject) { followObject = _followObject; }
     //virtual void Start() override {}
     virtual void Update() override;

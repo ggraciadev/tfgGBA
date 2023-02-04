@@ -3,11 +3,13 @@
 
 int GameObject::CURRENT_ID = 0;
 
-GameObject::GameObject() {
-    relativePosition = bn::fixed_point(0,0);
-    parent = nullptr;
-    camera = nullptr;
-    layerDepth = 0;
+GameObject::GameObject()
+    : relativePosition(0,0)
+    , parent(nullptr)
+    , camera(nullptr)
+    , data()
+{
+
 }
 
 // GameObject::GameObject(const int posX, const int posY, GameObject& _parent) {
@@ -23,36 +25,28 @@ GameObject::~GameObject() {
 }
 
 void GameObject::Start() {
-    id = CURRENT_ID++;
+    data.id = CURRENT_ID++;
 
     int size = components.size();
-    for(int i = 0; i < size; ++i) {
-        components[i]->SetGameObject(this);
-        components[i]->Start();
+    for(auto& element : components) 
+    {
+        element->SetGameObject(this);
+        element->Start();
     }
-    componentsSize = components.size();
+    data.componentsSize = components.size();
     SortComponentsByUpdates();
 }
 
 void GameObject::SortComponentsByUpdates() {
-    int i, j;
-    for(i = 0; i < componentsSize-1; ++i) {
-        bool swapped = false;
-        for(j = 0; j < componentsSize-i-1; ++j) {
-            if(components[j]->GetUpdateType() > components[j+1]->GetUpdateType()) {
-                bn::swap(components[j], components[j+1]);
-                swapped = true;
-            }
-        }
-        if(!swapped) {
-            break;
-        }
-    }
-    firtsLogicUpdateIndex = 0;
-    firstRenderIndex = componentsSize;
+    bn::sort(components.begin(), components.end(), 
+    [](auto i_left, auto i_right) { 
+        return i_left->GetUpdateType() < i_right->GetUpdateType();
+        });
+    int firtsLogicUpdateIndex = 0;
+    int firstRenderIndex = data.componentsSize;
     bool passPh = false;
     bool passLogic = false;
-    for(i = 0; i < componentsSize; ++i) {
+    for(int i = 0; i < data.componentsSize; ++i) {
         if(!passLogic && components[i]->GetUpdateType() == UpdateType::RENDER) {
             passPh = true;
             passLogic = true;
@@ -67,19 +61,19 @@ void GameObject::SortComponentsByUpdates() {
 }
 
 void GameObject::PhysicsUpdate() {
-    for(int i = 0; i < firtsLogicUpdateIndex; ++i) {
+    for(int i = 0; i < data.firtsLogicUpdateIndex; ++i) {
         components[i]->Update();
     }
 }
 
 void GameObject::Update() {
-    for(int i = firtsLogicUpdateIndex; i < firstRenderIndex; ++i) {
+    for(int i = data.firtsLogicUpdateIndex; i < data.firstRenderIndex; ++i) {
         components[i]->Update();
     }
 }
 
 void GameObject::Render() {
-    for(int i = firstRenderIndex; i < componentsSize; ++i) {
+    for(int i = data.firstRenderIndex; i < data.componentsSize; ++i) {
         components[i]->Update();
     }
 }
@@ -88,7 +82,7 @@ void GameObject::AddComponent(GameObjectComponent* component) {
     components.push_back(component);
 }
 
-bn::fixed_point GameObject::GetWorldPosition() {
+bn::fixed_point GameObject::GetWorldPosition() const {
     bn::fixed_point worldLocation = relativePosition;
     if(parent != nullptr) {
         worldLocation += parent->GetWorldPosition();
@@ -105,7 +99,6 @@ bn::fixed_point GameObject::GetScreenPosition() {
 }
 
 void GameObject::AddLocalOffset(const bn::fixed_point& delta) {
-    relativePosition.set_x(relativePosition.x());
     relativePosition += delta;
 }
 
@@ -117,22 +110,24 @@ void GameObject::SetLocalPosition(const bn::fixed_point& pos) {
     relativePosition = pos;
 }
 void GameObject::SetLocalPosition(const int posX, const int posY) {
-    AddLocalOffset(bn::fixed_point(posX, posY));
+    relativePosition.set_x(posX);
+    relativePosition.set_y(posY);
 }
 
 void GameObject::SetLayerDepth(const int depth) {
     if(depth == -1) {
-        layerDepth = 0;
+        data.layerDepth = 0;
         SetZOrder(0);
     }
     else {
-        layerDepth = depth;
+        data.layerDepth = depth;
     }
 
 }
 
 bool GameObject::GetWorldPositionDirty() {
-    if(parent != nullptr) 
-        worldPositionDirty = parent->GetWorldPositionDirty(); 
-    return worldPositionDirty;
+    if(parent != nullptr) {
+        data.worldPositionDirty = data.worldPositionDirty && parent->GetWorldPositionDirty(); 
+    }
+    return data.worldPositionDirty;
 }

@@ -11,9 +11,9 @@ enum UpdateType { PHYSICS_UPDATE, LOGIC_UPDATE, RENDER };
 class GameObjectComponent {
 public:
     
-    GameObjectComponent();
+    GameObjectComponent() = default;
+    virtual ~GameObjectComponent() = default;
     inline void SetGameObject(GameObject* go) { gameObject = go; }
-    virtual ~GameObjectComponent();
 
 
 protected:
@@ -21,8 +21,8 @@ protected:
     UpdateType updateType = UpdateType::LOGIC_UPDATE;
 
 public:
-    virtual void Start() {}
-    virtual void Update() {}
+    virtual void Start() {};
+    virtual void Update() {};
 
     inline UpdateType GetUpdateType() const { return updateType; }
 };

@@ -27,7 +27,8 @@ protected:
 
 public:
 
-    void Start();
+    virtual void Start() override;
+    virtual void Update() override {};
 
     MapCollisionType GetCollisionByCell(int cellX, int cellY) const;
 

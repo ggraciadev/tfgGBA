@@ -3,14 +3,6 @@
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
 
-Character::Character() {
-    
-}
-
-Character::~Character() {
-
-}
-
 void Character::Start() {   
     movement.SetCurrentMovementSpeed(1.5); 
     input.SetCharacter(this);
@@ -32,7 +24,7 @@ void Character::SetMapCollision(MapCollision* mc) {
 void Character::SetLayerDepth(int depth) {
     SetZOrder(1);
     GameObject::SetLayerDepth(depth);
-    animator.SetLayerDepth(layerDepth);
+    animator.SetLayerDepth(data.layerDepth);
 }
 
 void Character::SetZOrder(char z_order) {

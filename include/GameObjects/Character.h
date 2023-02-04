@@ -17,9 +17,9 @@
 
 class Character : public GameObject {
 public:
-    Character();
     //Character(const int posX, const int posY, GameObject* _parent = nullptr);
-    virtual ~Character();
+    Character() = default;
+    virtual ~Character() = default;
 
 protected:
 

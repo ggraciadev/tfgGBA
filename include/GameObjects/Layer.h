@@ -67,27 +67,27 @@ void Layer<CELLS_X, CELLS_Y>::SetLayerDepth(int depth) {
     bn::fixed speed = 1;
     
     GameObject::SetLayerDepth(depth);
-    if(layerDepth == -1) {
+    if(data.layerDepth == -1) {
         speed = -1.0f;
     }
     else {
-        speed = 1 - 1.0f/(layerDepth+1);
+        speed = 1 - 1.0f/(data.layerDepth+1);
         SetZOrder(3);
     }
     followComponent.SetAlphaOffset(speed);
-    backLayerComponent.SetLayerDepth(layerDepth);
+    backLayerComponent.SetLayerDepth(data.layerDepth);
     
 }
 
 template <int CELLS_X, int CELLS_Y>
 char Layer<CELLS_X, CELLS_Y>::GetBackgroundLayer() {
-    return layerDepth;
+    return data.layerDepth;
 }
 
 template <int CELLS_X, int CELLS_Y>
 void Layer<CELLS_X, CELLS_Y>::SetZOrder(char z_order) {
     GameObject::SetZOrder(z_order);
-    backLayerComponent.SetZOrder(zOrder);
+    backLayerComponent.SetZOrder(data.zOrder);
 }
 
 #endif
