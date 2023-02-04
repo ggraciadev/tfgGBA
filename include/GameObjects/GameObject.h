@@ -15,8 +15,6 @@
 
 class MapCollision;
 
-
-
 class GameObject {
 
 public:
@@ -26,23 +24,24 @@ public:
 
 protected:
     BN_DATA_EWRAM static int CURRENT_ID;
-
-    GameObject* parent;
     bn::vector<GameObjectComponent*, MAX_COMPONENTS> components;
-
-    struct Data {
-        int id : 6;
-        char layerDepth: 2;
-        char zOrder : 4;
-        char firtsLogicUpdateIndex : 3;
-        char firstRenderIndex : 3;
-        char componentsSize : 3;
-        bool worldPositionDirty : 1;
-    }  data;
-
+    
     bn::fixed_point relativePosition;
     bn::fixed_point worldPosition;
+
+    GameObject* parent;
     GameObject* camera;
+
+    int id;
+
+    char layerDepth;
+    char zOrder;
+
+    char firtsLogicUpdateIndex;
+    char firstRenderIndex;
+    char componentsSize;
+
+    bool worldPositionDirty;
 
 private:
     void SortComponentsByUpdates();
@@ -56,30 +55,28 @@ public:
     void Update();
     void Render();
 
-    inline const bn::fixed_point GetRelativePosition() const { return relativePosition; }
+    inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
     bn::fixed_point GetWorldPosition() const;
-    bn::fixed_point GetScreenPosition();
+    bn::fixed_point GetScreenPosition() const;
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
     void AddLocalOffset(const bn::fixed_point& delta);
     void AddLocalOffset(const int deltaX, const int deltaY);
 
-    void AddComponent(GameObjectComponent& component) {}
-    void AddComponent(GameObjectComponent&& component) {}
     void AddComponent(GameObjectComponent* component);
 
     inline bool HasParent() const { return parent != nullptr; }
     inline GameObject* GetParent() const { return parent; }
     inline void SetParent(GameObject* p) { parent = p; }
 
-    inline bool Equals(const GameObject& other) const {return data.id == other.data.id;}
-    inline bool Equals(const GameObject* other) const {return data.id == other->data.id;}
+    inline bool Equals(const GameObject& other) const {return id == other.id;}
+    inline bool Equals(const GameObject* other) const {return id == other->id;}
 
-    inline char GetLayerDepth() const { return data.layerDepth; }
+    inline char GetLayerDepth() const { return layerDepth; }
 
     void SetLayerDepth(const int depth);
-    inline void SetZOrder(const char z_order) { data.zOrder = z_order; }
+    inline void SetZOrder(const char z_order) { zOrder = z_order; }
 
     bool GetWorldPositionDirty();
 
