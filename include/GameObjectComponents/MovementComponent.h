@@ -48,6 +48,7 @@ public:
     inline bn::fixed GetGravityValue() const { return gravityValue; }
 
     void SetGrounded(bool g);
+    inline bool IsGrounded() const { return isGrounded; }
 };
 
 #endif

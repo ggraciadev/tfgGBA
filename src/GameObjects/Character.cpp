@@ -8,11 +8,15 @@ void Character::Start() {
     input.SetCharacter(this);
     boxCollision.Setup(COLLISION_OFFSET_X, COLLISION_OFFSET_Y, COLLISION_WIDTH, COLLISION_HEIGHT);
     animator.SetSpriteItem(SPRITE_SHEET);
+    jumpAb.SetJumpSpeed(JUMP_SPEED);
+    jumpAb.SetMaxJumps(2);
+    jumpAb.SetCharacter(this);
 
     AddComponent(&boxCollision);
     AddComponent(&input);
     AddComponent(&movement);
     AddComponent(&animator);
+    AddComponent(&jumpAb);
 
     GameObject::Start();
 }
@@ -33,7 +37,7 @@ void Character::SetZOrder(char z_order) {
 }
 
 void Character::Jump() {
-    movement.SetVelocityY(JUMP_SPEED);
+    jumpAb.UseAbility();
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {

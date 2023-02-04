@@ -6,11 +6,15 @@
 #include "GameObjectComponents/MovementComponent.h"
 #include "GameObjectComponents/InputComponent.h"
 #include "GameObjectComponents/BoxCollision.h"
+#include "GameObjectComponents/JumpAbility.h"
+
 
 #define COLLISION_OFFSET_X -13
 #define COLLISION_OFFSET_Y -26
 #define COLLISION_WIDTH 26
 #define COLLISION_HEIGHT 52
+
+#define MAX_ABILITIES 1
 
 #define JUMP_SPEED -4
 
@@ -26,7 +30,8 @@ protected:
     InputComponent input;
     BoxCollision boxCollision;
     Animator animator;
-    
+
+    JumpAbility jumpAb; 
 
 public:
     void Start();
@@ -39,6 +44,8 @@ public:
     void SetInputMovement(bn::fixed_point md);
     void SetInputMovementX(bn::fixed x);
     void SetInputMovementY(bn::fixed y);
+
+    inline MovementComponent* GetMovementComponent() { return &movement; }
 
     void Jump();
 
