@@ -24,13 +24,14 @@ public:
 
 protected:
     BN_DATA_EWRAM static int CURRENT_ID;
-
-    GameObject* parent;
     bn::vector<GameObjectComponent*, MAX_COMPONENTS> components;
-
+    
     bn::fixed_point relativePosition;
     bn::fixed_point worldPosition;
-    bool worldPositionDirty;
+
+    GameObject* parent;
+    GameObject* camera;
+
     int id;
 
     char layerDepth;
@@ -39,7 +40,8 @@ protected:
     char firtsLogicUpdateIndex;
     char firstRenderIndex;
     char componentsSize;
-    GameObject* camera;
+
+    bool worldPositionDirty;
 
 private:
     void SortComponentsByUpdates();
@@ -54,8 +56,8 @@ public:
     void Render();
 
     inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
-    bn::fixed_point GetWorldPosition();
-    bn::fixed_point GetScreenPosition();
+    bn::fixed_point GetWorldPosition() const;
+    bn::fixed_point GetScreenPosition() const;
 
     void SetLocalPosition(const bn::fixed_point& pos);
     void SetLocalPosition(const int posX, const int posY);
