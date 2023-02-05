@@ -8,11 +8,33 @@
 
 #define FRAME_SPEED 4
 
+template <int MAX_SIZE_ANIM>
+struct AnimInfo {
+
+    char animationFrames[MAX_SIZE_ANIM];
+    char animationLenght;
+    bool looping;
+
+    AnimInfo() {
+        animationLenght = 0;
+        looping = true;
+    }
+
+    AnimInfo(const char (& frames)[MAX_SIZE_ANIM], const char lenght, bool loop = false) {
+        for(int i = 0; i < lenght; ++i) {
+            animationFrames[i] = frames[i];
+        }
+        animationLenght = lenght;
+        looping = loop;
+    }
+};
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
 class Animator : public GameObjectComponent {
 public:
     
-    Animator();
-    virtual ~Animator();
+    Animator() = default;
+    virtual ~Animator() = default;
 
 protected:
     bool flipped;
@@ -20,8 +42,7 @@ protected:
     char currentTime;
     char currentAnimation;
 
-    const char animations[2][16] = {{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, {7,8,9,10,11,12,13,14,15,16,12}};
-    const char animationsLenght[2] = {14,11};
+    AnimInfo<MAX_SIZE_ANIM> animations [NUM_ANIMATIONS];
 
     bn::optional<bn::sprite_ptr> sprite;
     bn::optional<bn::sprite_item> spriteItem;
@@ -40,6 +61,84 @@ public:
 
     void SetFlipped(bool flip);
     inline bool GetFlipped() {return flipped;}
+
+    void SetAnimations(const AnimInfo<MAX_SIZE_ANIM> (& anims)[NUM_ANIMATIONS]) {
+        for(int i = 0; i < NUM_ANIMATIONS; ++i) animations[i] = anims[i];
+    }
 };
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::Start() {
+    updateType = UpdateType::RENDER;
+    GameObjectComponent::Start();
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetSpriteItem(const bn::sprite_item& s){ 
+    spriteItem = s; 
+    sprite = spriteItem->create_sprite(0, 0);
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::UpdateAnimation() {
+    if(currentTime >= FRAME_SPEED) {
+        int size = animations[currentAnimation].animationLenght - !animations[currentAnimation].looping;
+        if(currentFrame < size) {
+            currentFrame++;
+            if(currentFrame >= size && animations[currentAnimation].looping) {
+                currentFrame = 0;
+            }
+        }
+
+    }
+    sprite->set_tiles(spriteItem->tiles_item().create_tiles(animations[currentAnimation].animationFrames[currentFrame]));
+    currentTime = 0;
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::UpdateAnimationTimer() {
+
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::Update() {
+    currentTime ++;
+    if(currentTime >= FRAME_SPEED) {
+        UpdateAnimation();
+    }
+    if(sprite.has_value()) {
+        sprite->set_position(gameObject->GetScreenPosition());
+    }
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetLayerDepth(int depth) {
+    if(sprite.has_value()) {
+        sprite->set_bg_priority(depth);
+    }
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetZOrder(char z_order) {
+    if(sprite.has_value()) {
+        sprite->set_z_order(z_order);
+    }
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetFlipped(bool flip) {
+    sprite->set_horizontal_flip(flip);
+    
+}
+
+template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetCurrentAnimation(char anim) {
+    if(anim != currentAnimation) {
+        currentAnimation = anim;
+        currentFrame = 0;
+        currentTime = 0;
+        sprite->set_tiles(spriteItem->tiles_item().create_tiles(animations[currentAnimation].animationFrames[currentFrame]));
+    }
+}
 
 #endif

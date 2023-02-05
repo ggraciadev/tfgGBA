@@ -29,7 +29,7 @@ protected:
     MovementComponent movement;
     InputComponent input;
     BoxCollision boxCollision;
-    Animator animator;
+    Animator<4, 16> animator;
 
     JumpAbility jumpAb; 
 
@@ -47,6 +47,8 @@ public:
 
     inline MovementComponent* GetMovementComponent() { return &movement; }
 
+    void SetupAnimations();
+    void UpdateAnimationState();
     void Jump();
 
 };

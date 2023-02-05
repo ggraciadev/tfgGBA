@@ -7,7 +7,12 @@ void Character::Start() {
     movement.SetCurrentMovementSpeed(1.5); 
     input.SetCharacter(this);
     boxCollision.Setup(COLLISION_OFFSET_X, COLLISION_OFFSET_Y, COLLISION_WIDTH, COLLISION_HEIGHT);
-    animator.SetSpriteItem(SPRITE_SHEET);
+    
+
+    
+
+    SetupAnimations();
+
     jumpAb.SetJumpSpeed(JUMP_SPEED);
     jumpAb.SetMaxJumps(2);
     jumpAb.SetCharacter(this);
@@ -19,6 +24,17 @@ void Character::Start() {
     AddComponent(&jumpAb);
 
     GameObject::Start();
+}
+
+void Character::SetupAnimations() {
+    animator.SetSpriteItem(SPRITE_SHEET);
+
+    animator.SetAnimations({
+        AnimInfo<16>({0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true),
+        AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true),
+        AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false),
+        AnimInfo<16>({24,25,26,27,28}, 5, false)
+    });
 }
 
 void Character::SetMapCollision(MapCollision* mc) {
@@ -55,20 +71,28 @@ void Character::SetInputMovement(bn::fixed_point md) {
         }
         animator.SetFlipped(true);
     }
-    
-    if(md.x() == 0.0f) {
-        animator.SetCurrentAnimation(0);
-    }
-    else {
-        animator.SetCurrentAnimation(1);
-    }
     movement.SetInputMovement(md);
 
     movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
     if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
         movement.SetVelocityY(0);
     }
+    if(movement.IsGrounded()) {
+        if(md.x() == 0.0f) {
+            animator.SetCurrentAnimation(0);
+        }
+        else {
+            animator.SetCurrentAnimation(1);
+        }
+    }
+    else {
+        animator.SetCurrentAnimation(2);
+    }
 
+}
+
+void UpdateAnimationState() {
+    
 }
 
 void Character::SetInputMovementX(bn::fixed x) {
