@@ -1,17 +1,11 @@
 #include "GameObjectComponents/MovementComponent.h"
 #include "GameObjects/GameObject.h"
 
-MovementComponent::MovementComponent() : GameObjectComponent::GameObjectComponent() {
-}
-
-MovementComponent::~MovementComponent() {
-
-}
-
 void MovementComponent::Start() {
     GameObjectComponent::Start();
     velocity = bn::fixed_point(0,0);
     gravityValue = 0.2f;
+    movementDirection = 1;
 }
 
 void MovementComponent::Update() {

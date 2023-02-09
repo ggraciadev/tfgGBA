@@ -3,6 +3,7 @@
 void AbilityComponent::Update() {
     if(abilityInUse) {
         currentDuration--;
+        if(currentDuration <= 0) abilityInUse = false;
     }
 }
 

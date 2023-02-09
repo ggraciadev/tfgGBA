@@ -12,6 +12,21 @@ enum CollisionPositions {TOP_COLLISION, BOT_COLLISION, LEFT_COLLISION, RIGHT_COL
 
 class GameObject;
 
+struct BoxExtension {
+    bn::fixed_point boxOffset;
+    bn::fixed_point boxSize;
+
+    BoxExtension() {
+        boxOffset = bn::fixed_point(0,0);
+        boxSize = bn::fixed_point(1,1);
+    };
+
+    BoxExtension(const bn::fixed_point & offset, const bn::fixed_point & size) {
+        boxOffset = offset;
+        boxSize = size;
+    }
+};
+
 class BoxCollision : public GameObjectComponent{
 public:
     
@@ -30,8 +45,7 @@ protected:
     bn::fixed_point movementDirection;
     bn::fixed_point currentPosition;
 
-    bn::fixed_point boxOffset;
-    bn::fixed_point boxSize;
+    BoxExtension extension;
 
     bool updatedPosition;
     bool isTrigger;
@@ -42,6 +56,7 @@ public:
     virtual void Update() override;
 
     void Setup(bn::fixed_point offset, bn::fixed_point size);
+    inline void Setup(const BoxExtension& boxExt) { extension = boxExt; }
     inline void SetMapCollision(MapCollision* mc) {mapCollision = mc;}
     void Setup(int offX, int offY, int width, int height);
 
@@ -58,7 +73,7 @@ public:
 
     bn::fixed_point GetCurrentPosition();
 
-    inline bn::fixed_point GetSize() const {return boxSize;}
+    inline bn::fixed_point GetSize() const {return extension.boxSize;}
 
     inline bool GetContact(CollisionPositions pos) const { 
         return collisionContacts[pos];

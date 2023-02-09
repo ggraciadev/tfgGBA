@@ -2,7 +2,6 @@
 #define BF_MELEE_COMBO_ABILITY_H
 
 #include "GameObjectComponents/AbilityComponent.h"
-#include "Character.h"
 #include <bn_fixed_point.h>
 
 struct AttackInfo {
@@ -23,6 +22,9 @@ struct AttackInfo {
     }
 };
 
+
+class Character;
+
 template <int MAX_COMBO>
 class MeleeComboAbility : public AbilityComponent{
 public:
@@ -37,6 +39,7 @@ protected:
     int cooldownCombo = 0;
     int currentCooldown = 0;
     int currentFrame = 0;
+    int resetCombo = 0;
 
 public:
     virtual bool UseAbility() override;
@@ -52,6 +55,8 @@ public:
 
 };
 
+#include "Character.h"
+
 template <int MAX_COMBO>
 void MeleeComboAbility<MAX_COMBO>::Start() {
     AbilityComponent::Start();
@@ -61,16 +66,17 @@ void MeleeComboAbility<MAX_COMBO>::Start() {
 template <int MAX_COMBO>
 bool MeleeComboAbility<MAX_COMBO>::UseAbility() {
     
-    if(currentCooldown >0 || currentCombo >= MAX_COMBO) { return false; }
+    if(currentCooldown > 0 || currentCombo >= MAX_COMBO) { return false; }
     abilityDuration = attacksCombo[currentCombo].attackDuration;
     bool ret = AbilityComponent::UseAbility();
-    
-    character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, 20);
-    currentCombo++;
-    if(currentCombo >= MAX_COMBO) {
-        currentCooldown = cooldownCombo;
+    if(ret) {
+        character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, 20);
+        currentCombo++;
+        if(currentCombo >= MAX_COMBO) {
+            currentCooldown = cooldownCombo;
+        }
     }
-
+    return ret;
 }
 
 template <int MAX_COMBO>
@@ -78,6 +84,11 @@ void MeleeComboAbility<MAX_COMBO>::Update() {
     AbilityComponent::Update();
     if(currentCooldown > 0) {
         currentCooldown--;
+        if(currentCooldown == 0) {currentCombo = 0;}
+    }
+    if(currentCombo > 0) {
+        resetCombo--;
+        if(resetCombo <= 0) { currentCombo = 0; }
     }
 }
 

@@ -20,7 +20,7 @@ class GameObject {
 public:
     GameObject();
     //GameObject(const int posX, const int posY, GameObject& _parent);
-    ~GameObject();
+    virtual ~GameObject();
 
 protected:
     BN_DATA_EWRAM static int CURRENT_ID;
@@ -53,7 +53,7 @@ public:
 
     void Start();
     void PhysicsUpdate();
-    void Update();
+    virtual void Update();
     void Render();
 
     inline const bn::fixed_point GetRelativePosition() { return relativePosition; }

@@ -1,14 +1,7 @@
 #include "GameObjectComponents/InputComponent.h"
 
 #include "bn_keypad.h"
-#include "Character.h"
-
-InputComponent::InputComponent() : GameObjectComponent::GameObjectComponent() {
-}
-
-InputComponent::~InputComponent() {
-
-}
+#include "Player.h"
 
 void InputComponent::Start() {
     updateType = UpdateType::PHYSICS_UPDATE;
@@ -17,10 +10,6 @@ void InputComponent::Start() {
 
 void InputComponent::Update() {
     GameObjectComponent::Update();
-
-    if(bn::keypad::a_pressed()) {
-        character->Jump();
-    }
 
     inputMovement = bn::fixed_point(0,0);
     if(bn::keypad::left_held()) {
@@ -35,7 +24,17 @@ void InputComponent::Update() {
     else if(bn::keypad::down_held()) {
         inputMovement.set_y(1);
     }
-    character->SetInputMovement(inputMovement);
+    player->SetInputMovement(inputMovement);
+
+    if(bn::keypad::a_pressed()) {
+        player->Attack();
+    }
+    else if(bn::keypad::b_pressed()) {
+        player->Jump();
+    }
+    else if(bn::keypad::r_pressed()) {
+        player->Dash();
+    }
 
 }
 

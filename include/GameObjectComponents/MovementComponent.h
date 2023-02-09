@@ -8,15 +8,15 @@
 class MovementComponent : public GameObjectComponent{
 public:
     
-    MovementComponent();
-    virtual ~MovementComponent();
+    MovementComponent() = default;
+    virtual ~MovementComponent() = default;
 
 protected:
     bn::fixed_point inputMovement;
     bn::fixed_point velocity;
     bn::fixed currentMovementSpeed;
     bn::fixed gravityValue = 9.8f / (10*120.0f);
-    bn::fixed movementDirection;
+    int movementDirection;
     int currentImpulseDuration;
     bool isGrounded = false;
 
@@ -47,6 +47,8 @@ public:
     inline bn::fixed_point GetVelocity() const { return velocity; }
     void CalcVelocity();
     void CheckCollisions() const;
+
+    inline int GetMomvementDirection() const { return movementDirection; }
     
     inline void SetGravityValue(bn::fixed g) { gravityValue = g; }
     inline bn::fixed GetGravityValue() const { return gravityValue; }

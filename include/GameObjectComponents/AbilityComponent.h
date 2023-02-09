@@ -25,6 +25,7 @@ public:
 
     inline void SetCharacter(Character* c) { character= c;}
     inline void SetAbilityDuration(const int duration) { abilityDuration = duration; }
+    inline bool GetAbilityInUse() const { return abilityInUse; }
 
 };
 

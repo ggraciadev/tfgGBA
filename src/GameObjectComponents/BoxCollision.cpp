@@ -11,8 +11,8 @@ BoxCollision::~BoxCollision() {
 }
 
 void BoxCollision::Setup(bn::fixed_point offset, bn::fixed_point size) {
-    boxOffset = offset;
-    boxSize = size;
+    extension.boxOffset = offset;
+    extension.boxSize = size;
 }
 
 void BoxCollision::Setup(int offX, int offY, int width, int height) {
@@ -30,13 +30,13 @@ void BoxCollision::Update() {
     if(mapCollision != nullptr) {
         CheckCollisionWithMap();
         UpdateContacts();
-        gameObject->SetLocalPosition(currentPosition - boxOffset);
+        gameObject->SetLocalPosition(currentPosition - extension.boxOffset);
     }
 }
 
 void BoxCollision::UpdateCurrentPosition() {
     lastPosition = currentPosition;
-    currentPosition = gameObject->GetWorldPosition() + boxOffset;
+    currentPosition = gameObject->GetWorldPosition() + extension.boxOffset;
     movementDirection = currentPosition - lastPosition;
     updatedPosition = true;
 }
@@ -53,9 +53,9 @@ bool BoxCollision::IsColliding(BoxCollision* other) {
     bn::fixed_point otherSize = other->GetSize();
 
     return  currentPosition.x() < otherPosition.x() + otherSize.x() &&
-            currentPosition.x() + boxSize.x() > otherPosition.x() &&
+            currentPosition.x() + extension.boxSize.x() > otherPosition.x() &&
             currentPosition.y() < otherPosition.y() + otherSize.y() &&
-            currentPosition.y() + boxSize.y() > otherPosition.y();
+            currentPosition.y() + extension.boxSize.y() > otherPosition.y();
 }
 
 MapCollisionType BoxCollision::CheckCollisionWithMapEdge(int startX, int startY, int endX, int endY) {
@@ -90,10 +90,10 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
     MapCollisionType col = MapCollisionType::NONE;
     if(movementDirection.x() > 0) {
         MapCollisionType col;
-        int tempStartX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
+        int tempStartX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
         int tempStartY = currentPosition.y().floor_integer();
-        int tempEndX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
-        int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+        int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
+        int tempEndY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
         if(col != MapCollisionType::NONE) {
             currentPosition.set_x((currentPosition.x().floor_integer()) - 1);
@@ -104,7 +104,7 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
         int tempStartX = currentPosition.x().floor_integer();
         int tempStartY = currentPosition.y().floor_integer();
         int tempEndX = currentPosition.x().floor_integer();
-        int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+        int tempEndY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
         if(col != MapCollisionType::NONE) {
             currentPosition.set_x(currentPosition.x().floor_integer() + 1);
@@ -113,12 +113,12 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
     }
     else {
         if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer(), 
-            currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer() + boxSize.y().floor_integer())) {
+            currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer())) {
             collisionContacts[LEFT_COLLISION] = false;
 
         }
-        if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer() + boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer(), 
-            currentPosition.x().floor_integer() + boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer() + boxSize.y().floor_integer())) {
+        if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer(), 
+            currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer())) {
             collisionContacts[RIGHT_COLLISION] = false;
 
         }
@@ -131,9 +131,9 @@ MapCollisionType BoxCollision::CheckVerticalCollisions() {
     if(movementDirection.y() > 0) {
         
         int tempStartX = currentPosition.x().floor_integer();
-        int tempStartY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
-        int tempEndX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
-        int tempEndY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+        int tempStartY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
+        int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
+        int tempEndY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
         if(col != MapCollisionType::NONE) {
             currentPosition.set_y(currentPosition.y().floor_integer()-1);
@@ -143,7 +143,7 @@ MapCollisionType BoxCollision::CheckVerticalCollisions() {
     else if(movementDirection.y() < 0) {
         int tempStartX = currentPosition.x().floor_integer();
         int tempStartY = currentPosition.y().floor_integer();
-        int tempEndX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
+        int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
         int tempEndY = currentPosition.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
         if(col != MapCollisionType::NONE) {
@@ -151,8 +151,8 @@ MapCollisionType BoxCollision::CheckVerticalCollisions() {
             collisionContacts[TOP_COLLISION] = true;
         }   
     }
-    else if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer(), currentPosition.y().floor_integer() + boxSize.y().floor_integer() + TILE_HEIGHT, 
-        currentPosition.x().floor_integer() + boxSize.x().floor_integer(), currentPosition.y().floor_integer() + boxSize.y().floor_integer() + TILE_HEIGHT)) {
+    else if(MapCollisionType::NONE == CheckCollisionWithMapEdge(currentPosition.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT, 
+        currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT)) {
         collisionContacts[BOT_COLLISION] = false;
     }
     return col;
@@ -162,8 +162,8 @@ void BoxCollision::CheckCollisionWithMap() {
     int startX = currentPosition.x().floor_integer();
     int startY = currentPosition.y().floor_integer();
 
-    int endX = currentPosition.x().floor_integer() + boxSize.x().floor_integer();
-    int endY = currentPosition.y().floor_integer() + boxSize.y().floor_integer();
+    int endX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
+    int endY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
 
     MapCollisionType colX = MapCollisionType::COLLISION;
     MapCollisionType colY = MapCollisionType::COLLISION;

@@ -2,36 +2,48 @@
 #define BF_CHARACTER_H
 
 #include "GameObjects/GameObject.h"
-#include "GameObjectComponents/Animator.h"
 #include "GameObjectComponents/MovementComponent.h"
-#include "GameObjectComponents/InputComponent.h"
 #include "GameObjectComponents/BoxCollision.h"
 #include "GameObjectComponents/JumpAbility.h"
+#include "GameObjectComponents/MeleeComboAbility.h"
 
 
 #define COLLISION_OFFSET_X -13
 #define COLLISION_OFFSET_Y -26
 #define COLLISION_WIDTH 26
 #define COLLISION_HEIGHT 52
-
-#define MAX_ABILITIES 1
-
+#define MOVEMENT_SPEED 1.5
 #define JUMP_SPEED -4
+#define MAX_JUMPS 2
+#define COOLDOWN_COMBO 20
+
+struct CharacterInfo {
+    BoxExtension boxCollisionExtension;
+    bn::fixed movementSpeed;
+    int jumpSpeed;
+
+    CharacterInfo() {
+        boxCollisionExtension = BoxExtension(bn::fixed_point(COLLISION_OFFSET_X, COLLISION_OFFSET_Y), bn::fixed_point(COLLISION_WIDTH, COLLISION_HEIGHT));
+        movementSpeed = MOVEMENT_SPEED;
+        jumpSpeed = JUMP_SPEED;
+    };
+};
 
 class Character : public GameObject {
 public:
     Character() = default;
-    virtual ~Character() = default;
+    ~Character() = default;
     //Character(const int posX, const int posY, GameObject* _parent = nullptr);
 
 protected:
 
     MovementComponent movement;
-    InputComponent input;
     BoxCollision boxCollision;
-    Animator<4, 16> animator;
 
-    JumpAbility jumpAb; 
+    CharacterInfo characterInfo;
+
+    void SetupAnimations() {};
+    void SetupAttacks() {};
 
 public:
     void Start();
@@ -39,7 +51,6 @@ public:
     void SetMapCollision(MapCollision* mc);
 
     void SetLayerDepth(int depth);
-    void SetZOrder(char z_order);
 
     void SetInputMovement(bn::fixed_point md);
     void SetInputMovementX(bn::fixed x);
@@ -47,9 +58,7 @@ public:
 
     inline MovementComponent* GetMovementComponent() { return &movement; }
 
-    void SetupAnimations();
     void UpdateAnimationState();
-    void Jump();
 
 };
 

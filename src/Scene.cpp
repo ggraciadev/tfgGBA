@@ -55,17 +55,17 @@ void Scene::Start() {
     layer2.Start(LayerType::CITY_LAYER_2);
 
 
-    Character* tmpCharacter = characterFactory.Create();
+    Player* tmpPlayer = player.Create();
     
-    tmpCharacter->SetParent(&mapLayer);
-    tmpCharacter->SetLocalPosition(0, -20);
-    tmpCharacter->Start();
-    tmpCharacter->SetLayerDepth(0);
-    tmpCharacter->SetCamera(&camera);
-    tmpCharacter->SetMapCollision(mapLayer.GetMapCollision());
-    camera.SetFollowObject(tmpCharacter);
+    tmpPlayer->SetParent(&mapLayer);
+    tmpPlayer->SetLocalPosition(0, -20);
+    tmpPlayer->Start();
+    tmpPlayer->SetLayerDepth(0);
+    tmpPlayer->SetCamera(&camera);
+    tmpPlayer->SetMapCollision(mapLayer.GetMapCollision());
+    camera.SetFollowObject(tmpPlayer);
 
-    objects.push_back(tmpCharacter);
+    objects.push_back(tmpPlayer);
 
     int start = 1;
     int end = start + 1;
