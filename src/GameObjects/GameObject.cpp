@@ -37,29 +37,27 @@ void GameObject::Start() {
 }
 
 void GameObject::SortComponentsByUpdates() {
-    int i, j;
-    for(i = 0; i < componentsSize-1; ++i) {
-        bool swapped = false;
-        for(j = 0; j < componentsSize-i-1; ++j) {
-            if(components[j]->GetUpdateType() > components[j+1]->GetUpdateType()) {
-                bn::swap(components[j], components[j+1]);
-                swapped = true;
-            }
-        }
-        if(!swapped) {
-            break;
-        }
-    }
+    bn::sort(components.begin(), components.end(), 
+    [](auto i_left, auto i_right) { 
+        return i_left->GetUpdateType() < i_right->GetUpdateType();
+        });
     firtsLogicUpdateIndex = 0;
     firstRenderIndex = componentsSize;
+    lastRenderIndex = componentsSize;
     bool passPh = false;
     bool passLogic = false;
-    for(i = 0; i < componentsSize; ++i) {
-        if(!passLogic && components[i]->GetUpdateType() == UpdateType::RENDER) {
+    bool passRender = false;
+    for(int i = 0; i < componentsSize; ++i) {
+        if(!passRender && components[i]->GetUpdateType() == UpdateType::NO_UPDATE) {
+            passPh = true;
+            passLogic = true;
+            passRender = true;
+            lastRenderIndex = i;
+        }
+        else if(!passLogic && components[i]->GetUpdateType() == UpdateType::RENDER) {
             passPh = true;
             passLogic = true;
             firstRenderIndex = i;
-            break;
         }
         else if(!passPh && components[i]->GetUpdateType() == UpdateType::LOGIC_UPDATE) {
             passPh = true;
@@ -81,7 +79,7 @@ void GameObject::Update() {
 }
 
 void GameObject::Render() {
-    for(int i = firstRenderIndex; i < componentsSize; ++i) {
+    for(int i = firstRenderIndex; i < lastRenderIndex; ++i) {
         components[i]->Update();
     }
 }

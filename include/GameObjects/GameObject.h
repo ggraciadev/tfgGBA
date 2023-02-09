@@ -39,6 +39,7 @@ protected:
 
     char firtsLogicUpdateIndex;
     char firstRenderIndex;
+    char lastRenderIndex;
     char componentsSize;
 
     bool worldPositionDirty;

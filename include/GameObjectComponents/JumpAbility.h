@@ -18,11 +18,13 @@ protected:
     int currentJumps = 0;
 
 public:
-    virtual void UseAbility() override;
+    virtual void Start() override;
+    virtual bool UseAbility() override;
 
     inline void SetJumpSpeed(int s) { jumpSpeed = s; }
     inline int GetJumpSpeed() const { return jumpSpeed; }
     inline void SetMaxJumps(int jumps) { maxJumps = jumps; }
+    inline int GetCurrentJump() const { return currentJumps; }
 
 };
 

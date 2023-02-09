@@ -6,7 +6,7 @@
 
 class GameObject;
 
-enum UpdateType { PHYSICS_UPDATE, LOGIC_UPDATE, RENDER };
+enum UpdateType { PHYSICS_UPDATE, LOGIC_UPDATE, RENDER, NO_UPDATE };
 
 class GameObjectComponent {
 public:

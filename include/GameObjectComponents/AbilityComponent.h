@@ -15,11 +15,16 @@ public:
 
 protected:
     Character* character;
+    int abilityDuration;
+    int currentDuration;
+    bool abilityInUse;
 
 public:
-    virtual void UseAbility() {};
+    virtual bool UseAbility();
+    virtual void Update() override;
 
     inline void SetCharacter(Character* c) { character= c;}
+    inline void SetAbilityDuration(const int duration) { abilityDuration = duration; }
 
 };
 

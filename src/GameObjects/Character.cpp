@@ -30,10 +30,10 @@ void Character::SetupAnimations() {
     animator.SetSpriteItem(SPRITE_SHEET);
 
     animator.SetAnimations({
-        AnimInfo<16>({0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true),
-        AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true),
-        AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false),
-        AnimInfo<16>({24,25,26,27,28}, 5, false)
+        AnimInfo<16>({0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true, false),
+        AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true, false),
+        AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false, true),
+        AnimInfo<16>({24,25,26,27,28}, 5, false, true)
     });
 }
 
@@ -53,7 +53,11 @@ void Character::SetZOrder(char z_order) {
 }
 
 void Character::Jump() {
+    int lastJump = jumpAb.GetCurrentJump();
     jumpAb.UseAbility();
+    if(lastJump != jumpAb.GetCurrentJump()) {
+        animator.SetCurrentAnimation(2, true);
+    }
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {

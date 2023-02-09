@@ -22,6 +22,10 @@ void MovementComponent::Update() {
 }
 
 void MovementComponent::CalcVelocity() {
+    if(currentImpulseDuration > 0) {
+        currentImpulseDuration--;
+        return;
+    }
     velocity.set_x(currentMovementSpeed * inputMovement.x());
     if(gravityValue != 0) {
         if(!isGrounded) {
@@ -30,6 +34,12 @@ void MovementComponent::CalcVelocity() {
     }
     else {
         velocity.set_y(currentMovementSpeed * inputMovement.y());
+    }
+    if(velocity.x() > 0) {
+        movementDirection = 1;
+    }
+    else if(velocity.x() < 0) {
+        movementDirection = -1;
     }
 }
 
@@ -46,6 +56,13 @@ void MovementComponent::SetGrounded(bool g) {
     }
 }
 
-void MovementComponent::AddImpulse(bn::fixed_point impulse) {
+void MovementComponent::AddImpulse(bn::fixed_point impulse, int impulseDuration) {
+    currentImpulseDuration = impulseDuration;
     velocity += impulse;
+    if(velocity.x() > 0) {
+        movementDirection = 1;
+    }
+    else if(velocity.x() < 0) {
+        movementDirection = -1;
+    }
 }

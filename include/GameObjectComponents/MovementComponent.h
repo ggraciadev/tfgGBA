@@ -11,13 +11,15 @@ public:
     MovementComponent();
     virtual ~MovementComponent();
 
-
 protected:
     bn::fixed_point inputMovement;
     bn::fixed_point velocity;
     bn::fixed currentMovementSpeed;
     bn::fixed gravityValue = 9.8f / (10*120.0f);
+    bn::fixed movementDirection;
+    int currentImpulseDuration;
     bool isGrounded = false;
+
 
 public:
     virtual void Start() override;
@@ -36,8 +38,10 @@ public:
     //void SetVelocity(bn::fixed_point v) {velocity = v;}
     //void SetVelocity(bn::fixed x, bn::fixed y) {SetVelocity(bn::fixed_point(x, y));}
 
-    void AddImpulse(bn::fixed_point impulse);
-    inline void AddImpulse(bn::fixed x, bn::fixed y) { AddImpulse(bn::fixed_point(x, y)); }
+    void AddImpulse(bn::fixed_point impulse, int impulseDuration = 60);
+    inline void AddImpulseForward(bn::fixed impulse, int impulseDuration = 60) {AddImpulse(bn::fixed_point(impulse * movementDirection, 0), impulseDuration);}
+    inline void AddImpulseUp(bn::fixed impulse, int impulseDuration = 60) {AddImpulse(bn::fixed_point(0, -impulse), impulseDuration);}
+    inline void AddImpulse(bn::fixed x, bn::fixed y, int impulseDuration = 60) { AddImpulse(bn::fixed_point(x, y), impulseDuration); }
 
     inline  bn::fixed_point GetInputMovement() const { return inputMovement; }
     inline bn::fixed_point GetVelocity() const { return velocity; }

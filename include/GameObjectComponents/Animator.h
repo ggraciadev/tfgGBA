@@ -14,18 +14,21 @@ struct AnimInfo {
     char animationFrames[MAX_SIZE_ANIM];
     char animationLenght;
     bool looping;
+    bool canReplay;
 
     AnimInfo() {
         animationLenght = 0;
         looping = true;
+        canReplay = false;
     }
 
-    AnimInfo(const char (& frames)[MAX_SIZE_ANIM], const char lenght, bool loop = false) {
+    AnimInfo(const char (& frames)[MAX_SIZE_ANIM], const char lenght, bool loop = false, bool replay = false) {
         for(int i = 0; i < lenght; ++i) {
             animationFrames[i] = frames[i];
         }
         animationLenght = lenght;
         looping = loop;
+        canReplay = replay;
     }
 };
 
@@ -51,7 +54,7 @@ public:
 
     virtual void UpdateAnimation();
     virtual void UpdateAnimationTimer();
-    virtual void SetCurrentAnimation(char anim);
+    virtual void SetCurrentAnimation(char anim, bool forceChange = false);
 
     virtual void Start() override;
     virtual void Update() override;
@@ -132,8 +135,8 @@ void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetFlipped(bool flip) {
 }
 
 template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
-void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetCurrentAnimation(char anim) {
-    if(anim != currentAnimation) {
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetCurrentAnimation(char anim, bool forceChange) {
+    if((animations[anim].canReplay && forceChange)|| anim != currentAnimation) {
         currentAnimation = anim;
         currentFrame = 0;
         currentTime = 0;
