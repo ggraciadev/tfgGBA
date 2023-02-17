@@ -35,7 +35,6 @@ public:
 
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
-
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "GameObjects/Player.h"
+#include "GameObjectComponents/MeleeComboAbility.h"
 
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
@@ -42,12 +43,14 @@ void Player::SetZOrder(char z_order) {
 void Player::SetupAnimations() {
     animator.SetSpriteItem(SPRITE_SHEET);
 
-    animator.SetAnimations({
-        AnimInfo<16>({0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true, false),
-        AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true, false),
-        AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false, true),
-        AnimInfo<16>({24,25,26,27,28}, 5, false, true)
-    });
+    bn::vector<AnimInfo<16>, 4> anims;
+    
+    anims.emplace_back(AnimInfo<16>(bn::array<char, 16>{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true, false));
+    anims.emplace_back(AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true, false));
+    anims.emplace_back(AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false, true));
+    anims.emplace_back(AnimInfo<16>({24,25,26,27,28}, 5, false, true));
+
+    animator.SetAnimations(bn::move(anims));
 }
 
 void Player::SetupAttacks() {

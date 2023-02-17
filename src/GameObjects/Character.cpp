@@ -1,5 +1,6 @@
 #include "GameObjects/Character.h"
 #include "GameObjectComponents/MapCollision.h"
+#include "MeleeComboAbility.h"
 
 void Character::Start() {
     movement.SetCurrentMovementSpeed(characterInfo.movementSpeed);
@@ -58,4 +59,12 @@ void Character::SetInputMovementX(bn::fixed x) {
 
 void Character::SetInputMovementY(bn::fixed y) {
     movement.SetInputMovementY(y);
+}
+
+void Character::GetDamage(const AttackInfo& atkInfo) {
+    damageReciever.GetDamage(atkInfo);
+}
+
+BoxCollision* Character::GetBoxCollision() {
+    return &boxCollision;
 }

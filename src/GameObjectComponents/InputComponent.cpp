@@ -1,7 +1,6 @@
 #include "GameObjectComponents/InputComponent.h"
-
+#include "GameObjects/Player.h"
 #include "bn_keypad.h"
-#include "Player.h"
 
 void InputComponent::Start() {
     updateType = UpdateType::PHYSICS_UPDATE;

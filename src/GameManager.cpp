@@ -50,3 +50,7 @@ void GameManager::Render(bn::sprite_text_generator& t) {
     bn::core::update();
 }
 
+Scene* GameManager::GetCurrentScene() { 
+    return scene;
+}
+

@@ -3,11 +3,11 @@
 
 #include "bn_core.h"
 #include "bn_optional.h"
-#include "Scene.h"
 
 #include "common_info.h"
 #include "common_variable_8x16_sprite_font.h"
 #include "bn_sprite_text_generator.h"
+#include "Scene.h"
 
 class GameManager { //Singleton
 
@@ -31,6 +31,7 @@ public:
     void Update();
     void PhysicsUpdate();
     void Render(bn::sprite_text_generator& t);
+    Scene* GetCurrentScene();
 
 
 };

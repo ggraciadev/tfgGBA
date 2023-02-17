@@ -11,10 +11,10 @@
 template <int MAX_SIZE_ANIM>
 struct AnimInfo {
 
-    char animationFrames[MAX_SIZE_ANIM];
+    bn::array<char, MAX_SIZE_ANIM> animationFrames;
     char animationLenght;
-    bool looping;
-    bool canReplay;
+    bool looping : 1;
+    bool canReplay : 1;
 
     AnimInfo() {
         animationLenght = 0;
@@ -22,10 +22,8 @@ struct AnimInfo {
         canReplay = false;
     }
 
-    AnimInfo(const char (& frames)[MAX_SIZE_ANIM], const char lenght, bool loop = false, bool replay = false) {
-        for(int i = 0; i < lenght; ++i) {
-            animationFrames[i] = frames[i];
-        }
+    AnimInfo(bn::array<char, MAX_SIZE_ANIM> frames, const char lenght, bool loop = false, bool replay = false) {
+        animationFrames = bn::move(frames);
         animationLenght = lenght;
         looping = loop;
         canReplay = replay;
@@ -45,12 +43,12 @@ protected:
     char currentTime;
     char currentAnimation;
 
-    AnimInfo<MAX_SIZE_ANIM> animations [NUM_ANIMATIONS];
+    bn::vector<AnimInfo<MAX_SIZE_ANIM>, NUM_ANIMATIONS> animations;
 
     bn::optional<bn::sprite_ptr> sprite;
     bn::optional<bn::sprite_item> spriteItem;
 public:
-    virtual void SetSpriteItem(const bn::sprite_item& s);
+    virtual void SetSpriteItem(bn::sprite_item s);
 
     virtual void UpdateAnimation();
     virtual void UpdateAnimationTimer();
@@ -63,11 +61,15 @@ public:
     virtual void SetZOrder(char z_order);
 
     void SetFlipped(bool flip);
-    inline bool GetFlipped() {return flipped;}
+    inline bool GetFlipped() const {return flipped;}
 
-    void SetAnimations(const AnimInfo<MAX_SIZE_ANIM> (& anims)[NUM_ANIMATIONS]) {
-        for(int i = 0; i < NUM_ANIMATIONS; ++i) animations[i] = anims[i];
+    void SetAnimations(bn::vector<AnimInfo<MAX_SIZE_ANIM>, NUM_ANIMATIONS> anims) {
+        animations = bn::move(anims);
     }
+
+    void ResetAnim() { currentFrame = 0; currentTime = 0;}
+
+    inline void SetCurrentFrame(char frame) { currentFrame = frame; }
 };
 
 template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
@@ -77,8 +79,8 @@ void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::Start() {
 }
 
 template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
-void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetSpriteItem(const bn::sprite_item& s){ 
-    spriteItem = s; 
+void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetSpriteItem(bn::sprite_item s){ 
+    spriteItem = bn::move(s); 
     sprite = spriteItem->create_sprite(0, 0);
 }
 

@@ -5,7 +5,7 @@
 #include "GameObjectComponents/MovementComponent.h"
 #include "GameObjectComponents/BoxCollision.h"
 #include "GameObjectComponents/JumpAbility.h"
-#include "GameObjectComponents/MeleeComboAbility.h"
+#include "GameObjectComponents/DamageRecieverAbility.h"
 
 
 #define COLLISION_OFFSET_X -13
@@ -28,6 +28,7 @@ struct CharacterInfo {
         jumpSpeed = JUMP_SPEED;
     };
 };
+class Attack;
 
 class Character : public GameObject {
 public:
@@ -39,6 +40,7 @@ protected:
 
     MovementComponent movement;
     BoxCollision boxCollision;
+    DamageRecieverAbility damageReciever;
 
     CharacterInfo characterInfo;
 
@@ -59,6 +61,9 @@ public:
     inline MovementComponent* GetMovementComponent() { return &movement; }
 
     void UpdateAnimationState();
+
+    virtual void GetDamage(const AttackInfo& atkInfo);
+    BoxCollision* GetBoxCollision();
 
 };
 

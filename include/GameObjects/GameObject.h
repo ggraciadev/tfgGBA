@@ -43,6 +43,7 @@ protected:
     char componentsSize;
 
     bool worldPositionDirty;
+    bool destroyed;
 
 private:
     void SortComponentsByUpdates();
@@ -55,6 +56,7 @@ public:
     void PhysicsUpdate();
     virtual void Update();
     void Render();
+    void Destroy() { destroyed = true; }
 
     inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
     bn::fixed_point GetWorldPosition() const;

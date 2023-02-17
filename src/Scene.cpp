@@ -23,6 +23,9 @@
 //#include "Actor.h"
 #include "GameManager.h"
 #include "GameObjects/Character.h"
+#include "Attack.h"
+#include "GameObjects/Player.h"
+#include "GameObjects/Enemy.h"
 // #include "PlayerController.h"
 // #include "Player.h"
 
@@ -61,13 +64,26 @@ void Scene::Start() {
     tmpPlayer->SetLocalPosition(0, -20);
     tmpPlayer->Start();
     tmpPlayer->SetLayerDepth(0);
+    tmpPlayer->SetZOrder(0);
     tmpPlayer->SetCamera(&camera);
     tmpPlayer->SetMapCollision(mapLayer.GetMapCollision());
     camera.SetFollowObject(tmpPlayer);
 
     objects.push_back(tmpPlayer);
+    characters.push_back(tmpPlayer);
 
-    int start = 1;
+    Enemy* tmpEnemy = enemy.Create();
+    tmpEnemy->SetParent(&mapLayer);
+    tmpEnemy->SetLocalPosition(64, -20);
+    tmpEnemy->Start();
+    tmpEnemy->SetLayerDepth(0);
+    tmpEnemy->SetZOrder(1);
+    tmpEnemy->SetCamera(&camera);
+    tmpEnemy->SetMapCollision(mapLayer.GetMapCollision());
+    objects.push_back(tmpEnemy);
+    characters.push_back(tmpEnemy);
+
+    int start = 2;
     int end = start + 1;
 
     // for(int i = start; i < end; ++i) {
@@ -81,18 +97,18 @@ void Scene::Start() {
     // }
 
     // start = end;
-    end = start + 2;
+    // end = start + 2;
 
-    for(int i = start; i < end; ++i) {
-        BackgroundElement<2,2>* bgEl = bg1ElementsFactory.Create();
-        bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
-        bgEl->SetParent(&layer1);
-        bgEl->SetLocalPosition((i-start-1) * 200,-80);
-        bgEl->Start();
-        bgEl->SetLayerDepth(1);
-        bgEl->SetCamera(&camera);
-        objects.push_back(bgEl);
-    }
+    // for(int i = start; i < end; ++i) {
+    //     BackgroundElement<2,2>* bgEl = bg1ElementsFactory.Create();
+    //     bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
+    //     bgEl->SetParent(&layer1);
+    //     bgEl->SetLocalPosition((i-start-1) * 200,-80);
+    //     bgEl->Start();
+    //     bgEl->SetLayerDepth(1);
+    //     bgEl->SetCamera(&camera);
+    //     objects.push_back(bgEl);
+    // }
     start = end;
     end = start + 5;
 
@@ -106,9 +122,6 @@ void Scene::Start() {
         bgEl->SetCamera(&camera);
         objects.push_back(bgEl);
     }
-    
-
-
     gameObjectListSize = objects.size();
 }
 
@@ -117,15 +130,19 @@ void Scene::Update() {
     mapLayer.Update();
     layer1.Update();
     layer2.Update();
-    for (int i = 0; i < gameObjectListSize; ++i) {
-        objects[i]->Update();
+    for (int i = 0; i < objects.size(); ++i) {
+        if(objects[i] != nullptr) {
+            objects[i]->Update();
+        }
     }
 }
 
 void Scene::PhysicsUpdate() {
 
-    for (int i = 0; i < gameObjectListSize; ++i) {
-        objects[i]->PhysicsUpdate();
+    for (int i = 0; i < objects.size(); ++i) {
+        if(objects[i] != nullptr) {
+            objects[i]->PhysicsUpdate();
+        }
     }
 }
 
@@ -133,7 +150,46 @@ void Scene::Render() {
     mapLayer.Render();
     layer1.Render();
     layer2.Render();
-    for (int i = 0; i < gameObjectListSize; ++i) {
-        objects[i]->Render();
+    for (int i = 0; i < objects.size(); ++i) {
+        if(objects[i] != nullptr) {
+            objects[i]->Render();
+        }
     }
+}
+
+bn::vector<Character*, 16> Scene::GetAllInstancesCharacters() {
+    return characters;
+}
+
+void Scene::SpawnAttack(GameObject* parent, bn::fixed_point position, AttackInfo& attackInfo) {
+    Attack* tmpAtk = attackFactory.Create();
+    tmpAtk->SetParent(parent);
+    tmpAtk->SetLocalPosition(position);
+    tmpAtk->SetAttackInfo(attackInfo);
+    tmpAtk->Start();
+    tmpAtk->SetLayerDepth(0);
+    tmpAtk->SetZOrder(0);
+    tmpAtk->SetCamera(&camera);
+    bool found = false;
+    for(int i = objects.size()-1; i >= 0; --i) {
+        if(objects[i] == nullptr) {
+            objects[i] = tmpAtk;
+            found = true;
+        }
+    }
+    if(!found) {
+        objects.push_back(tmpAtk);
+    }
+}
+
+void Scene::DestroyAttack(Attack* atk) {
+    for(int i = objects.size()-1; i >= 0; --i) {
+        if(atk->Equals(objects[i])) {
+            atk->SetLocalPosition(-500, -500);
+            atk->Render();
+            objects[i] = nullptr;
+        }
+    }
+    atk->Destroy();
+    attackFactory.Destroy(atk);
 }

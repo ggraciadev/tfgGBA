@@ -1,32 +1,13 @@
 #ifndef BF_MELEE_COMBO_ABILITY_H
 #define BF_MELEE_COMBO_ABILITY_H
 
-#include "GameObjectComponents/AbilityComponent.h"
+#include "GameObjectComponents/AttackAbility.h"
 #include <bn_fixed_point.h>
-
-struct AttackInfo {
-    int attackPower;
-    int impulseSpeed;
-    int attackDuration;
-
-    AttackInfo() {
-        attackPower = 100;
-        impulseSpeed = 1;
-        attackDuration = 20;
-    }
-
-    AttackInfo(int power, int speed, int duration) {
-        attackPower = power;
-        impulseSpeed = speed;
-        attackDuration = duration;
-    }
-};
-
 
 class Character;
 
 template <int MAX_COMBO>
-class MeleeComboAbility : public AbilityComponent{
+class MeleeComboAbility : public AttackAbility{
 public:
     
     MeleeComboAbility() = default;
@@ -45,6 +26,7 @@ public:
     virtual bool UseAbility() override;
     virtual void Update() override;
     virtual void Start() override;
+    
 
     inline void SetCooldownCombo(int cooldown) { cooldownCombo = cooldown; }
     inline int GetCurrentCombo() const { return currentCombo; }
@@ -70,6 +52,7 @@ bool MeleeComboAbility<MAX_COMBO>::UseAbility() {
     abilityDuration = attacksCombo[currentCombo].attackDuration;
     bool ret = AbilityComponent::UseAbility();
     if(ret) {
+        SpawnAttack(attacksCombo[currentCombo]);
         character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, 20);
         currentCombo++;
         if(currentCombo >= MAX_COMBO) {

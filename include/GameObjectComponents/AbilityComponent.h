@@ -22,6 +22,7 @@ protected:
 public:
     virtual bool UseAbility();
     virtual void Update() override;
+    virtual void OnAbilityFinished() {};
 
     inline void SetCharacter(Character* c) { character= c;}
     inline void SetAbilityDuration(const int duration) { abilityDuration = duration; }
