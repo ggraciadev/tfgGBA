@@ -170,15 +170,13 @@ void Scene::SpawnAttack(GameObject* parent, bn::fixed_point position, AttackInfo
     tmpAtk->SetLayerDepth(0);
     tmpAtk->SetZOrder(0);
     tmpAtk->SetCamera(&camera);
-    bool found = false;
-    for(int i = objects.size()-1; i >= 0; --i) {
-        if(objects[i] == nullptr) {
-            objects[i] = tmpAtk;
-            found = true;
-        }
-    }
-    if(!found) {
+    
+    auto foundPos = bn::find(objects.begin(), objects.end(), nullptr);
+    if(foundPos == objects.end()) {
         objects.push_back(tmpAtk);
+    }
+    else {
+        *foundPos = tmpAtk;
     }
 }
 

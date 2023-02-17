@@ -89,7 +89,6 @@ void BoxCollision::UpdateContacts() {
 MapCollisionType BoxCollision::CheckHorizontalCollisions() {
     MapCollisionType col = MapCollisionType::NONE;
     if(movementDirection.x() > 0) {
-        MapCollisionType col;
         int tempStartX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
         int tempStartY = currentPosition.y().floor_integer();
         int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
@@ -128,6 +127,8 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
 
 MapCollisionType BoxCollision::CheckVerticalCollisions() {
     MapCollisionType col = MapCollisionType::NONE;
+    // collisionContacts[BOT_COLLISION] = true;
+    // return col;
     if(movementDirection.y() > 0) {
         
         int tempStartX = currentPosition.x().floor_integer();

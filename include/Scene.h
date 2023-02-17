@@ -30,8 +30,8 @@ protected:
     Factory<BackgroundElement<4,4>, 1> bg0ElementsFactory;
     Factory<BackgroundElement<2,2>, 2> bg1ElementsFactory;
     Factory<BackgroundElement<1,1>, 5> bg2ElementsFactory;
-    Factory<Attack, 16> attackFactory;
-    bn::vector<GameObject*, 1000> objects;
+    Factory<Attack, 2> attackFactory;
+    bn::vector<GameObject*, 20> objects;
     bn::vector<Character*, 50> characters;
     int gameObjectListSize;
     //bn::optional<bn::regular_bg_ptr> back;

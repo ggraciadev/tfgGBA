@@ -49,6 +49,7 @@ protected:
 
 public:
     void Start();
+    virtual void Update();
 
     void SetMapCollision(MapCollision* mc);
 

@@ -21,6 +21,11 @@ void Character::SetLayerDepth(int depth) {
     GameObject::SetLayerDepth(depth);
 }
 
+void Character::Update() {
+    GameObject::Update();
+    movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+}
+
 void Character::SetInputMovement(bn::fixed_point md) {
     if(md.x() > 0.0f) {
         if(boxCollision.GetContact(RIGHT_COLLISION)) {
@@ -36,7 +41,6 @@ void Character::SetInputMovement(bn::fixed_point md) {
     }
     movement.SetInputMovement(md);
 
-    movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
     if(boxCollision.GetContact(TOP_COLLISION) && movement.GetVelocity().y() < 0) {
         movement.SetVelocityY(0);
     }

@@ -4,6 +4,9 @@
 #include "bn_core.h"
 #include "bn_vector.h"
 
+template<typename T>
+using lent_ptr = T*;
+
 
 template <class T, int MAX_INSTANCES>
 class Factory {
