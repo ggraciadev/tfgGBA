@@ -29,10 +29,10 @@ void MovementComponent::CalcVelocity() {
     else {
         velocity.set_y(currentMovementSpeed * inputMovement.y());
     }
-    if(velocity.x() > 0) {
+    if(inputMovement.x() > 0 && velocity.x() > 0) {
         movementDirection = 1;
     }
-    else if(velocity.x() < 0) {
+    else if(inputMovement.x() < 0 && velocity.x() < 0) {
         movementDirection = -1;
     }
 }
@@ -52,11 +52,5 @@ void MovementComponent::SetGrounded(bool g) {
 
 void MovementComponent::AddImpulse(bn::fixed_point impulse, int impulseDuration) {
     currentImpulseDuration = impulseDuration;
-    velocity += impulse;
-    if(velocity.x() > 0) {
-        movementDirection = 1;
-    }
-    else if(velocity.x() < 0) {
-        movementDirection = -1;
-    }
+    velocity = impulse;
 }

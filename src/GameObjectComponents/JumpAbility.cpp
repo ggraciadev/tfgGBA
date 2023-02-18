@@ -2,10 +2,11 @@
 #include "Character.h"
 
 void JumpAbility::Start() {
-    AbilityComponent::Start();
     abilityDuration = 0;
     currentDuration = 0;
+    currentJumps = 0;
     updateType = NO_UPDATE;
+    AbilityComponent::Start();
 }
 
 bool JumpAbility::UseAbility() {
@@ -15,5 +16,7 @@ bool JumpAbility::UseAbility() {
     if(currentJumps < maxJumps) {
         character->GetMovementComponent()->SetVelocityY(jumpSpeed);
         currentJumps++;
+        return true;
     }
+    return false;
 }

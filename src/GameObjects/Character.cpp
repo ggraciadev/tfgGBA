@@ -6,8 +6,11 @@ void Character::Start() {
     movement.SetCurrentMovementSpeed(characterInfo.movementSpeed);
     boxCollision.Setup(characterInfo.boxCollisionExtension);
 
+    damageReciever.SetDamageCooldown(10);
+
     AddComponent(&boxCollision);
     AddComponent(&movement);
+    AddComponent(&damageReciever);
 
     GameObject::Start();
 }
@@ -22,8 +25,8 @@ void Character::SetLayerDepth(int depth) {
 }
 
 void Character::Update() {
-    GameObject::Update();
     movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+    GameObject::Update();
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {
@@ -65,8 +68,8 @@ void Character::SetInputMovementY(bn::fixed y) {
     movement.SetInputMovementY(y);
 }
 
-void Character::GetDamage(const AttackInfo& atkInfo) {
-    damageReciever.GetDamage(atkInfo);
+void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    bool result = damageReciever.GetDamage(atkInfo, attackPosition);
 }
 
 BoxCollision* Character::GetBoxCollision() {

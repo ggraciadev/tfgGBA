@@ -7,7 +7,7 @@
 
 void Attack::Start() {
     targets = GameManager::GetInstance()->GetCurrentScene()->GetAllInstancesCharacters();
-    boxCollision.Setup(16,16,32,32);
+    boxCollision.Setup(-16,-16,32,32);
     SetupAnimations();
     if(!componentAdded) {
         AddComponent(&boxCollision);
@@ -48,7 +48,7 @@ void Attack::SetupAnimations() {
 
     bn::vector<AnimInfo<16>, 1> anims;
     
-    anims.emplace_back(AnimInfo<16>(bn::array<char, 16>{0,1,2,3,4}, 5, false, false));
+    anims.emplace_back(AnimInfo<16>(bn::array<char, 16>{0,1,2,3,4}, 5, false));
 
     animator.SetAnimations(bn::move(anims));
     animator.ResetAnim();
@@ -65,5 +65,9 @@ void Attack::SetZOrder(char z_order) {
 }
 
 void Attack::DoDamage(Character* other) {
-    other->GetDamage(attackInfo);
+    other->GetDamage(attackInfo, GetWorldPosition());
+}
+
+void Attack::SetDirection(int dir) {
+    animator.SetFlipped(dir == -1);
 }

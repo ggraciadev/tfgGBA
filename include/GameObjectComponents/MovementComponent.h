@@ -40,6 +40,7 @@ public:
 
     void AddImpulse(bn::fixed_point impulse, int impulseDuration = 60);
     inline void AddImpulseForward(bn::fixed impulse, int impulseDuration = 60) {AddImpulse(bn::fixed_point(impulse * movementDirection, 0), impulseDuration);}
+    inline void AddImpulseBackward(bn::fixed impulse, int impulseDuration = 60) {AddImpulse(bn::fixed_point(impulse * (-movementDirection), 0), impulseDuration);}
     inline void AddImpulseUp(bn::fixed impulse, int impulseDuration = 60) {AddImpulse(bn::fixed_point(0, -impulse), impulseDuration);}
     inline void AddImpulse(bn::fixed x, bn::fixed y, int impulseDuration = 60) { AddImpulse(bn::fixed_point(x, y), impulseDuration); }
 
@@ -48,7 +49,8 @@ public:
     void CalcVelocity();
     void CheckCollisions() const;
 
-    inline int GetMomvementDirection() const { return movementDirection; }
+    inline int GetMovementDirection() const { return movementDirection; }
+    inline void SetMovementDirection(const int dir) { movementDirection = dir; }
     
     inline void SetGravityValue(bn::fixed g) { gravityValue = g; }
     inline bn::fixed GetGravityValue() const { return gravityValue; }

@@ -35,6 +35,8 @@ public:
     virtual void DoDamage(Character* other);
     void SetCharacterCreator(Character* cc);
 
+    void SetDirection(int dir);
+
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
 

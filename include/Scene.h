@@ -48,7 +48,7 @@ public:
     virtual void Render();
 
     bn::vector<Character*, 16> GetAllInstancesCharacters();
-    void SpawnAttack(GameObject* parent, bn::fixed_point position, AttackInfo& attackInfo);
+    void SpawnAttack(GameObject* parent, Character* creator, bn::fixed_point position, int direction, AttackInfo& attackInfo);
     void DestroyAttack(Attack* atk);
     
 };

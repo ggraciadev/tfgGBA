@@ -161,15 +161,17 @@ bn::vector<Character*, 16> Scene::GetAllInstancesCharacters() {
     return characters;
 }
 
-void Scene::SpawnAttack(GameObject* parent, bn::fixed_point position, AttackInfo& attackInfo) {
+void Scene::SpawnAttack(GameObject* parent, Character* creator, bn::fixed_point position, int direction, AttackInfo& attackInfo) {
     Attack* tmpAtk = attackFactory.Create();
     tmpAtk->SetParent(parent);
     tmpAtk->SetLocalPosition(position);
     tmpAtk->SetAttackInfo(attackInfo);
     tmpAtk->Start();
+    tmpAtk->SetCharacterCreator(creator);
     tmpAtk->SetLayerDepth(0);
     tmpAtk->SetZOrder(0);
     tmpAtk->SetCamera(&camera);
+    tmpAtk->SetDirection(direction);
     
     auto foundPos = bn::find(objects.begin(), objects.end(), nullptr);
     if(foundPos == objects.end()) {

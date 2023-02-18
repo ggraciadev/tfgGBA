@@ -41,7 +41,7 @@ public:
 
 template <int MAX_COMBO>
 void MeleeComboAbility<MAX_COMBO>::Start() {
-    AbilityComponent::Start();
+    AttackAbility::Start();
     updateType = LOGIC_UPDATE;
 }
 
@@ -50,10 +50,10 @@ bool MeleeComboAbility<MAX_COMBO>::UseAbility() {
     
     if(currentCooldown > 0 || currentCombo >= MAX_COMBO) { return false; }
     abilityDuration = attacksCombo[currentCombo].attackDuration;
-    bool ret = AbilityComponent::UseAbility();
+    bool ret = AttackAbility::UseAbility();
     if(ret) {
         SpawnAttack(attacksCombo[currentCombo]);
-        character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, 20);
+        character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, abilityDuration);
         currentCombo++;
         if(currentCombo >= MAX_COMBO) {
             currentCooldown = cooldownCombo;
@@ -64,7 +64,7 @@ bool MeleeComboAbility<MAX_COMBO>::UseAbility() {
 
 template <int MAX_COMBO>
 void MeleeComboAbility<MAX_COMBO>::Update() {
-    AbilityComponent::Update();
+    AttackAbility::Update();
     if(currentCooldown > 0) {
         currentCooldown--;
         if(currentCooldown == 0) {currentCombo = 0;}

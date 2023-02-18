@@ -33,7 +33,7 @@ public:
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
 
-    virtual void GetDamage(const AttackInfo& atkInfo) override;
+    virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };
 
 #endif

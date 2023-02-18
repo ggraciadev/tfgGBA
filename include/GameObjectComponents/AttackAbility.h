@@ -12,10 +12,12 @@ public:
     virtual ~AttackAbility() = default;
 
 protected:
+    bn::fixed_point spawnOffset;
 
 public:
 
     void SpawnAttack(AttackInfo& attackInfo);
+    inline void SetSpawnOffset(bn::fixed_point offset) { spawnOffset = offset; }
 
 };
 

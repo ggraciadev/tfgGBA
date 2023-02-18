@@ -63,7 +63,7 @@ public:
 
     void UpdateAnimationState();
 
-    virtual void GetDamage(const AttackInfo& atkInfo);
+    virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
     BoxCollision* GetBoxCollision();
 
 };

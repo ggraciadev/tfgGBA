@@ -14,6 +14,7 @@ void Player::Start() {
     SetupAttacks();
     meleeComboAb.SetCooldownCombo(COOLDOWN_COMBO);
     meleeComboAb.SetCharacter(this);
+    meleeComboAb.SetSpawnOffset(bn::fixed_point(10, 0));
 
     SetupAnimations();
 
@@ -45,10 +46,10 @@ void Player::SetupAnimations() {
 
     bn::vector<AnimInfo<16>, 4> anims;
     
-    anims.emplace_back(AnimInfo<16>(bn::array<char, 16>{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true, false));
-    anims.emplace_back(AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true, false));
-    anims.emplace_back(AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false, true));
-    anims.emplace_back(AnimInfo<16>({24,25,26,27,28}, 5, false, true));
+    anims.emplace_back(AnimInfo<16>(bn::array<char, 16>{0,0,1,1,2,2,3,3,4,4,5,5,6,6}, 14, true));
+    anims.emplace_back(AnimInfo<16>({7,8,9,10,11,12,13,14,15,16,12}, 11, true));
+    anims.emplace_back(AnimInfo<16>({19,20,20,21,21,22,22,23,23}, 9, false));
+    anims.emplace_back(AnimInfo<16>({24,25,26,27,28}, 5, false));
 
     animator.SetAnimations(bn::move(anims));
 }
@@ -62,9 +63,7 @@ void Player::SetupAttacks() {
 }
 
 void Player::Jump() {
-    int lastJump = jumpAb.GetCurrentJump();
-    jumpAb.UseAbility();
-    if(lastJump != jumpAb.GetCurrentJump()) {
+    if(jumpAb.UseAbility()) {
         animator.SetCurrentAnimation(2, true);
     }
 }
@@ -93,5 +92,5 @@ void Player::UpdateAnimationState() {
         animator.SetCurrentAnimation(2);
     }
 
-    animator.SetFlipped(movement.GetMomvementDirection() == -1);
+    animator.SetFlipped(movement.GetMovementDirection() == -1);
 }

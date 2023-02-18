@@ -31,8 +31,8 @@ void Enemy::Update() {
     UpdateAnimationState();
 }
 
-void Enemy::GetDamage(const AttackInfo& atkInfo) {
-    Character::GetDamage(atkInfo);
+void Enemy::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    Character::GetDamage(atkInfo, attackPosition);
     if(damageReciever.GetAbilityInUse()) {
         animator.SetCurrentAnimation(1);
     }
@@ -53,8 +53,8 @@ void Enemy::SetupAnimations() {
 
     bn::vector<AnimInfo<2>, 2> anims;
     
-    anims.emplace_back(AnimInfo<2>(bn::array<char, 2>{0,0}, 1, true, false));
-    anims.emplace_back(AnimInfo<2>({1,1}, 1, true, false));
+    anims.emplace_back(AnimInfo<2>(bn::array<char, 2>{0,0}, 1, true));
+    anims.emplace_back(AnimInfo<2>({1,1}, 1, true));
 
     animator.SetAnimations(bn::move(anims));
 }
@@ -87,7 +87,7 @@ void Enemy::Dash() {
 
 void Enemy::UpdateAnimationState() {
     //if(meleeComboAb.GetAbilityInUse()) return;
+    animator.SetFlipped(movement.GetMovementDirection() == -1);
     if(damageReciever.GetAbilityInUse()) return;
     animator.SetCurrentAnimation(0);
-    animator.SetFlipped(movement.GetMomvementDirection() == -1);
 }

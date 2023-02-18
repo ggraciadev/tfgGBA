@@ -4,5 +4,8 @@
 #include "GameObjects/Attack.h"
 
 void AttackAbility::SpawnAttack(AttackInfo& attackInfo) {
-    GameManager::GetInstance()->GetCurrentScene()->SpawnAttack(character, bn::fixed_point(0, 0), attackInfo);
+    bn::fixed_point spawnPos = spawnOffset;
+    int direction = character->GetMovementComponent()->GetMovementDirection();
+    spawnPos.set_x(spawnOffset.x() * direction);
+    GameManager::GetInstance()->GetCurrentScene()->SpawnAttack(character, character, spawnPos, direction, attackInfo);
 }

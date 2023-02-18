@@ -12,12 +12,16 @@ public:
     virtual ~DamageRecieverAbility() = default;
 
 protected:
+    float damageCooldown;
+    float currentDamageCooldown;
 
 public:
     virtual void Start() override;
+    virtual void Update() override;
     virtual bool UseAbility() override;
 
-    virtual void GetDamage(const AttackInfo& atkInfo);
+    virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
+    inline void SetDamageCooldown(const float cooldown) { damageCooldown = cooldown; }
 };
 
 #endif

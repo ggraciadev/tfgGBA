@@ -14,19 +14,16 @@ struct AnimInfo {
     bn::array<char, MAX_SIZE_ANIM> animationFrames;
     char animationLenght;
     bool looping : 1;
-    bool canReplay : 1;
 
     AnimInfo() {
         animationLenght = 0;
         looping = true;
-        canReplay = false;
     }
 
-    AnimInfo(bn::array<char, MAX_SIZE_ANIM> frames, const char lenght, bool loop = false, bool replay = false) {
+    AnimInfo(bn::array<char, MAX_SIZE_ANIM> frames, const char lenght, bool loop = false) {
         animationFrames = bn::move(frames);
         animationLenght = lenght;
         looping = loop;
-        canReplay = replay;
     }
 };
 
@@ -138,7 +135,7 @@ void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetFlipped(bool flip) {
 
 template <int NUM_ANIMATIONS, int MAX_SIZE_ANIM>
 void Animator<NUM_ANIMATIONS, MAX_SIZE_ANIM>::SetCurrentAnimation(char anim, bool forceChange) {
-    if((animations[anim].canReplay && forceChange)|| anim != currentAnimation) {
+    if(forceChange || anim != currentAnimation) {
         currentAnimation = anim;
         currentFrame = 0;
         currentTime = 0;
