@@ -8,6 +8,7 @@
 void Attack::Start() {
     targets = GameManager::GetInstance()->GetCurrentScene()->GetAllInstancesCharacters();
     boxCollision.Setup(-16,-16,32,32);
+    boxCollision.SetIsTrigger(true);
     SetupAnimations();
     if(!componentAdded) {
         AddComponent(&boxCollision);

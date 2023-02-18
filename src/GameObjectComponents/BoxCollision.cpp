@@ -27,7 +27,7 @@ void BoxCollision::Start() {
 
 void BoxCollision::Update() {
     UpdateCurrentPosition();
-    if(mapCollision != nullptr) {
+    if(mapCollision != nullptr && !isTrigger) {
         CheckCollisionWithMap();
         UpdateContacts();
         gameObject->SetLocalPosition(currentPosition - extension.boxOffset);

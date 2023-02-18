@@ -48,7 +48,7 @@ protected:
     BoxExtension extension;
 
     bool updatedPosition;
-    bool isTrigger;
+    bool isTrigger = false;
 
 public:
 
@@ -62,6 +62,7 @@ public:
 
 
     void UpdateCurrentPosition();
+    inline void SetIsTrigger(bool trigger) { isTrigger = trigger; }
 
     void UpdateContacts();
     MapCollisionType CheckHorizontalCollisions();
