@@ -23,7 +23,11 @@ void Player::Start() {
     AddComponent(&input);
     AddComponent(&animator);
 
+    
+
     Character::Start();
+    movement.SetGravityValue(0);
+    boxCollision.SetIsTrigger(true);
 }
 
 void Player::Update() {

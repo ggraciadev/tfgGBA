@@ -13,6 +13,9 @@
 #include <bn_regular_bg_ptr.h>
 #include "bn_vector.h"
 
+#include "MapGenerator.h"
+#include "Map.h"
+
 class Scene {
 
 public:
@@ -21,9 +24,10 @@ public:
 
 protected:
     Camera camera;
-    MapLayer mapLayer;
-    Layer<64,32> layer1;
-    Layer<64,32> layer2;
+    Map map;
+    MapGenerator mapGenerator;
+    Layer<64,64> layer1;
+    Layer<64,64> layer2;
     Factory<Player, 1> player;
     Factory<Character, 10> characterFactory;
     Factory<Enemy, 1> enemy;

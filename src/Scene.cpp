@@ -44,10 +44,13 @@ Scene::~Scene() {
 
 void Scene::Start() {
     camera.Start();
-    
-    mapLayer.SetCamera(&camera);
-    mapLayer.SetLayerDepth(0);
-    mapLayer.Start(LayerType::CITY_LAYER_0);
+    map.mapLayer.SetCamera(&camera);
+    map.mapLayer.SetLayerDepth(0);
+    map.mapLayer.SetLocalPosition(0,0);
+    map.mapLayer.Start(LayerType::CITY_LAYER_0);
+    mapGenerator.InitMapGenerator(&map);
+    mapGenerator.GenerateMap();
+
 
     layer1.SetLayerDepth(1);
     layer1.SetCamera(&camera);
@@ -60,30 +63,30 @@ void Scene::Start() {
 
     Player* tmpPlayer = player.Create();
     
-    tmpPlayer->SetParent(&mapLayer);
-    tmpPlayer->SetLocalPosition(0, -20);
+    tmpPlayer->SetParent(&map.mapLayer);
+    tmpPlayer->SetLocalPosition(0, 0);
     tmpPlayer->Start();
     tmpPlayer->SetLayerDepth(0);
     tmpPlayer->SetZOrder(0);
     tmpPlayer->SetCamera(&camera);
-    tmpPlayer->SetMapCollision(mapLayer.GetMapCollision());
+    tmpPlayer->SetMapCollision(map.mapLayer.GetMapCollision());
     camera.SetFollowObject(tmpPlayer);
 
     objects.push_back(tmpPlayer);
     characters.push_back(tmpPlayer);
 
-    Enemy* tmpEnemy = enemy.Create();
-    tmpEnemy->SetParent(&mapLayer);
-    tmpEnemy->SetLocalPosition(64, -20);
-    tmpEnemy->Start();
-    tmpEnemy->SetLayerDepth(0);
-    tmpEnemy->SetZOrder(1);
-    tmpEnemy->SetCamera(&camera);
-    tmpEnemy->SetMapCollision(mapLayer.GetMapCollision());
-    objects.push_back(tmpEnemy);
-    characters.push_back(tmpEnemy);
+    // Enemy* tmpEnemy = enemy.Create();
+    // tmpEnemy->SetParent(&map.mapLayer);
+    // tmpEnemy->SetLocalPosition(64, -20);
+    // tmpEnemy->Start();
+    // tmpEnemy->SetLayerDepth(0);
+    // tmpEnemy->SetZOrder(1);
+    // tmpEnemy->SetCamera(&camera);
+    // tmpEnemy->SetMapCollision(map.mapLayer.GetMapCollision());
+    // objects.push_back(tmpEnemy);
+    // characters.push_back(tmpEnemy);
 
-    int start = 2;
+    int start = 1;
     int end = start + 1;
 
     // for(int i = start; i < end; ++i) {
@@ -96,9 +99,9 @@ void Scene::Start() {
     //     bgEl->SetCamera(&camera);
     // }
 
+
     // start = end;
     // end = start + 2;
-
     // for(int i = start; i < end; ++i) {
     //     BackgroundElement<2,2>* bgEl = bg1ElementsFactory.Create();
     //     bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
@@ -109,25 +112,25 @@ void Scene::Start() {
     //     bgEl->SetCamera(&camera);
     //     objects.push_back(bgEl);
     // }
-    start = end;
-    end = start + 5;
+    // start = end;
+    // end = start + 5;
 
-    for(int i = start; i < end; ++i) {
-        BackgroundElement<1,1>* bgEl = bg2ElementsFactory.Create();
-        bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
-        bgEl->SetParent(&layer2);
-        bgEl->SetLocalPosition((i-start-2) * 90,-50);
-        bgEl->Start();
-        bgEl->SetLayerDepth(2);
-        bgEl->SetCamera(&camera);
-        objects.push_back(bgEl);
-    }
+    // for(int i = start; i < end; ++i) {
+    //     BackgroundElement<1,1>* bgEl = bg2ElementsFactory.Create();
+    //     bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
+    //     bgEl->SetParent(&layer2);
+    //     bgEl->SetLocalPosition((i-start-2) * 90,-50);
+    //     bgEl->Start();
+    //     bgEl->SetLayerDepth(2);
+    //     bgEl->SetCamera(&camera);
+    //     objects.push_back(bgEl);
+    // }
     gameObjectListSize = objects.size();
 }
 
 void Scene::Update() {
     camera.Update();
-    mapLayer.Update();
+    map.mapLayer.Update();
     layer1.Update();
     layer2.Update();
     for (int i = 0; i < objects.size(); ++i) {
@@ -147,7 +150,7 @@ void Scene::PhysicsUpdate() {
 }
 
 void Scene::Render() {
-    mapLayer.Render();
+    map.mapLayer.Render();
     layer1.Render();
     layer2.Render();
     for (int i = 0; i < objects.size(); ++i) {

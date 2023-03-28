@@ -6,6 +6,9 @@
 
 class MapLayer : public Layer <MAP_WIDTH, MAP_HEIGHT> {
 
+friend class MapRoom;
+friend class MapGenerator;
+
 public:
     MapLayer();
     virtual ~MapLayer();

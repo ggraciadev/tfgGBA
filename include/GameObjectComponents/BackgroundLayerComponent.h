@@ -33,7 +33,7 @@ protected:
 
     LayerType layerType;
 
-    const char START_Y_POSITION [3] = {20,16,12};
+    const char START_Y_POSITION [3] = {54,16,12};
     const char LAYER_HEIGHT [3] = {8, 10, 10};
 
     const char BLOCK_WIDTH [3] = {3,2,2};
@@ -55,11 +55,17 @@ protected:
     bn::optional<bn::regular_bg_map_item> map_item;
     bn::optional<bn::regular_bg_ptr> bg;
     bn::optional<bn::regular_bg_map_ptr> bg_map;
+
+    bn::regular_bg_map_cell* temp_cell;
+    bn::regular_bg_map_cell_info temp_cell_info;
     
 
 public:
     virtual void Start();
     virtual void Update();
+
+    void SetTileIndex(int cellX, int cellY, int tileIndex);
+    inline void ReloadMap() { bg_map->reload_cells_ref(); }
 
     inline void SetLayerType(LayerType _layerType) { layerType = _layerType; }
 
@@ -91,7 +97,19 @@ BackgroundLayerComponent<CELLS_X, CELLS_Y>::~BackgroundLayerComponent() {
 }
 
 template <int CELLS_X, int CELLS_Y>
+void BackgroundLayerComponent<CELLS_X, CELLS_Y>::SetTileIndex(int cellX, int cellY, int tileIndex) {
+    if(cellX >= 0 && cellX < CELLS_X && cellY >= 0 && cellY < CELLS_Y) {
+        
+        temp_cell = &cells[map_item->cell_index(cellX, cellY)];
+        temp_cell_info = bn::regular_bg_map_cell_info(*temp_cell);
+        temp_cell_info.set_tile_index(tileIndex);
+        *temp_cell = temp_cell_info.cell();
+    }
+}
+
+template <int CELLS_X, int CELLS_Y>
 void BackgroundLayerComponent<CELLS_X, CELLS_Y>::Start() {
+    if(layerType == 0) return;
     bn::regular_bg_map_cell* current_cell;
 
     const int begin = START_Y_POSITION[(int)layerType];
