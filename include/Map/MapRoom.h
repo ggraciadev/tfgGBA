@@ -3,6 +3,11 @@
 
 #include <bn_point.h>
 
+#define GROUND_MIN_HEIGHT 1
+#define CEIL_MIN_HEIGHT 1
+#define LEFT_WALL_WIDTH 1
+#define RIGHT_WALL_WIDTH 1
+
 class MapLayer;
 class MapCollision;
 

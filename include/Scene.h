@@ -24,8 +24,6 @@ public:
 
 protected:
     Camera camera;
-    Map map;
-    MapGenerator mapGenerator;
     Layer<64,64> layer1;
     Layer<64,64> layer2;
     Factory<Player, 1> player;
@@ -38,6 +36,8 @@ protected:
     bn::vector<GameObject*, 20> objects;
     bn::vector<Character*, 50> characters;
     int gameObjectListSize;
+    Map map;
+    MapGenerator mapGenerator;
     //bn::optional<bn::regular_bg_ptr> back;
     //bn::optional<Camera> mainCamera;
 

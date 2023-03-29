@@ -4,7 +4,7 @@
 #include "MapRoom.h"
 #include "MapLayer.h"
 
-#define MAX_MAP_ROOMS 32
+#define MAX_MAP_ROOMS 16
 
 class Map {
 
@@ -17,6 +17,7 @@ public:
 
 protected:
     MapRoom mapRooms[MAX_MAP_ROOMS];
+    
     MapLayer mapLayer;
 };
 

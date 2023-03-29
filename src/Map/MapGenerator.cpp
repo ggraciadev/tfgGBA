@@ -15,13 +15,14 @@ bool MapGenerator::GenerateMapStep() {
         result = GenerateMapRoom(roomSize, beginSearch, endSearch) != nullptr;
     }
     else {
-        for(int i = 0; i < currentRoomIndex; ++i) {
+        int stepMax = currentRoomIndex;
+        for(int i = currentStep-1; i < stepMax && i < MAX_MAP_ROOMS; ++i) {
             if(roomState[i] == RoomGenerationState::CREATED) {
                 result = GenerateAdjacentRooms(i) || result;
             }
         }
     }
-    if(currentRoomIndex == MAX_MAP_ROOMS) {
+    if(currentRoomIndex >= MAX_MAP_ROOMS) {
         result = false;
     }
     currentStep++;
@@ -34,14 +35,11 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
     bn::point roomSize;
     bn::point beginSearch;
     bn::point endSearch;
-    int random = rand.get_int(0,100);
-    random = 0;
-    //bn::point roomPosition;
-
-    if(tempMapRoom->leftRoom == nullptr && random < EXPAND_X_PROB) {
+    
+    if(tempMapRoom->leftRoom == nullptr && rand.get_int(0,100) < EXPAND_X_PROB) {
         roomSize = GenerateRoomSize();
-        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x()-1, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() - roomSize.y() + 1, 0, MAP_HEIGHT));
-        endSearch = bn::point(Utils::Clamp(beginSearch.x() - roomSize.x(), 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + tempMapRoom->size.y() - 1, 0, MAP_HEIGHT));
+        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x()-1, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() - roomSize.y() + ROOM_DOOR_SIZE, 0, MAP_HEIGHT));
+        endSearch = bn::point(Utils::Clamp(beginSearch.x() - roomSize.x(), 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + tempMapRoom->size.y() - ROOM_DOOR_SIZE, 0, MAP_HEIGHT));
         
         MapRoom* tmpRoom = GenerateMapRoom(roomSize, beginSearch, endSearch);
         if(tmpRoom != nullptr) {
@@ -51,10 +49,11 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
             roomState[roomIndex] = RoomGenerationState::EXPANDED;
         }
     }
-    if(tempMapRoom->rightRoom == nullptr && random < EXPAND_X_PROB) {
+
+    if(tempMapRoom->rightRoom == nullptr && rand.get_int(0,100) < EXPAND_X_PROB) {
         roomSize = GenerateRoomSize();
-        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() + tempMapRoom->size.x(), 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() - roomSize.y() + 1, 0, MAP_HEIGHT));
-        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + 1, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + tempMapRoom->size.y() - 1, 0, MAP_HEIGHT));
+        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() + tempMapRoom->size.x(), 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() - roomSize.y() + ROOM_DOOR_SIZE, 0, MAP_HEIGHT));
+        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + 1, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + tempMapRoom->size.y() - ROOM_DOOR_SIZE, 0, MAP_HEIGHT));
         
         MapRoom* tmpRoom = GenerateMapRoom(roomSize, beginSearch, endSearch);
         if(tmpRoom != nullptr) {
@@ -64,11 +63,12 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
             roomState[roomIndex] = RoomGenerationState::EXPANDED;
         }
     }
-    if(tempMapRoom->downRoom == nullptr && random < EXPAND_Y_PROB) {
+
+    if(tempMapRoom->downRoom == nullptr && rand.get_int(0,100) < EXPAND_Y_PROB) {
         roomSize = GenerateRoomSize();
 
-        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() - roomSize.x() + 1, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() + tempMapRoom->size.y(), 0, MAP_HEIGHT));
-        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + tempMapRoom->size.x() - 1, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + 1, 0, MAP_HEIGHT));
+        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() - roomSize.x() + ROOM_DOOR_SIZE, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y() + tempMapRoom->size.y(), 0, MAP_HEIGHT));
+        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + tempMapRoom->size.x() - ROOM_DOOR_SIZE, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() + roomSize.y() + 1, 0, MAP_HEIGHT));
         MapRoom* tmpRoom = GenerateMapRoom(roomSize, beginSearch, endSearch);
         if(tmpRoom != nullptr) {
             tempMapRoom->downRoom = tmpRoom;
@@ -77,11 +77,12 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
             roomState[roomIndex] = RoomGenerationState::EXPANDED;
         }
     }
-    if(tempMapRoom->upRoom == nullptr && random < EXPAND_Y_PROB) {
+
+    if(tempMapRoom->upRoom == nullptr && rand.get_int(0,100) < EXPAND_Y_PROB) {
         roomSize = GenerateRoomSize();
 
-        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() - roomSize.x() + 1, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y()-1, 0, MAP_HEIGHT));
-        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + tempMapRoom->size.x() - 1, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() - roomSize.y(), 0, MAP_HEIGHT));
+        beginSearch = bn::point(Utils::Clamp(tempMapRoom->pos.x() - roomSize.x() + ROOM_DOOR_SIZE, 0, MAP_WIDTH), Utils::Clamp(tempMapRoom->pos.y()-1, 0, MAP_HEIGHT));
+        endSearch = bn::point(Utils::Clamp(beginSearch.x() + roomSize.x() + tempMapRoom->size.x() - ROOM_DOOR_SIZE, 0, MAP_WIDTH), Utils::Clamp(beginSearch.y() - roomSize.y(), 0, MAP_HEIGHT));
         
         MapRoom* tmpRoom = GenerateMapRoom(roomSize, beginSearch, endSearch);
         if(tmpRoom != nullptr) {
@@ -94,6 +95,7 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
 
     if(roomState[roomIndex] == RoomGenerationState::CREATED) {
         roomState[roomIndex] = RoomGenerationState::CANT_EXPAND;
+        result = false;
     } 
     
     return result;
@@ -101,7 +103,7 @@ bool MapGenerator::GenerateAdjacentRooms(int roomIndex) {
 
 MapRoom* MapGenerator::GenerateMapRoom(bn::point size, bn::point beginSearch, bn::point endSearch) {
     MapRoom* result = nullptr;
-    
+    if(currentRoomIndex >= MAX_MAP_ROOMS) return nullptr;
     bn::optional<bn::point> roomPosition = GetValidRoomPosition(size, beginSearch, endSearch);
     if(roomPosition.has_value()) {
         result = GenerateMapRoomAt(*roomPosition, size);
@@ -112,19 +114,18 @@ MapRoom* MapGenerator::GenerateMapRoom(bn::point size, bn::point beginSearch, bn
 
 bn::point MapGenerator::GenerateRoomSize(int width, int height) {
     bn::point result;
-    if(height <= 0) {
+    if(height > 0) {
         result.set_y(height);
     }
     else {
         result.set_y(rand.get_int(ROOM_MIN_SIZE, ROOM_MAX_SIZE));
     }
-    if(width <= 0) {
+    if(width > 0) {
         result.set_x(width);
     }
     else {
         result.set_x(rand.get_int(ROOM_MIN_SIZE, ROOM_MAX_SIZE));
     }
-    return bn::point(4,4);
 
     return result;
 }
@@ -133,7 +134,7 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
     bn::optional<bn::point> result;
     result.reset();
     bn::point tempPos(-1,-1);
-    bn::point direction(Utils::GetSignZero(endSearch.x() - beginSearch.x()), Utils::GetSignZero(endSearch.y() - beginSearch.y()));
+    bn::point direction(Utils::GetSign(endSearch.x() - beginSearch.x()), Utils::GetSign(endSearch.y() - beginSearch.y()));
 
     int widthCheck = 0;
     int heightCheck = 0;
@@ -141,7 +142,7 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
     for(int i = beginSearch.y(); i != endSearch.y(); i += direction.y()) {
         widthCheck = 0;
         for(int j = beginSearch.x(); j != endSearch.x(); j += direction.x()) {
-            if(mapPtr->mapLayer.GetMapCollision()->GetCollisionByCell(j, i)) {
+            if(mapPtr->mapLayer.GetMapCollision()->GetCollisionByCell(j, i) == MapCollisionType::COLLISION) {
                 widthCheck = 0;
                 heightCheck = -1; //como despues se suma uno, se quedara en 0
                 break;
@@ -150,7 +151,7 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
                 widthCheck++;
                 if(widthCheck >= roomSize.x()) {
                     if (direction.x() > 0) {
-                        tempPos.set_x((roomSize.x() - 1));
+                        tempPos.set_x(j - (roomSize.x() - 1));
                     }
                     else {
                         tempPos.set_x(j);
@@ -163,7 +164,7 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
         heightCheck++;
         if(heightCheck >= roomSize.y()) {
             if (direction.y() > 0) {
-                tempPos.set_y((roomSize.y() - 1));
+                tempPos.set_y(i - (roomSize.y() - 1));
             }
             else {
                 tempPos.set_y(i);
@@ -178,9 +179,11 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
 
     return result;
 }
+
 MapRoom* MapGenerator::GenerateMapRoomAt(bn::point position, bn::point size) {
     MapRoom* result = &mapPtr->mapRooms[currentRoomIndex];
     result->InitRoom(position, size);
+    result->GenerateRoomWalls(&mapPtr->mapLayer.mapCollision);
     roomState[currentRoomIndex] = RoomGenerationState::CREATED;
     currentRoomIndex++;
     return result;
@@ -188,11 +191,11 @@ MapRoom* MapGenerator::GenerateMapRoomAt(bn::point position, bn::point size) {
 
 void MapGenerator::GenerateMap() {
     bool finished = false;
-    int maxIt = 3;
+    int temp = 2 * MAX_MAP_ROOMS;
+    //temp = 3;
     while(!finished) {
-        maxIt--;
-        if(maxIt <= 0) break;
-        finished = !GenerateMapStep();
+        if(temp-- <= 0) break;
+        finished = currentRoomIndex >= MAX_MAP_ROOMS || !GenerateMapStep();
     }
     for(int i = 0; i < currentRoomIndex; ++i) {
         mapPtr->mapRooms[i].GenerateRoomInterior(mapPtr->mapLayer);

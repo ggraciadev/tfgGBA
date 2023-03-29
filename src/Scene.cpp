@@ -48,9 +48,6 @@ void Scene::Start() {
     map.mapLayer.SetLayerDepth(0);
     map.mapLayer.SetLocalPosition(0,0);
     map.mapLayer.Start(LayerType::CITY_LAYER_0);
-    mapGenerator.InitMapGenerator(&map);
-    mapGenerator.GenerateMap();
-
 
     layer1.SetLayerDepth(1);
     layer1.SetCamera(&camera);
@@ -126,6 +123,9 @@ void Scene::Start() {
     //     objects.push_back(bgEl);
     // }
     gameObjectListSize = objects.size();
+
+    mapGenerator.InitMapGenerator(&map);
+    mapGenerator.GenerateMap();
 }
 
 void Scene::Update() {
