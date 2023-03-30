@@ -72,18 +72,18 @@ void Scene::Start() {
     objects.push_back(tmpPlayer);
     characters.push_back(tmpPlayer);
 
-    // Enemy* tmpEnemy = enemy.Create();
-    // tmpEnemy->SetParent(&map.mapLayer);
-    // tmpEnemy->SetLocalPosition(64, -20);
-    // tmpEnemy->Start();
-    // tmpEnemy->SetLayerDepth(0);
-    // tmpEnemy->SetZOrder(1);
-    // tmpEnemy->SetCamera(&camera);
-    // tmpEnemy->SetMapCollision(map.mapLayer.GetMapCollision());
-    // objects.push_back(tmpEnemy);
-    // characters.push_back(tmpEnemy);
+    Enemy* tmpEnemy = enemy.Create();
+    tmpEnemy->SetParent(&map.mapLayer);
+    tmpEnemy->SetLocalPosition(64, -20);
+    tmpEnemy->Start();
+    tmpEnemy->SetLayerDepth(0);
+    tmpEnemy->SetZOrder(1);
+    tmpEnemy->SetCamera(&camera);
+    tmpEnemy->SetMapCollision(map.mapLayer.GetMapCollision());
+    objects.push_back(tmpEnemy);
+    characters.push_back(tmpEnemy);
 
-    int start = 1;
+    int start = 2;
     int end = start + 1;
 
     // for(int i = start; i < end; ++i) {

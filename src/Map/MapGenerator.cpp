@@ -200,7 +200,8 @@ void MapGenerator::GenerateMap() {
     for(int i = 0; i < currentRoomIndex; ++i) {
         mapPtr->mapRooms[i].GenerateRoomInterior(mapPtr->mapLayer);
     }
-    mapPtr->mapLayer.backLayerComponent.ReloadMap();
+    mapPtr->GenerateMapGraphics();
+    //mapPtr->mapLayer.backLayerComponent.ReloadMap();
 }
 
 

@@ -11,9 +11,9 @@ GameManager::GameManager() {
 }
 
 GameManager::~GameManager() {
-    if(scene != nullptr) {
-        delete(scene);
-    }
+    // if(scene != nullptr) {
+    //     delete(scene);
+    // }
 }
 
 GameManager* GameManager::GetInstance() {
@@ -25,8 +25,8 @@ GameManager* GameManager::GetInstance() {
 }
 
 void GameManager::Init() {
-    scene = new Scene();
-    scene->Start();
+    //scene = new Scene();
+    scene.Start();
 
     // bn::ostringstream string_stream(printString);
     // string_stream << MovementComponent::GetClassName();
@@ -35,15 +35,15 @@ void GameManager::Init() {
 }
 
 void GameManager::Update() {
-    scene->Update();
+    scene.Update();
 }
 
 void GameManager::PhysicsUpdate() {
-    scene->PhysicsUpdate();
+    scene.PhysicsUpdate();
 }
 
 void GameManager::Render(bn::sprite_text_generator& t) {
-    scene->Render();
+    scene.Render();
     
     //bn::vector<bn::sprite_ptr, 32> text_sprites;
     //t.generate(0, 0, printString, text_sprites);
@@ -51,6 +51,6 @@ void GameManager::Render(bn::sprite_text_generator& t) {
 }
 
 Scene* GameManager::GetCurrentScene() { 
-    return scene;
+    return &scene;
 }
 

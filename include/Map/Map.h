@@ -15,9 +15,11 @@ public:
     Map() = default;
     ~Map() = default;
 
+    void GenerateMapGraphics();
+
 protected:
     MapRoom mapRooms[MAX_MAP_ROOMS];
-    
+    //bool mapTilesOccupied[MAP_WIDTH * MAP_HEIGHT];
     MapLayer mapLayer;
 };
 

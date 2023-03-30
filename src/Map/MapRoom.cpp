@@ -35,9 +35,18 @@ void MapRoom::GenerateRoomInterior(MapLayer& map) {
 }
 
 void MapRoom::GenerateMapCollisions(MapCollision* mapCollisions) {
+    GenerateRoomInteriorTiles(mapCollisions);
     GenerateRoomWalls(mapCollisions);
     GenerateRoomDoors(mapCollisions);
     GenerateRoomPlatforms(mapCollisions);
+}
+
+void MapRoom::GenerateRoomInteriorTiles(MapCollision* mapCollisions) {
+    for (int i = pos.y() + CEIL_MIN_HEIGHT; i < pos.y() - GROUND_MIN_HEIGHT + size.y(); ++i) {
+        for(int j = pos.x() + 1; j < pos.x() + size.x() - 1; j++) {
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
+        }
+    }
 }
 
 void MapRoom::GenerateRoomWalls(MapCollision* mapCollisions) {
@@ -90,7 +99,7 @@ void MapRoom::GenerateRoomDoors(MapCollision* mapCollisions) {
 void MapRoom::GenerateRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions) {
     for(int i = begin.y(); i < end.y(); ++i) {
         for(int j = begin.x(); j < end.x(); ++j) {
-            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::NONE);
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
         }
     }
 }
@@ -101,23 +110,6 @@ void MapRoom::GenerateRoomPlatforms(MapCollision* mapCollisions) {
 
 void MapRoom::GenerateRoomTiles(MapLayer& map) {
     // = nullptr;
-    int initY = pos.y();
-    int initX = pos.x();
-    int endY = initY + size.y();
-    int endX = initX + size.x();
-    for (int i = initY; i < endY; i++) {
-        for(int j = initX; j < endX; ++j) {
-            //map.backLayerComponent.SetTileIndex(j, i, 5);
-            switch(map.mapCollision.GetCollisionByCell(j, i)) {
-                case MapCollisionType::NONE:
-                    map.backLayerComponent.SetTileIndex(j, i, 15);
-                    break;
-                case MapCollisionType::COLLISION:
-                    map.backLayerComponent.SetTileIndex(j, i, 4);
-                    break;
-                case MapCollisionType::PLATFORM:
-                    break;
-            }
-        }
-    }
+    
+    
 }

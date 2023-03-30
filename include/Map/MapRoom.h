@@ -21,13 +21,14 @@ public:
 
 protected:
 
-    bn::point pos;
-    bn::point size;
-
     MapRoom* leftRoom;
     MapRoom* rightRoom;
     MapRoom* upRoom;
     MapRoom* downRoom;
+    
+    bn::point pos;
+    bn::point size;
+
 
 public:
     void InitRoom();
@@ -47,6 +48,8 @@ public:
     
 
 protected:
+    //Para hacer los bordes de la sala
+    void GenerateRoomInteriorTiles(MapCollision* mapCollisions);
     //Para hacer los bordes de la sala
     void GenerateRoomWalls(MapCollision* mapCollisions);
     //Para hacer las connexiones entre salas

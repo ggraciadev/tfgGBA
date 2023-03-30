@@ -9,6 +9,7 @@ void Player::Start() {
 
     jumpAb.SetJumpSpeed(characterInfo.jumpSpeed);
     jumpAb.SetMaxJumps(MAX_JUMPS);
+    jumpAb.SetMaxJumps(-1);
     jumpAb.SetCharacter(this);
 
     SetupAttacks();
@@ -23,11 +24,9 @@ void Player::Start() {
     AddComponent(&input);
     AddComponent(&animator);
 
-    
-
     Character::Start();
-    movement.SetGravityValue(0);
-    boxCollision.SetIsTrigger(true);
+    // movement.SetGravityValue(0);
+    // boxCollision.SetIsTrigger(true);
 }
 
 void Player::Update() {

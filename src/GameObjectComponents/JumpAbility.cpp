@@ -13,7 +13,7 @@ bool JumpAbility::UseAbility() {
     if(character->GetMovementComponent()->IsGrounded()) {
         currentJumps = 0;
     }
-    if(currentJumps < maxJumps) {
+    if(maxJumps == -1 || currentJumps < maxJumps) {
         character->GetMovementComponent()->SetVelocityY(jumpSpeed);
         currentJumps++;
         return true;

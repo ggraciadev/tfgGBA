@@ -1,6 +1,6 @@
 #include "GameObjects/MapLayer.h"
 
-MapLayer::MapLayer() : Layer<MAP_WIDTH,MAP_HEIGHT>::Layer(){
+MapLayer::MapLayer() : Layer<REAL_MAP_WIDTH,REAL_MAP_HEIGHT>::Layer(){
 
 }
 

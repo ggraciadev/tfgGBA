@@ -13,14 +13,14 @@ class GameManager { //Singleton
 
 protected:
 
-    GameManager();
     static GameManager* instance;
-    Scene* scene;
+    Scene scene;
 
     bn::string<64> printString;
 
     bn::sprite_text_generator* textGen;
 
+    GameManager();
 
 public:
     ~GameManager();
