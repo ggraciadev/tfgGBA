@@ -94,9 +94,12 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
         int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
         int tempEndY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::ROOM_INTERIOR) {
+        if(col != MapCollisionType::ROOM_INTERIOR && col != MapCollisionType::PLATFORM) {
             currentPosition.set_x((currentPosition.x().floor_integer()) - 1);
             collisionContacts[RIGHT_COLLISION] = true;
+        }
+        else {
+            col = MapCollisionType::ROOM_INTERIOR;
         }
     }
     else if(movementDirection.x() < 0) {
@@ -105,21 +108,25 @@ MapCollisionType BoxCollision::CheckHorizontalCollisions() {
         int tempEndX = currentPosition.x().floor_integer();
         int tempEndY = currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::ROOM_INTERIOR) {
+        if(col != MapCollisionType::ROOM_INTERIOR && col != MapCollisionType::PLATFORM) {
             currentPosition.set_x(currentPosition.x().floor_integer() + 1);
             collisionContacts[LEFT_COLLISION] = true;
         }
+        else {
+            col = MapCollisionType::ROOM_INTERIOR;
+        }
     }
     else {
-        if(MapCollisionType::ROOM_INTERIOR == CheckCollisionWithMapEdge(currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer(), 
-            currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer())) {
+        MapCollisionType tempCol = CheckCollisionWithMapEdge(currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer(), 
+            currentPosition.x().floor_integer() - TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer());
+        if(tempCol == MapCollisionType::ROOM_INTERIOR || tempCol == MapCollisionType::PLATFORM) {
             collisionContacts[LEFT_COLLISION] = false;
 
         }
-        if(MapCollisionType::ROOM_INTERIOR == CheckCollisionWithMapEdge(currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer(), 
-            currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer())) {
+        tempCol = CheckCollisionWithMapEdge(currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer(), 
+            currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer() + TILE_WIDTH, currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer());
+        if(tempCol == MapCollisionType::ROOM_INTERIOR || tempCol == MapCollisionType::PLATFORM) {
             collisionContacts[RIGHT_COLLISION] = false;
-
         }
     }
     return col;
@@ -147,14 +154,19 @@ MapCollisionType BoxCollision::CheckVerticalCollisions() {
         int tempEndX = currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer();
         int tempEndY = currentPosition.y().floor_integer();
         col = CheckCollisionWithMapEdge(tempStartX, tempStartY, tempEndX, tempEndY);
-        if(col != MapCollisionType::ROOM_INTERIOR) {
+        if(col != MapCollisionType::ROOM_INTERIOR && col != MapCollisionType::PLATFORM) {
             currentPosition.set_y(currentPosition.y().floor_integer()+1);
             collisionContacts[TOP_COLLISION] = true;
         }   
+        else {
+            col = MapCollisionType::ROOM_INTERIOR;
+        }
     }
-    else if(MapCollisionType::ROOM_INTERIOR == CheckCollisionWithMapEdge(currentPosition.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT, 
-        currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT)) {
-        collisionContacts[BOT_COLLISION] = false;
+    else {
+        if(MapCollisionType::ROOM_INTERIOR == CheckCollisionWithMapEdge(currentPosition.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT, 
+            currentPosition.x().floor_integer() + extension.boxSize.x().floor_integer(), currentPosition.y().floor_integer() + extension.boxSize.y().floor_integer() + TILE_HEIGHT)) {
+            collisionContacts[BOT_COLLISION] = false;
+        }
     }
     return col;
 }
@@ -169,7 +181,7 @@ void BoxCollision::CheckCollisionWithMap() {
     MapCollisionType colX = MapCollisionType::COLLISION;
     MapCollisionType colY = MapCollisionType::COLLISION;
     do {
-        if(colX != MapCollisionType::ROOM_INTERIOR) {
+        if(colX != MapCollisionType::ROOM_INTERIOR && colX != MapCollisionType::PLATFORM) {
             colX = CheckHorizontalCollisions();
         }
         if(colY != MapCollisionType::ROOM_INTERIOR) {

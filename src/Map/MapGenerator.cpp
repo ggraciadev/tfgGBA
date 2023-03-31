@@ -199,7 +199,7 @@ void MapGenerator::GenerateMap(unsigned seed) {
         finished = currentRoomIndex >= MAX_MAP_ROOMS || !GenerateMapStep();
     }
     for(int i = 0; i < currentRoomIndex; ++i) {
-        mapPtr->mapRooms[i].GenerateRoomInterior(mapPtr->mapLayer);
+        mapPtr->mapRooms[i].GenerateRoomInterior(mapPtr->mapLayer, rand);
     }
     mapPtr->GenerateMapGraphics();
     //mapPtr->mapLayer.backLayerComponent.ReloadMap();

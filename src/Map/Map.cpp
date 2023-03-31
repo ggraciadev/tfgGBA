@@ -15,6 +15,7 @@ void Map::GenerateMapGraphics() {
                     mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 14);
                     break;
                 case MapCollisionType::PLATFORM:
+                    mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 10);
                     break;
             }
         }

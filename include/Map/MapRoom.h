@@ -2,11 +2,19 @@
 #define BF_MAP_ROOM_H
 
 #include <bn_point.h>
+#include <bn_random.h>
 
 #define GROUND_MIN_HEIGHT 1
 #define CEIL_MIN_HEIGHT 1
 #define LEFT_WALL_WIDTH 1
 #define RIGHT_WALL_WIDTH 1
+
+#define PLATFORM_MIN_WIDTH 4
+#define PLATFORM_MAX_WIDTH 6
+#define PLATFORM_MIN_HEIGHT 1
+#define PLATFORM_MAX_HEIGHT 1
+#define PLAYER_JUMP_WIDTH 5
+#define PLAYER_JUMP_HEIGHT 4
 
 class MapLayer;
 class MapCollision;
@@ -44,7 +52,7 @@ public:
     inline void SetDownRoom(MapRoom* room) { downRoom = room; if(room != nullptr) room->upRoom = this; }
 
     //para generar el interior de la sala y los graficos
-    void GenerateRoomInterior(MapLayer& map);
+    void GenerateRoomInterior(MapLayer& map, bn::random& rand);
     
 
 protected:
@@ -53,15 +61,12 @@ protected:
     //Para hacer los bordes de la sala
     void GenerateRoomWalls(MapCollision* mapCollisions);
     //Para hacer las connexiones entre salas
-    void GenerateRoomDoors(MapCollision* mapCollisions);
+    void GenerateRoomDoorsAndPlatforms(MapCollision* mapCollisions, bn::random& rand);
     //Para hacer las connexiones entre salas
     void GenerateRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
-    //Para llenar la sala de plataformas
-    void GenerateRoomPlatforms(MapCollision* mapCollisions);
+    void GenerateRoomPlatforms(MapCollision* mapCollisions, bn::point otherRoomGroundBegin, bn::point otherRoomGroundEnd, bn::random& rand);
     //Para asignar las colisiones de la sala
-    void GenerateMapCollisions(MapCollision* mapCollisions);
-    //Para asignar Tiles a la sala
-    void GenerateRoomTiles(MapLayer& map);
+    void GenerateMapCollisions(MapCollision* mapCollisions, bn::random& rand);
 };
 
 #endif
