@@ -192,7 +192,7 @@ MapRoom* MapGenerator::GenerateMapRoomAt(bn::point position, bn::point size) {
 void MapGenerator::GenerateMap(unsigned seed) {
     bool finished = false;
     int temp = 2 * MAX_MAP_ROOMS;
-    rand.SetSeed(seed);
+    rand.set_seed(seed);
     //temp = 3;
     while(!finished) {
         if(temp-- <= 0) break;
