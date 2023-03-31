@@ -9,6 +9,8 @@
 #define ROOM_MAX_SIZE 48
 #define ROOM_DOOR_SIZE 18
 
+
+
 enum RoomGenerationState {NOT_CREATED, CREATED, EXPANDED, CANT_EXPAND };
 
 class MapGenerator {
@@ -17,7 +19,7 @@ public:
     ~MapGenerator() = default;
     
     void InitMapGenerator(Map* map);
-    void GenerateMap();
+    void GenerateMap(unsigned seed);
 
 protected:
     int currentStep;
