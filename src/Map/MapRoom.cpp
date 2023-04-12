@@ -95,11 +95,13 @@ void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random&
                     mapCollisions->SetMapCollisionType(k, j, MapCollisionType::ROOM_INTERIOR);
                 }
             }
-            beginPos = Utils::Clamp(tempPos - rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), pos.x(), pos.x() + size.x()-1);
-            int endX = Utils::Clamp(tempPos + rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), pos.x(), pos.x() + size.x()-1);
+            beginPos = Utils::Clamp(tempPos - rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, pos.x() + size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
+            int endX = Utils::Clamp(tempPos + rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, pos.x() + size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
             //PLATAFORMA HORIZONTAL
-            for(int j = beginPos; j < endX; j++) {
-                mapCollisions->SetMapCollisionType(j, endPos, MapCollisionType::PLATFORM);
+            for(int j = endPos - HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; j < endPos + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; ++j) {
+                for(int k = beginPos; k < endX; k++) {
+                    mapCollisions->SetMapCollisionType(k, j, MapCollisionType::PLATFORM);
+                }
             }
         }
     }
