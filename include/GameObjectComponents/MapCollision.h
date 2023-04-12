@@ -21,7 +21,7 @@
 
 #define OFFSET_Y 0 + MAP_HEIGHT * TILE_HEIGHT / 2
 
-enum MapCollisionType {ROOM_EXTERIOR = 0, PLATFORM = 1, COLLISION = 2, ROOM_INTERIOR = 3};
+enum MapCollisionType {ROOM_EXTERIOR = 0, PLATFORM = 1, COLLISION = 2, ROOM_INTERIOR = 3, };
 
 struct Collisions {
     unsigned collision : 2;

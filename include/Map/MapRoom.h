@@ -16,6 +16,15 @@
 #define PLAYER_JUMP_WIDTH 5
 #define PLAYER_JUMP_HEIGHT 4
 
+#define MIN_HORIZONTAL_SUBDIVISION 20
+#define MIN_HORIZONTAL_BLOCK_PLATFORM 6
+#define MAX_HORIZONTAL_BLOCK_PLATFORM 12
+#define HORIZONTAL_SUBDIVISION_WALL_WIDTH 3
+
+#define ROOM_MIN_SIZE 24
+#define ROOM_MAX_SIZE 48
+#define ROOM_DOOR_SIZE 10
+
 class MapLayer;
 class MapCollision;
 
@@ -62,6 +71,9 @@ protected:
     void GenerateRoomWalls(MapCollision* mapCollisions);
     //Para hacer las connexiones entre salas
     void GenerateRoomDoorsAndPlatforms(MapCollision* mapCollisions, bn::random& rand);
+
+    void GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random& rand);
+    
     //Para hacer las connexiones entre salas
     void GenerateRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
     void GenerateRoomPlatforms(MapCollision* mapCollisions, bn::point otherRoomGroundBegin, bn::point otherRoomGroundEnd, bn::random& rand);

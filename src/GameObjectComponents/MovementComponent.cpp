@@ -1,5 +1,6 @@
 #include "GameObjectComponents/MovementComponent.h"
 #include "GameObjects/GameObject.h"
+#include "utils.h"
 
 void MovementComponent::Start() {
     GameObjectComponent::Start();
@@ -23,7 +24,7 @@ void MovementComponent::CalcVelocity() {
     velocity.set_x(currentMovementSpeed * inputMovement.x());
     if(gravityValue != 0) {
         if(!isGrounded) {
-            velocity.set_y(velocity.y() + gravityValue);
+            velocity.set_y(Utils::Min(velocity.y() + gravityValue, MAX_VERTICAL_SPEED));
         }
     }
     else {

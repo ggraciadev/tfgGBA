@@ -5,12 +5,6 @@
 #include "bn_optional.h"
 #include "bn_random.h"
 
-#define ROOM_MIN_SIZE 24
-#define ROOM_MAX_SIZE 48
-#define ROOM_DOOR_SIZE 18
-
-
-
 enum RoomGenerationState {NOT_CREATED, CREATED, EXPANDED, CANT_EXPAND };
 
 class MapGenerator {

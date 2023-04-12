@@ -109,7 +109,17 @@ void BackgroundLayerComponent<CELLS_X, CELLS_Y>::SetTileIndex(int cellX, int cel
 
 template <int CELLS_X, int CELLS_Y>
 void BackgroundLayerComponent<CELLS_X, CELLS_Y>::Start() {
-    if(layerType == 0) return;
+    if(layerType == 0) {
+        for(int i = 0; i < 128; ++i) {
+            for(int j = 0; j < 256; ++j) {
+                temp_cell = &cells[map_item->cell_index(j, i)];
+                temp_cell_info = bn::regular_bg_map_cell_info(*temp_cell);
+                temp_cell_info.set_tile_index(14);
+                *temp_cell = temp_cell_info.cell();
+            }
+        }
+        return;
+    }
     bn::regular_bg_map_cell* current_cell;
 
     const int begin = START_Y_POSITION[(int)layerType];

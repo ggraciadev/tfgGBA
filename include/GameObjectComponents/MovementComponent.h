@@ -4,6 +4,7 @@
 #include "GameObjectComponents/GameObjectComponent.h"
 #include <bn_fixed_point.h>
 
+#define MAX_VERTICAL_SPEED 10
 
 class MovementComponent : public GameObjectComponent{
 public:
