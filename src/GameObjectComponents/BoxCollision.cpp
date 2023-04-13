@@ -60,9 +60,15 @@ bool BoxCollision::IsColliding(BoxCollision* other) {
 
 MapCollisionType BoxCollision::CheckCollisionWithMapEdge(int startX, int startY, int endX, int endY) {
     MapCollisionType result = MapCollisionType::ROOM_INTERIOR;
-    for(int i = startY; i < endY+1 && result == MapCollisionType::ROOM_INTERIOR; i += TILE_HEIGHT) {
-        for(int j = startX; j < endX+1 && result == MapCollisionType::ROOM_INTERIOR; j += TILE_WIDTH) {
-            result = mapCollision->GetCollisionByPosition(j, i);
+    for(int i = startY; i < endY+1; i += TILE_HEIGHT) {
+        for(int j = startX; j < endX+1; j += TILE_WIDTH) {
+            MapCollisionType temp = mapCollision->GetCollisionByPosition(j, i);
+            if(temp != MapCollisionType::ROOM_INTERIOR) {
+                result = temp;
+            } 
+            if(temp == MapCollisionType::COLLISION) {
+                return result;
+            }
         }
     }
 
