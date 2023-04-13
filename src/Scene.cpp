@@ -125,7 +125,7 @@ void Scene::Start() {
     gameObjectListSize = objects.size();
 
     mapGenerator.InitMapGenerator(&map);
-    mapGenerator.GenerateMap(2);
+    mapGenerator.GenerateMap(52);
 }
 
 void Scene::Update() {

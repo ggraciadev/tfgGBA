@@ -8,9 +8,9 @@
 #include "GameObjectComponents/DamageRecieverAbility.h"
 
 
-#define COLLISION_OFFSET_X -13
+#define COLLISION_OFFSET_X -10
 #define COLLISION_OFFSET_Y -26
-#define COLLISION_WIDTH 26
+#define COLLISION_WIDTH 18
 #define COLLISION_HEIGHT 52
 #define MOVEMENT_SPEED 1.5
 #define JUMP_SPEED -4

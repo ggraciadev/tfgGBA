@@ -37,9 +37,11 @@ void MapRoom::GenerateMapCollisions(MapCollision* mapCollisions, bn::random& ran
     GenerateRoomInteriorTiles(mapCollisions);
     GenerateRoomWalls(mapCollisions);
     GenerateRoomDoorsAndPlatforms(mapCollisions, rand);
-    GenerateRoomInteriorWalls(mapCollisions, rand);
     GenerateRoomNoise(mapCollisions, rand);
-    
+    GenerateRoomInteriorWalls(mapCollisions, rand);
+    if(upRoom != nullptr) {
+        AddUpRoomPlatform(mapCollisions, rand);
+    }
 }
 
 
@@ -68,8 +70,12 @@ void MapRoom::GenerateRoomWalls(MapCollision* mapCollisions) {
 void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random& rand) {
     if(size.x() > MIN_HORIZONTAL_SUBDIVISION) {
         int tempPos = pos.x() + size.x() / 2 + rand.get_int(-size.x() / 8, size.x() / 8 + 1);
-        
-        for(int i = pos.y() + 1; i < pos.y() + size.y() - 1; ++i) {
+        int initY = pos.y() + 1;
+        int endY = pos.y() + size.y() - 1;
+        if(downRoom != nullptr) {
+            endY = pos.y() + size.y() - HORZONTAL_SUBDIVISION_DOOR_SIZE;
+        }
+        for(int i = initY; i < endY; ++i) {
             for(int j = tempPos - HORIZONTAL_SUBDIVISION_WALL_WIDTH/2; j <= tempPos + HORIZONTAL_SUBDIVISION_WALL_WIDTH/2; ++j) {
                 mapCollisions->SetMapCollisionType(j, i, MapCollisionType::COLLISION);
             }
@@ -80,7 +86,7 @@ void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random&
         for(int i = 0; i < unionDoors; ++i) {
             int beginPos = pos.y();
             int endPos = beginPos + HORZONTAL_SUBDIVISION_DOOR_SIZE;
-            switch(rand.get_int(0, 4)) {
+            switch(rand.get_int(1, 4)) {
                 case 0: //por arriba
                     beginPos = Utils::Clamp(pos.y(), pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
                     endPos = Utils::Clamp(beginPos + HORZONTAL_SUBDIVISION_DOOR_SIZE, pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
@@ -104,6 +110,26 @@ void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random&
                     mapCollisions->SetMapCollisionType(k, j, MapCollisionType::PLATFORM);
                 }
             }
+        }
+    }
+}
+
+void MapRoom::AddUpRoomPlatform(MapCollision* mapCollisions, bn::random& rand) {
+    int platformSize = MIN_HORIZONTAL_BLOCK_PLATFORM;
+    int initPos = upRoom->pos.x() + 1;
+    int endPos = initPos + platformSize;
+    int initPosY = pos.y();
+    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+        for(int j = initPos; j < endPos; ++j) {
+            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
+        }
+    }
+    initPos = pos.x() + size.x() - platformSize - 1;
+    endPos = initPos + platformSize;
+    initPosY = initPosY + PLAYER_JUMP_HEIGHT;
+    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+        for(int j = initPos; j < endPos; ++j) {
+            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
         }
     }
 }
