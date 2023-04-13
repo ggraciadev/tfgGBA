@@ -4,7 +4,7 @@
 #include "MapRoom.h"
 #include "MapLayer.h"
 
-#define MAX_MAP_ROOMS 16
+#define MAX_MAP_ROOMS 24
 
 class Map {
 

@@ -38,6 +38,7 @@ void MapRoom::GenerateMapCollisions(MapCollision* mapCollisions, bn::random& ran
     GenerateRoomWalls(mapCollisions);
     GenerateRoomDoorsAndPlatforms(mapCollisions, rand);
     GenerateRoomInteriorWalls(mapCollisions, rand);
+    GenerateRoomNoise(mapCollisions, rand);
     
 }
 
@@ -78,15 +79,15 @@ void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random&
 
         for(int i = 0; i < unionDoors; ++i) {
             int beginPos = pos.y();
-            int endPos = beginPos + ROOM_DOOR_SIZE;
+            int endPos = beginPos + HORZONTAL_SUBDIVISION_DOOR_SIZE;
             switch(rand.get_int(0, 4)) {
                 case 0: //por arriba
-                    beginPos = Utils::Clamp(pos.y() + 1, pos.y(), pos.y() + size.y()-1);
-                    endPos = Utils::Clamp(beginPos + ROOM_DOOR_SIZE, pos.y(), pos.y() + size.y()-1);
+                    beginPos = Utils::Clamp(pos.y(), pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
+                    endPos = Utils::Clamp(beginPos + HORZONTAL_SUBDIVISION_DOOR_SIZE, pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
                     break;
                 default: //por el medio
-                    beginPos = Utils::Clamp(pos.y() + size.y() / 2 - ROOM_DOOR_SIZE / 2, pos.y(), pos.y() + size.y()-1);
-                    endPos = Utils::Clamp(beginPos + ROOM_DOOR_SIZE, pos.y(), pos.y() + size.y()-1);
+                    beginPos = Utils::Clamp(pos.y() + size.y() / 2 - HORZONTAL_SUBDIVISION_DOOR_SIZE / 2, pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
+                    endPos = Utils::Clamp(beginPos + HORZONTAL_SUBDIVISION_DOOR_SIZE, pos.y() + 1 + MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT, pos.y() + size.y()-MAX_GROUND_NOISE_TILES_HEIGHT * MIN_GROUND_NOISE_TILES_HEIGHT);
                     break;
             }
             //HUECO DE LA PARED PARA PODER PASAR
@@ -103,6 +104,55 @@ void MapRoom::GenerateRoomInteriorWalls(MapCollision* mapCollisions, bn::random&
                     mapCollisions->SetMapCollisionType(k, j, MapCollisionType::PLATFORM);
                 }
             }
+        }
+    }
+}
+
+void MapRoom::GenerateRoomNoise(MapCollision* mapCollisions, bn::random& rand) {
+    int currentTopCount = 0;
+    int currentBotCount = 0;
+    int topNoiseHeight = rand.get_int(MIN_GROUND_NOISE_TILES_HEIGHT, MIN_GROUND_NOISE_TILES_HEIGHT + 2) * GROUND_NOISE_TILE_HEIGHT;
+    int botNoiseHeight = rand.get_int(MIN_GROUND_NOISE_TILES_HEIGHT, MIN_GROUND_NOISE_TILES_HEIGHT + 2) * GROUND_NOISE_TILE_HEIGHT;
+    int topLeftMargin = pos.x() + 1;
+    int topRightMargin = pos.x() + size.x() - 1;
+    int botLeftMargin = pos.x() + 1;
+    int botRightMargin = pos.x() + size.x() - 1;
+
+    if(leftRoom != nullptr) {
+        if(leftRoom->pos.y() + leftRoom->size.y() >= pos.y() && leftRoom->pos.y() < pos.y() + GROUND_NOISE_TILE_HEIGHT * MAX_GROUND_NOISE_TILES_HEIGHT) {
+            topLeftMargin += GROUND_NOISE_TILE_WIDTH;
+        }
+        if(leftRoom->pos.y() + leftRoom->size.y() >= pos.y() + size.y() - 1 - GROUND_NOISE_TILE_HEIGHT * MAX_GROUND_NOISE_TILES_HEIGHT && leftRoom->pos.y() < pos.y() + size.y() - 1) {
+            botLeftMargin += GROUND_NOISE_TILE_WIDTH;
+        }
+    }
+    if(rightRoom != nullptr) {
+        if(rightRoom->pos.y() + rightRoom->size.y() >= pos.y() && rightRoom->pos.y() < pos.y() + GROUND_NOISE_TILE_HEIGHT * MAX_GROUND_NOISE_TILES_HEIGHT) {
+            topRightMargin -= GROUND_NOISE_TILE_WIDTH;
+        }
+        if(rightRoom->pos.y() + rightRoom->size.y() >= pos.y() + size.y() - 1 - GROUND_NOISE_TILE_HEIGHT * MAX_GROUND_NOISE_TILES_HEIGHT && rightRoom->pos.y() < pos.y() + size.y() - 1) {
+            botRightMargin -= GROUND_NOISE_TILE_WIDTH;
+        }
+    }
+    
+    for(int i = pos.x() + 1; i < pos.x() + size.x() - 1; ++i) {       
+        if(i >= topLeftMargin && i <= topRightMargin && !(upRoom != nullptr && i > upRoom->pos.x() && i < upRoom->pos.x() + upRoom->size.x() - 1)) {
+            for(int j = pos.y() + 1; j < pos.y() + 1 + topNoiseHeight; ++j) {
+                mapCollisions->SetMapCollisionType(i, j, MapCollisionType::COLLISION);
+            }
+        }
+        if(++currentTopCount >= GROUND_NOISE_TILE_WIDTH) {
+            topNoiseHeight = rand.get_int(Utils::Max(topNoiseHeight / GROUND_NOISE_TILE_HEIGHT - 1, MIN_GROUND_NOISE_TILES_HEIGHT), Utils::Min(topNoiseHeight / GROUND_NOISE_TILE_HEIGHT + 2, MAX_GROUND_NOISE_TILES_HEIGHT)) * GROUND_NOISE_TILE_HEIGHT;
+            currentTopCount = 0;
+        }
+        if(i >= botLeftMargin && i <= botRightMargin && !(downRoom != nullptr && i > downRoom->pos.x() && i < downRoom->pos.x() + downRoom->size.x() - 1)) {
+            for(int j = pos.y() + size.y() - 3 - botNoiseHeight; j < pos.y() + size.y() - 1; ++j) {
+                mapCollisions->SetMapCollisionType(i, j, MapCollisionType::COLLISION);
+            }
+        }
+        if(++currentBotCount >= GROUND_NOISE_TILE_WIDTH) {
+            botNoiseHeight = rand.get_int(Utils::Max(botNoiseHeight / GROUND_NOISE_TILE_HEIGHT - 1, MIN_GROUND_NOISE_TILES_HEIGHT), Utils::Min(botNoiseHeight / GROUND_NOISE_TILE_HEIGHT + 2, MAX_GROUND_NOISE_TILES_HEIGHT)) * GROUND_NOISE_TILE_HEIGHT;
+            currentBotCount = 0;
         }
     }
 }
@@ -153,34 +203,36 @@ void MapRoom::GenerateRoomDoor(bn::point begin,bn::point end, MapCollision* mapC
 }
 
 void MapRoom::GenerateRoomPlatforms(MapCollision* mapCollisions, bn::point otherRoomGroundBegin, bn::point otherRoomGroundEnd, bn::random& rand) {
-    int currentDirection = Utils::GetSign(pos.x() - otherRoomGroundBegin.x());
-    int initPosX = otherRoomGroundBegin.x() + currentDirection * PLAYER_JUMP_WIDTH;
-    int destinyPosX;
-    if(currentDirection > 0) {
-        destinyPosX = pos.x() + size.x();
-    }
-    else {
-        destinyPosX = pos.x();
-    }
-    int lastPlatformX;
-    int platformLenght;
-    int i = otherRoomGroundEnd.y();
+    // int currentDirection = Utils::GetSign(pos.x() - otherRoomGroundBegin.x());
+    // int initPosX = otherRoomGroundBegin.x() + currentDirection * PLAYER_JUMP_WIDTH;
+    // int destinyPosX;
+    // if(currentDirection > 0) {
+    //     destinyPosX = pos.x() + size.x();
+    // }
+    // else {
+    //     destinyPosX = pos.x();
+    // }
+    // int lastPlatformX;
+    // int platformLenght;
+    // int i = otherRoomGroundEnd.y();
 
-    while(i < pos.y() + size.y() - 1) {
-        platformLenght = rand.get_int(PLATFORM_MIN_WIDTH, PLATFORM_MAX_WIDTH);
-        destinyPosX = Utils::Clamp(initPosX + platformLenght * currentDirection, pos.x() + 1, pos.x() + size.x() - 1);
+    // while(i < pos.y() + size.y() - 1) {
+    //     platformLenght = rand.get_int(PLATFORM_MIN_WIDTH, PLATFORM_MAX_WIDTH);
+    //     destinyPosX = Utils::Clamp(initPosX + platformLenght * currentDirection, pos.x() + 1, pos.x() + size.x() - 1);
         
-        for(int j = initPosX; j != destinyPosX; j += currentDirection) {
-            if(currentDirection > 0 && j >= destinyPosX || currentDirection < 0 && j <= destinyPosX) {
-                break;
-            }
-            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::PLATFORM);
-        }
-        i += PLAYER_JUMP_HEIGHT;
-        initPosX += PLAYER_JUMP_WIDTH * currentDirection;
-        if(initPosX >= pos.x() + size.x() -1 || initPosX <= pos.x() + 1) {
-            currentDirection *= -1;
-            initPosX -= PLAYER_JUMP_WIDTH * currentDirection * 2;
-        }
-    }
+    //     for(int j = initPosX; j != destinyPosX; j += currentDirection) {
+    //         if(currentDirection > 0 && j >= destinyPosX || currentDirection < 0 && j <= destinyPosX) {
+    //             break;
+    //         }
+    //         mapCollisions->SetMapCollisionType(j, i, MapCollisionType::PLATFORM);
+    //     }
+    //     i += PLAYER_JUMP_HEIGHT;
+    //     initPosX += PLAYER_JUMP_WIDTH * currentDirection;
+    //     if(initPosX >= pos.x() + size.x() -1 || initPosX <= pos.x() + 1) {
+    //         currentDirection *= -1;
+    //         initPosX -= PLAYER_JUMP_WIDTH * currentDirection * 2;
+    //     }
+    // }
+
+
 }
