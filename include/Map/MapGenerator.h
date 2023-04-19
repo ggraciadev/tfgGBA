@@ -28,6 +28,21 @@ protected:
     bn::optional<bn::point> GetValidRoomPosition(bn::point roomSize, bn::point beginSearch, bn::point endSearch);
     MapRoom* GenerateMapRoomAt(bn::point position, bn::point size);
     bool GenerateAdjacentRooms(int roomIndex);
+
+    void GenerateMapRoomInterior(MapRoom* room);
+
+    //Para hacer los bordes de la sala
+    void GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* mapCollisions);
+    //Para hacer los bordes de la sala
+    void GenerateMapRoomWalls(MapRoom* room, MapCollision* mapCollisions);
+    //Para hacer las connexiones entre salas
+    void GenerateMapRoomDoors(MapRoom* room, MapCollision* mapCollisions, bn::random& rand);
+
+    void GenerateMapRoomPlatforms(MapRoom* room, MapCollision* mapCollisions, bn::random& rand);
+    void GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCollisions, bn::random& rand);
+    
+    //Para hacer las connexiones entre salas
+    void GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
 };
 
 #endif

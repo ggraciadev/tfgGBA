@@ -183,7 +183,7 @@ bn::optional<bn::point>  MapGenerator::GetValidRoomPosition(bn::point roomSize, 
 MapRoom* MapGenerator::GenerateMapRoomAt(bn::point position, bn::point size) {
     MapRoom* result = &mapPtr->mapRooms[currentRoomIndex];
     result->InitRoom(position, size);
-    result->GenerateRoomWalls(&mapPtr->mapLayer.mapCollision);
+    GenerateMapRoomWalls(result, &mapPtr->mapLayer.mapCollision);
     roomState[currentRoomIndex] = RoomGenerationState::CREATED;
     currentRoomIndex++;
     return result;
@@ -199,7 +199,7 @@ void MapGenerator::GenerateMap(unsigned seed) {
         finished = currentRoomIndex >= MAX_MAP_ROOMS || !GenerateMapStep();
     }
     for(int i = 0; i < currentRoomIndex; ++i) {
-        mapPtr->mapRooms[i].GenerateRoomInterior(mapPtr->mapLayer, rand);
+        GenerateMapRoomInterior(&mapPtr->mapRooms[i]);
     }
     mapPtr->GenerateMapGraphics();
     //mapPtr->mapLayer.backLayerComponent.ReloadMap();
@@ -213,5 +213,122 @@ void MapGenerator::InitMapGenerator(Map* map) {
     for(int i = 0; i < MAX_MAP_ROOMS; ++i) {
         mapPtr->mapRooms[i].InitRoom();
         roomState[i] = RoomGenerationState::NOT_CREATED;
+    }
+}
+
+
+ void MapGenerator::GenerateMapRoomInterior(MapRoom* room) {
+    GenerateMapRoomInteriorTiles(room, &mapPtr->mapLayer.mapCollision);
+    GenerateMapRoomWalls(room, &mapPtr->mapLayer.mapCollision);
+    GenerateMapRoomDoors(room, &mapPtr->mapLayer.mapCollision, rand);
+    GenerateMapRoomPlatforms(room, &mapPtr->mapLayer.mapCollision, rand);
+ }
+
+void MapGenerator::GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* mapCollisions) {
+    for (int i = room->pos.y() + CEIL_MIN_HEIGHT; i < room->pos.y() - GROUND_MIN_HEIGHT + room->size.y(); ++i) {
+        for(int j = room->pos.x() + 1; j < room->pos.x() + room->size.x() - 1; j++) {
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
+        }
+    }
+}
+
+void MapGenerator::GenerateMapRoomWalls(MapRoom* room, MapCollision* mapCollisions) {
+    for (int i = room->pos.x(); i < room->pos.x() + room->size.x(); i++) {
+        mapCollisions->SetMapCollisionType(i, room->pos.y(), MapCollisionType::COLLISION);
+        for(int j = 1; j <= GROUND_MIN_HEIGHT; ++j) {
+            mapCollisions->SetMapCollisionType(i, room->pos.y() + room->size.y() - j, MapCollisionType::COLLISION);
+        }
+    }
+    for(int i = room->pos.y(); i < room->pos.y() + room->size.y(); ++i) {
+        mapCollisions->SetMapCollisionType(room->pos.x(), i, MapCollisionType::COLLISION);
+        mapCollisions->SetMapCollisionType(room->pos.x() + room->size.x() - 1, i, MapCollisionType::COLLISION);
+    }
+}
+
+void MapGenerator::GenerateMapRoomDoors(MapRoom* room, MapCollision* mapCollisions, bn::random& rand) {
+    bn::point begin;
+    bn::point end;
+    MapRoom* tempRoom;
+
+    if(room->downRoom != nullptr) {
+        tempRoom = room->downRoom;
+        begin.set_x(Utils::Max(room->pos.x(), tempRoom->pos.x()) + 1);
+        begin.set_y(room->pos.y() + room->size.y() - 1);
+        end.set_x(Utils::Min(room->pos.x() + room->size.x(), tempRoom->pos.x() + tempRoom->size.x()) - 1);
+        end.set_y(room->pos.y() + room->size.y());
+        GenerateMapRoomDoor(begin, end, mapCollisions);
+    }
+    if(room->leftRoom != nullptr) {
+        tempRoom = room->leftRoom;
+        begin.set_x(room->pos.x());
+        begin.set_y(Utils::Max(room->pos.y(), tempRoom->pos.y()) + CEIL_MIN_HEIGHT);
+        end.set_x(room->pos.x()+1);
+        end.set_y(Utils::Min(room->pos.y() + room->size.y(), tempRoom->pos.y() + tempRoom->size.y()) - GROUND_MIN_HEIGHT);
+        GenerateMapRoomDoor(begin, end, mapCollisions);
+    }
+    if(room->rightRoom != nullptr) {
+        tempRoom = room->rightRoom;
+        begin.set_x(room->pos.x() + room->size.x() - 1);
+        begin.set_y(Utils::Max(room->pos.y(), tempRoom->pos.y()) + CEIL_MIN_HEIGHT);
+        end.set_x(room->pos.x() + room->size.x());
+        end.set_y(Utils::Min(room->pos.y() + room->size.y(), tempRoom->pos.y() + tempRoom->size.y()) - GROUND_MIN_HEIGHT);
+        GenerateMapRoomDoor(begin, end, mapCollisions);
+    }
+    if(room->upRoom != nullptr) {
+        tempRoom = room->upRoom;
+        begin.set_x(Utils::Max(room->pos.x(), tempRoom->pos.x()) + 1);
+        begin.set_y(room->pos.y());
+        end.set_x(Utils::Min(room->pos.x() + room->size.x(), tempRoom->pos.x() + tempRoom->size.x()) - 1);
+        end.set_y(room->pos.y() + 1);
+        GenerateMapRoomDoor(begin, end, mapCollisions);
+    }
+}
+
+void MapGenerator::GenerateMapRoomPlatforms(MapRoom* room, MapCollision* mapCollisions, bn::random& rand) {
+    if(room->size.x() > MIN_HORIZONTAL_SUBDIVISION) {
+        int tempPos = room->pos.x() + room->size.x() / 2 + rand.get_int(-room->size.x() / 8, room->size.x() / 8 + 1);
+
+       
+        int beginX = Utils::Clamp(tempPos - rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
+        int endX = Utils::Clamp(tempPos + rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
+        int endY = room->pos.y() + room->size.y() - 1 - PLAYER_JUMP_HEIGHT;
+        
+        for(int j = endY - HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; j < endY + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; ++j) {
+            for(int k = beginX; k < endX; k++) {
+                mapCollisions->SetMapCollisionType(k, j, MapCollisionType::PLATFORM);
+            }
+        }
+    }
+
+    if(room->upRoom != nullptr) {
+        GenerateUpMapRoomPlatform(room, mapCollisions, rand);
+    }
+}
+
+void MapGenerator::GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCollisions, bn::random& rand) {
+    int platformSize = MIN_HORIZONTAL_BLOCK_PLATFORM;
+    int initPos = room->upRoom->pos.x() + 1;
+    int endPos = initPos + platformSize;
+    int initPosY = room->pos.y();
+    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+        for(int j = initPos; j < endPos; ++j) {
+            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
+        }
+    }
+    initPos = room->pos.x() + room->size.x() - platformSize - 1;
+    endPos = initPos + platformSize;
+    initPosY = initPosY + PLAYER_JUMP_HEIGHT;
+    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+        for(int j = initPos; j < endPos; ++j) {
+            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
+        }
+    }
+}
+    
+void MapGenerator::GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions) {
+    for(int i = begin.y(); i < end.y(); ++i) {
+        for(int j = begin.x(); j < end.x(); ++j) {
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
+        }
     }
 }
