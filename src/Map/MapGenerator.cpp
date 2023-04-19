@@ -227,7 +227,9 @@ void MapGenerator::InitMapGenerator(Map* map) {
 void MapGenerator::GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* mapCollisions) {
     for (int i = room->pos.y() + CEIL_MIN_HEIGHT; i < room->pos.y() - GROUND_MIN_HEIGHT + room->size.y(); ++i) {
         for(int j = room->pos.x() + 1; j < room->pos.x() + room->size.x() - 1; j++) {
-            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
+            if(mapCollisions->GetCollisionByCell(j,i) != MapCollisionType::PLATFORM) {
+                mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
+            }
         }
     }
 }
@@ -291,7 +293,7 @@ void MapGenerator::GenerateMapRoomPlatforms(MapRoom* room, MapCollision* mapColl
        
         int beginX = Utils::Clamp(tempPos - rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
         int endX = Utils::Clamp(tempPos + rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
-        int endY = room->pos.y() + room->size.y() - 1 - PLAYER_JUMP_HEIGHT;
+        int endY = room->pos.y() + room->size.y() - 1 - PLAYER_JUMP_HEIGHT * 2;
         
         for(int j = endY - HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; j < endY + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; ++j) {
             for(int k = beginX; k < endX; k++) {
@@ -307,20 +309,51 @@ void MapGenerator::GenerateMapRoomPlatforms(MapRoom* room, MapCollision* mapColl
 
 void MapGenerator::GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCollisions, bn::random& rand) {
     int platformSize = MIN_HORIZONTAL_BLOCK_PLATFORM;
+
+    bn::point begin;
+    bn::point end;
+
+    begin.set_x(Utils::Max(room->pos.x(), room->upRoom->pos.x()) + 1);
+    begin.set_y(room->pos.y());
+    end.set_x(Utils::Min(room->pos.x() + room->size.x(), room->upRoom->pos.x() + room->upRoom->size.x()) - 1);
+    end.set_y(begin.y() + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT);
+
     int initPos = room->upRoom->pos.x() + 1;
     int endPos = initPos + platformSize;
-    int initPosY = room->pos.y();
-    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+
+    if(room->pos.x() > room->upRoom->pos.x()) {
+        initPos = end.x() - platformSize;
+        endPos = end.x();
+    }
+    else {
+        initPos = begin.x();
+        endPos = begin.x() + platformSize;
+    }
+
+    
+    for(int i = begin.y(); i < end.y(); ++i) {
         for(int j = initPos; j < endPos; ++j) {
-            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::PLATFORM);
         }
     }
-    initPos = room->pos.x() + room->size.x() - platformSize - 1;
-    endPos = initPos + platformSize;
-    initPosY = initPosY + PLAYER_JUMP_HEIGHT;
-    for(int i = 0; i < HORIZONTAL_SUBDIVISION_GROUND_HEIGHT; ++i) {
+
+    if(end.x() - begin.x() <= PLAYER_JUMP_WIDTH * 2) {
+        if(room->pos.x() > room->upRoom->pos.x()) {
+            initPos = begin.x();
+            endPos = begin.x() + platformSize;
+        }
+        else {
+            initPos = end.x() - platformSize;
+            endPos = end.x();
+        }
+    }
+    
+    begin.set_y(begin.y() + PLAYER_JUMP_HEIGHT * 2);
+    end.set_y(begin.y() + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT);
+
+    for(int i = begin.y(); i < end.y(); ++i) {
         for(int j = initPos; j < endPos; ++j) {
-            mapCollisions->SetMapCollisionType(j, initPosY + i, MapCollisionType::PLATFORM);
+            mapCollisions->SetMapCollisionType(j, i, MapCollisionType::PLATFORM);
         }
     }
 }
