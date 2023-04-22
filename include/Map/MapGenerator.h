@@ -43,6 +43,8 @@ protected:
     
     //Para hacer las connexiones entre salas
     void GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
+
+    void GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer);
 };
 
 #endif

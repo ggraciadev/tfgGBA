@@ -200,6 +200,7 @@ void MapGenerator::GenerateMap(unsigned seed) {
     }
     for(int i = 0; i < currentRoomIndex; ++i) {
         GenerateMapRoomInterior(&mapPtr->mapRooms[i]);
+        GenerateMapRoomGraphics(&mapPtr->mapRooms[i], &mapPtr->mapLayer);
     }
     mapPtr->GenerateMapGraphics();
     //mapPtr->mapLayer.backLayerComponent.ReloadMap();
@@ -364,4 +365,35 @@ void MapGenerator::GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollisi
             mapCollisions->SetMapCollisionType(j, i, MapCollisionType::ROOM_INTERIOR);
         }
     }
+}
+
+void MapGenerator::GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer) {
+    GenerateMapRoomGraphicsFirstCoat(room, mapLayer);
+    GenerateMapRoomGraphicsPlatforms(room, mapLayer);
+    GenerateMapRoomGraphicsWindows(room, mapLayer);
+    //mapLayer.mapCollision.GetCollisionByCell(j, i)
+
+    //mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 0);
+                    
+}
+
+void MapGenerator::GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer) {
+    int initX = room->pos.x();
+    int endX = initX + room->size.x();
+    int initY = room->pos.x();
+    int endY = initY + room->pos.y();
+
+    for(int i = initY; i < endY; ++i) {
+        for(int j = initX; j < endX; ++j) {
+            
+        }
+    }
+}
+
+void MapGenerator::GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* mapLayer) {
+
+}
+
+void MapGenerator::GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
+
 }
