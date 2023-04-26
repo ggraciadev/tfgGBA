@@ -45,6 +45,9 @@ protected:
     void GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
 
     void GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer);
+    void GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer);
+    void GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* mapLayer);
+    void GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
 };
 
 #endif

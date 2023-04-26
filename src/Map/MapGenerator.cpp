@@ -202,8 +202,8 @@ void MapGenerator::GenerateMap(unsigned seed) {
         GenerateMapRoomInterior(&mapPtr->mapRooms[i]);
         GenerateMapRoomGraphics(&mapPtr->mapRooms[i], &mapPtr->mapLayer);
     }
-    mapPtr->GenerateMapGraphics();
-    //mapPtr->mapLayer.backLayerComponent.ReloadMap();
+    //mapPtr->GenerateMapGraphics();
+    mapPtr->mapLayer.backLayerComponent.ReloadMap();
 }
 
 
@@ -295,12 +295,15 @@ void MapGenerator::GenerateMapRoomPlatforms(MapRoom* room, MapCollision* mapColl
         int beginX = Utils::Clamp(tempPos - rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
         int endX = Utils::Clamp(tempPos + rand.get_int(MIN_HORIZONTAL_BLOCK_PLATFORM, MAX_HORIZONTAL_BLOCK_PLATFORM), room->pos.x() + HORIZONTAL_SUBDIVISION_OFFSET, room->pos.x() + room->size.x()-1-HORIZONTAL_SUBDIVISION_OFFSET);
         int endY = room->pos.y() + room->size.y() - 1 - PLAYER_JUMP_HEIGHT * 2;
-        
+
         for(int j = endY - HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; j < endY + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT / 2; ++j) {
             for(int k = beginX; k < endX; k++) {
                 mapCollisions->SetMapCollisionType(k, j, MapCollisionType::PLATFORM);
             }
         }
+
+        room->SetCentralPlatformPos(bn::point(beginX, endY));
+        room->SetCentralPlatoformSize(endX - beginX);
     }
 
     if(room->upRoom != nullptr) {
@@ -319,6 +322,7 @@ void MapGenerator::GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCol
     end.set_x(Utils::Min(room->pos.x() + room->size.x(), room->upRoom->pos.x() + room->upRoom->size.x()) - 1);
     end.set_y(begin.y() + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT);
 
+
     int initPos = room->upRoom->pos.x() + 1;
     int endPos = initPos + platformSize;
 
@@ -331,6 +335,7 @@ void MapGenerator::GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCol
         endPos = begin.x() + platformSize;
     }
 
+    room->upRoomPlatformPosTop = bn::point(initPos, begin.y());
     
     for(int i = begin.y(); i < end.y(); ++i) {
         for(int j = initPos; j < endPos; ++j) {
@@ -351,6 +356,8 @@ void MapGenerator::GenerateUpMapRoomPlatform(MapRoom* room, MapCollision* mapCol
     
     begin.set_y(begin.y() + PLAYER_JUMP_HEIGHT * 2);
     end.set_y(begin.y() + HORIZONTAL_SUBDIVISION_GROUND_HEIGHT);
+
+    room->upRoomPlatformPosCenter = bn::point(initPos, begin.y());
 
     for(int i = begin.y(); i < end.y(); ++i) {
         for(int j = initPos; j < endPos; ++j) {
@@ -380,20 +387,108 @@ void MapGenerator::GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer) {
 void MapGenerator::GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer) {
     int initX = room->pos.x();
     int endX = initX + room->size.x();
-    int initY = room->pos.x();
-    int endY = initY + room->pos.y();
+    int initY = room->pos.y();
+    int endY = initY + room->size.y();
 
-    for(int i = initY; i < endY; ++i) {
+    for(int i = initY; i < endY + 1; ++i) {
         for(int j = initX; j < endX; ++j) {
-            
+            MapCollisionType currentCollision = mapLayer->mapCollision.GetCollisionByCell(j, i);
+            int tile = 0;
+            if(i == endY) {
+                if(currentCollision == MapCollisionType::ROOM_EXTERIOR) {
+                    tile = 27;
+                }
+            }
+            else if(currentCollision == MapCollisionType::COLLISION) {
+                if(i == initY) {
+                    tile = 27;
+                }
+                else if(i >= endY - GROUND_MIN_HEIGHT) {
+                    tile = 25 + j % 2;
+                }
+                else if ((j == initX || j == endX - 1)) {
+                    tile = 2;
+                }
+            }
+            else {
+                if(i == endY - GROUND_MIN_HEIGHT - 1 && mapLayer->mapCollision.GetCollisionByCell(j, i + 1) == MapCollisionType::COLLISION) {
+                    tile = 23 + j % 2;
+                }
+                else {
+                    tile = 1;
+                }
+            }
+            mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
         }
     }
 }
 
 void MapGenerator::GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* mapLayer) {
+    int initX = room->centralPlatformPos.x();
+    int endX = initX + room->centralPlatformSize;
+    int initY = room->centralPlatformPos.y() - 1;
+    int endY = initY + 1;
+
+    int tile = -1;
+
+    for(int i = initY; i < endY; ++i) {
+        for(int j = initX; j < endX; ++j) {
+            // tile = -1;
+            // if(i == initY) {
+            //     if(j == initX) {
+            //         tile = 28 + j%2;
+            //     }
+            //     else if(j == endX - 1) {
+            //         tile = 32 + j%2;
+            //     }
+            //     else {
+            //         tile = 30 + j%2;
+            //     }
+            // }
+            // else if (j == initX || j == endX - 1) {
+            //     tile = 37;
+            // }
+            // else if (i == endY-2) {
+            //     tile = 38 + j%2;
+            // }
+            // else if(i == endY-1){
+            //     tile = 40 + j%2;
+            // }
+            tile = 30 + j%2;
+
+            if(tile != -1){
+                mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            }
+        }
+    }
+
+    initX = room->upRoomPlatformPosCenter.x();
+    endX = initX + PLATFORM_MIN_WIDTH;
+
+    for(int i = initX; i < endX; ++i) {
+        tile = 30 + i%2;
+        mapLayer->backLayerComponent.SetTileIndex(i + MAP_X_OFFSET, room->upRoomPlatformPosCenter.y() + MAP_Y_OFFSET, tile);
+    }
+
+    initX = room->upRoomPlatformPosTop.x();
+    endX = initX + PLATFORM_MIN_WIDTH;
+
+    for(int i = initX; i < endX; ++i) {
+        tile = 30 + i%2;
+        mapLayer->backLayerComponent.SetTileIndex(i + MAP_X_OFFSET, room->upRoomPlatformPosTop.y() + MAP_Y_OFFSET, tile);
+    }
 
 }
 
 void MapGenerator::GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
-
+    int initX = room->pos.x();
+    int endX = initX + room->size.x();
+    int initY = room->pos.y();
+    int endY = initY + room->size.y();
+    
+    for(int i = initY; i < endY; ++i) {
+        for(int j = initX; j < endX; ++j) {
+            
+        }
+    }
 }
