@@ -53,6 +53,7 @@ protected:
     
     bn::point pos;
     bn::point size;
+    bn::point downDoor;
 
     bn::point centralPlatformPos;
     bn::point upRoomPlatformPosCenter;

@@ -198,12 +198,21 @@ void MapGenerator::GenerateMap(unsigned seed) {
         if(temp-- <= 0) break;
         finished = currentRoomIndex >= MAX_MAP_ROOMS || !GenerateMapStep();
     }
+    ClearMapGraphics();
     for(int i = 0; i < currentRoomIndex; ++i) {
         GenerateMapRoomInterior(&mapPtr->mapRooms[i]);
         GenerateMapRoomGraphics(&mapPtr->mapRooms[i], &mapPtr->mapLayer);
     }
     //mapPtr->GenerateMapGraphics();
     mapPtr->mapLayer.backLayerComponent.ReloadMap();
+}
+
+void MapGenerator::ClearMapGraphics() {
+    for(int i = 0; i < REAL_MAP_HEIGHT; ++i) {
+        for(int j = 0; j < REAL_MAP_WIDTH; ++j) {
+            mapPtr->mapLayer.backLayerComponent.SetTileIndex(j, i, 0);
+        }
+    }
 }
 
 
@@ -237,12 +246,12 @@ void MapGenerator::GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* map
 
 void MapGenerator::GenerateMapRoomWalls(MapRoom* room, MapCollision* mapCollisions) {
     for (int i = room->pos.x(); i < room->pos.x() + room->size.x(); i++) {
-        mapCollisions->SetMapCollisionType(i, room->pos.y(), MapCollisionType::COLLISION);
+        mapCollisions->SetMapCollisionType(i, room->pos.y(), MapCollisionType::ROOM_EXTERIOR);
         for(int j = 1; j <= GROUND_MIN_HEIGHT; ++j) {
             mapCollisions->SetMapCollisionType(i, room->pos.y() + room->size.y() - j, MapCollisionType::COLLISION);
         }
     }
-    for(int i = room->pos.y(); i < room->pos.y() + room->size.y(); ++i) {
+    for(int i = room->pos.y() + 1; i < room->pos.y() + room->size.y(); ++i) {
         mapCollisions->SetMapCollisionType(room->pos.x(), i, MapCollisionType::COLLISION);
         mapCollisions->SetMapCollisionType(room->pos.x() + room->size.x() - 1, i, MapCollisionType::COLLISION);
     }
@@ -259,6 +268,7 @@ void MapGenerator::GenerateMapRoomDoors(MapRoom* room, MapCollision* mapCollisio
         begin.set_y(room->pos.y() + room->size.y() - 1);
         end.set_x(Utils::Min(room->pos.x() + room->size.x(), tempRoom->pos.x() + tempRoom->size.x()) - 1);
         end.set_y(room->pos.y() + room->size.y());
+        room->downDoor = (bn::point(begin.x(), end.x()));
         GenerateMapRoomDoor(begin, end, mapCollisions);
     }
     if(room->leftRoom != nullptr) {
@@ -378,9 +388,6 @@ void MapGenerator::GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer) {
     GenerateMapRoomGraphicsFirstCoat(room, mapLayer);
     GenerateMapRoomGraphicsPlatforms(room, mapLayer);
     GenerateMapRoomGraphicsWindows(room, mapLayer);
-    //mapLayer.mapCollision.GetCollisionByCell(j, i)
-
-    //mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 0);
                     
 }
 
@@ -390,35 +397,67 @@ void MapGenerator::GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* map
     int initY = room->pos.y();
     int endY = initY + room->size.y();
 
-    for(int i = initY; i < endY + 1; ++i) {
+    for(int i = initY ; i < endY + 1; ++i) {
         for(int j = initX; j < endX; ++j) {
             MapCollisionType currentCollision = mapLayer->mapCollision.GetCollisionByCell(j, i);
+            MapCollisionType leftCollision = mapLayer->mapCollision.GetCollisionByCell(j-1, i);
+            MapCollisionType rightCollision = mapLayer->mapCollision.GetCollisionByCell(j+1, i);
+            MapCollisionType botCollision = mapLayer->mapCollision.GetCollisionByCell(j, i+1);
+            MapCollisionType botLeftCollision = mapLayer->mapCollision.GetCollisionByCell(j-1, i+1);
+            MapCollisionType botRightCollision = mapLayer->mapCollision.GetCollisionByCell(j+1, i+1);
+
             int tile = 0;
-            if(i == endY) {
-                if(currentCollision == MapCollisionType::ROOM_EXTERIOR) {
-                    tile = 27;
-                }
-            }
-            else if(currentCollision == MapCollisionType::COLLISION) {
-                if(i == initY) {
-                    tile = 27;
-                }
-                else if(i >= endY - GROUND_MIN_HEIGHT) {
+            
+            if(currentCollision == MapCollisionType::COLLISION) {
+                if(leftCollision == MapCollisionType::COLLISION && rightCollision == MapCollisionType::COLLISION) {
                     tile = 25 + j % 2;
                 }
-                else if ((j == initX || j == endX - 1)) {
-                    tile = 2;
+                else if(leftCollision == MapCollisionType::COLLISION) {
+                    tile = 38 + j % 2;
+                }
+                else if(rightCollision == MapCollisionType::COLLISION) {
+                    tile = 42 + j % 2;
+                }
+                else if(botLeftCollision == MapCollisionType::COLLISION) {
+                    tile = 36 + j % 2;
+                }
+                else if(botRightCollision == MapCollisionType::COLLISION) {
+                    tile = 40 + j % 2;
+                }
+                else if(j == initX){
+                    tile = 45;
+                }
+                else if(j == endX - 1) {
+                    tile = 44;
                 }
             }
-            else {
-                if(i == endY - GROUND_MIN_HEIGHT - 1 && mapLayer->mapCollision.GetCollisionByCell(j, i + 1) == MapCollisionType::COLLISION) {
+            else if(botCollision == MapCollisionType::COLLISION) {
+                if(botLeftCollision == MapCollisionType::COLLISION && botRightCollision == MapCollisionType::COLLISION) {
                     tile = 23 + j % 2;
                 }
-                else {
-                    tile = 1;
+                else if(botLeftCollision == MapCollisionType::COLLISION) {
+                    tile = 36 + j % 2;
+                }
+                else if(botRightCollision == MapCollisionType::COLLISION) {
+                    tile = 40 + j % 2;
+                }
+                else if(j == initX){
+                    tile = 45;
+                }
+                else if(j == endX - 1) {
+                    tile = 44;
                 }
             }
-            mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            else if((i == endY || i == initY) && currentCollision == MapCollisionType::ROOM_EXTERIOR) {
+                tile = 27;
+            }
+            else if(i != endY){
+                tile = 1;
+            }
+
+            if(tile != 0) {
+                mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            }
         }
     }
 }
@@ -433,27 +472,7 @@ void MapGenerator::GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* map
 
     for(int i = initY; i < endY; ++i) {
         for(int j = initX; j < endX; ++j) {
-            // tile = -1;
-            // if(i == initY) {
-            //     if(j == initX) {
-            //         tile = 28 + j%2;
-            //     }
-            //     else if(j == endX - 1) {
-            //         tile = 32 + j%2;
-            //     }
-            //     else {
-            //         tile = 30 + j%2;
-            //     }
-            // }
-            // else if (j == initX || j == endX - 1) {
-            //     tile = 37;
-            // }
-            // else if (i == endY-2) {
-            //     tile = 38 + j%2;
-            // }
-            // else if(i == endY-1){
-            //     tile = 40 + j%2;
-            // }
+            
             tile = 30 + j%2;
 
             if(tile != -1){
@@ -481,14 +500,158 @@ void MapGenerator::GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* map
 }
 
 void MapGenerator::GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
-    int initX = room->pos.x();
-    int endX = initX + room->size.x();
-    int initY = room->pos.y();
-    int endY = initY + room->size.y();
+    GenerateMapRoomPlatformGraphicsWindows(room, mapLayer);
+    GenerateMapRoomGroundGraphicsWindows(room, mapLayer);
+    
+}
+
+void MapGenerator::GenerateMapRoomPlatformGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
+    int initX = room->centralPlatformPos.x();
+    int endX = initX + room->centralPlatformSize;
+    int windowHeight = 5;
+    int initY = room->centralPlatformPos.y() - windowHeight - 1;
+    int endY = initY + windowHeight;
     
     for(int i = initY; i < endY; ++i) {
+        int offset = 0;
+        if(i == endY-1) {
+            offset = 7;
+        }
         for(int j = initX; j < endX; ++j) {
+            int tile = -1;
+            if(i == initY || i == endY-1) {
+                if(j == initX) {
+                    tile = 6 + offset;
+                }
+                else if(j == (endX - initX) / 2 + initX) {
+                    tile = 8 + offset;
+                }
+                else if(j == endX-1) {
+                    tile = 9 + offset;
+                }
+                else {
+                    tile = 7 + offset;
+                }
+            }
+            else {
+                if(j == initX) {
+                    tile = 10;
+                }
+                else if(j == endX - 1) {
+                    tile = 12;
+                }
+                else if (j == (endX - initX) / 2 + initX) {
+                    tile = 11;
+                }
+                else {
+                    tile = 0;
+                }
+            }
+
+            if(tile != -1) {
+                mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            }
+        }
+    }
+}
+void MapGenerator::GenerateMapRoomGroundGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
+    MapRoom* downRoom = room->downRoom;
+    int initX = room->pos.x() + 1;
+    int endX = room->pos.x() + room->size.x() - 1;
+    int initY = room->centralPlatformPos.y() + 1;
+    int endY = room->pos.y() + room->size.y() -2;
+    
+    if(downRoom != nullptr) {
+        initX = room->pos.x() + 1;
+        endX = room->downDoor.x() - 1;
+        initY = room->centralPlatformPos.y() + 1;
+        endY = room->pos.y() + room->size.y() -2;
+        
+        GenerateBigWindowGraphic(initX, endX, initY, endY, mapLayer);
+
+        initX = room->downDoor.y() + 1;
+        endX = room->pos.x() + room->size.x() - 1;
+        initY = room->centralPlatformPos.y() + 1;
+        endY = room->pos.y() + room->size.y() -2;
+        
+        GenerateBigWindowGraphic(initX, endX, initY, endY, mapLayer);
+    }
+    else {
+        int widndowWidth = 9;
+        int first = initX;
+        int last = endX;
+        initX = first + 1;
+        endX = first + widndowWidth;
+        GenerateBigWindowGraphic(initX, endX, initY, endY, mapLayer);
+
+        endX = last - 1;
+        initX = endX - widndowWidth;
+        GenerateBigWindowGraphic(initX, endX, initY, endY, mapLayer);
+    }
+    
+}
+
+void MapGenerator::GenerateBigWindowGraphic(int initX, int endX, int initY, int endY, MapLayer* mapLayer) {
+    if(initX >= endX) {
+        return;
+    }
+    for(int i = initY; i < endY; ++i) {
+        for(int j = initX; j < endX; ++j) {
+            int tile = -1;
+            if(j == initX) {
+                if(i == endY-2) {
+                    tile = 17;
+                }
+                else if(i == endY-1) {
+                    tile = 20;
+                }
+                else if(i == initY) {
+                    tile = 6;
+                }
+                else {
+                    tile = 10;
+                }
+            }
+            else if(j == endX - 1) {
+                if(i == endY-2) {
+                    tile = 19;
+                }
+                else if(i == endY-1) {
+                    tile = 22;
+                }
+                else if(i == initY) {
+                    tile = 9;
+                }
+                else {
+                    tile = 12;
+                }
+            }
+            else if(j == (endX - initX) / 2 + initX && i < endY - 2){
+                if(i == initY) {
+                    tile = 8;
+                }
+                else {
+                    tile = 11;
+                }
+            }
+            else {
+                if(i == endY-2) {
+                    tile = 18;
+                }
+                else if(i == endY-1) {
+                    tile = 21;
+                }
+                else if(i == initY) {
+                    tile = 7;
+                }
+                else {
+                    tile = 0;
+                }
+            }
             
+            if(tile != -1) {
+                mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            }
         }
     }
 }

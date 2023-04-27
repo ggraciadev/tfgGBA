@@ -44,10 +44,17 @@ protected:
     //Para hacer las connexiones entre salas
     void GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollision* mapCollisions);
 
+    void ClearMapGraphics();
+
     void GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
+
+    void GenerateMapRoomPlatformGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
+    void GenerateMapRoomGroundGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
+
+    void GenerateBigWindowGraphic(int initX, int endX, int initY, int endY, MapLayer* mapLayer);
 };
 
 #endif

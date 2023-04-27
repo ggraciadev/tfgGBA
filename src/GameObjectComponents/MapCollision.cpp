@@ -29,7 +29,7 @@ void MapCollision::Start() {
 }
 
 MapCollisionType MapCollision::GetCollisionByCell(int cellX, int cellY) const { 
-    MapCollisionType result = MapCollisionType::COLLISION;
+    MapCollisionType result = MapCollisionType::ROOM_EXTERIOR;
     if(cellX >= 0 && cellX < MAP_WIDTH && cellY >= 0 && cellY < MAP_HEIGHT) {
         result = (MapCollisionType)collisions[cellX + MAP_WIDTH * cellY].collision; 
     }
