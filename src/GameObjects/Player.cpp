@@ -59,19 +59,21 @@ void Player::SetupAnimations() {
 
 void Player::SetupAttacks() {
     meleeComboAb.SetAttackCombo({
-        AttackInfo(10, 1, 20),
-        AttackInfo(10, 1, 20),
-        AttackInfo(20, 2, 30),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 10, 1, 20, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 10, 1, 20, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 20, 2, 30, 25),
     });
 }
 
 void Player::Jump() {
+    if(damageReciever.GetAbilityInUse()) return;
     if(jumpAb.UseAbility()) {
         animator.SetCurrentAnimation(2, true);
     }
 }
 
 void Player::Attack() {
+    if(damageReciever.GetAbilityInUse()) return;
     if(meleeComboAb.UseAbility()) {
         animator.SetCurrentAnimation(3);
     }
@@ -96,4 +98,8 @@ void Player::UpdateAnimationState() {
     }
 
     animator.SetFlipped(movement.GetMovementDirection() == -1);
+}
+
+void Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    Character::GetDamage(atkInfo, attackPosition);
 }

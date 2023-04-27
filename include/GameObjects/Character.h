@@ -51,7 +51,7 @@ public:
     void Start();
     virtual void Update();
 
-    void SetMapCollision(MapCollision* mc);
+    virtual void SetMapCollision(MapCollision* mc);
 
     void SetLayerDepth(int depth);
 

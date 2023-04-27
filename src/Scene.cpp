@@ -22,10 +22,7 @@
 
 //#include "Actor.h"
 #include "GameManager.h"
-#include "GameObjects/Character.h"
 #include "Attack.h"
-#include "GameObjects/Player.h"
-#include "GameObjects/Enemy.h"
 // #include "PlayerController.h"
 // #include "Player.h"
 
@@ -72,10 +69,11 @@ void Scene::Start() {
     objects.push_back(tmpPlayer);
     characters.push_back(tmpPlayer);
 
-    Enemy* tmpEnemy = enemy.Create();
+    EnemyDalek* tmpEnemy = enemy.Create();
     tmpEnemy->SetParent(&map.mapLayer);
     tmpEnemy->SetLocalPosition(64, -20);
     tmpEnemy->Start();
+    tmpEnemy->SetPlayer(tmpPlayer);
     tmpEnemy->SetLayerDepth(0);
     tmpEnemy->SetZOrder(1);
     tmpEnemy->SetCamera(&camera);
@@ -86,42 +84,6 @@ void Scene::Start() {
     int start = 2;
     int end = start + 1;
 
-    // for(int i = start; i < end; ++i) {
-    //     objects.push_back(bg0ElementsFactory.Create());
-    //     bgEl->SetSpriteItem(SPRITE_SHEET_SHOP);
-    //     bgEl->SetParent(&mapLayer);
-    //     bgEl->SetLocalPosition(0,0);
-    //     bgEl->Start();
-    //     bgEl->SetLayerDepth(0);
-    //     bgEl->SetCamera(&camera);
-    // }
-
-
-    // start = end;
-    // end = start + 2;
-    // for(int i = start; i < end; ++i) {
-    //     BackgroundElement<2,2>* bgEl = bg1ElementsFactory.Create();
-    //     bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B1);
-    //     bgEl->SetParent(&layer1);
-    //     bgEl->SetLocalPosition((i-start-1) * 200,-80);
-    //     bgEl->Start();
-    //     bgEl->SetLayerDepth(1);
-    //     bgEl->SetCamera(&camera);
-    //     objects.push_back(bgEl);
-    // }
-    // start = end;
-    // end = start + 5;
-
-    // for(int i = start; i < end; ++i) {
-    //     BackgroundElement<1,1>* bgEl = bg2ElementsFactory.Create();
-    //     bgEl->SetSpriteItem(SPRITE_SHEET_HOUSE_B2);
-    //     bgEl->SetParent(&layer2);
-    //     bgEl->SetLocalPosition((i-start-2) * 90,-50);
-    //     bgEl->Start();
-    //     bgEl->SetLayerDepth(2);
-    //     bgEl->SetCamera(&camera);
-    //     objects.push_back(bgEl);
-    // }
     gameObjectListSize = objects.size();
 
     mapGenerator.InitMapGenerator(&map);
@@ -166,8 +128,14 @@ bn::vector<Character*, 16> Scene::GetAllInstancesCharacters() {
 
 void Scene::SpawnAttack(GameObject* parent, Character* creator, bn::fixed_point position, int direction, AttackInfo& attackInfo) {
     Attack* tmpAtk = attackFactory.Create();
-    tmpAtk->SetParent(parent);
-    tmpAtk->SetLocalPosition(position);
+    if(parent != nullptr) {
+        tmpAtk->SetParent(parent);
+        tmpAtk->SetLocalPosition(position);
+    }
+    else {
+        tmpAtk->SetParent(&map.mapLayer);
+        tmpAtk->SetLocalPosition(creator->GetWorldPosition() + position);
+    }
     tmpAtk->SetAttackInfo(attackInfo);
     tmpAtk->Start();
     tmpAtk->SetCharacterCreator(creator);

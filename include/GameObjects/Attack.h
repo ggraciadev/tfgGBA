@@ -19,11 +19,14 @@ protected:
     BoxCollision boxCollision;
     Animator<1,16> animator;
     int timeToLive = 30;
+    int currentDirection = 0;
     bool componentAdded = false;
     
     AttackInfo attackInfo;
     bn::vector<Character*, 16> targets;
     Character* characterCreator;
+
+    MapCollision* mapCollision;  
 
     void SetupAnimations();
 
@@ -31,6 +34,7 @@ public:
     void Start();
 
     void Update();
+    void UpdateMovement();
     void SetAttackInfo(const AttackInfo& attackInfo);
     virtual void DoDamage(Character* other);
     void SetCharacterCreator(Character* cc);
@@ -39,6 +43,8 @@ public:
 
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
+
+    void SetMapCollisions(MapCollision* mCol) { mapCollision = mCol; }
 
 };
 

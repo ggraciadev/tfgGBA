@@ -106,7 +106,7 @@ bn::fixed_point GameObject::GetScreenPosition() const {
 }
 
 void GameObject::AddLocalOffset(const bn::fixed_point& delta) {
-    relativePosition.set_x(relativePosition.x());
+    //relativePosition.set_x(relativePosition.x());
     relativePosition += delta;
 }
 

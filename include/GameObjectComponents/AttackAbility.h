@@ -16,7 +16,7 @@ protected:
 
 public:
 
-    void SpawnAttack(AttackInfo& attackInfo);
+    void SpawnAttack(AttackInfo& attackInfo, bool attachToCreator);
     inline void SetSpawnOffset(bn::fixed_point offset) { spawnOffset = offset; }
 
 };

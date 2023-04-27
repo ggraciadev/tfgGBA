@@ -116,6 +116,25 @@ public:
         else if (x < 0) return 1;
         else { return 0; }
     }
+
+    static int Abs(int a) {
+        if(a > 0) return a;
+        else return -a;
+    }
+
+    static float Abs(float a) {
+        if(a > 0) return a;
+        else return -a;
+    }
+
+    static bn::fixed Abs(bn::fixed a) {
+        if(a > 0) return a;
+        else return -a;
+    }
+
+    static bn::fixed GetManhattanDist(const bn::fixed_point a, const bn::fixed_point b) {
+        return Abs(b.x() - a.x()) + Abs(b.y() - a.y());
+    }
 };
 
 #endif

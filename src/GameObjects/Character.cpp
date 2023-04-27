@@ -7,6 +7,7 @@ void Character::Start() {
     boxCollision.Setup(characterInfo.boxCollisionExtension);
 
     damageReciever.SetDamageCooldown(10);
+    damageReciever.SetCharacter(this);
 
     AddComponent(&boxCollision);
     AddComponent(&movement);
@@ -30,6 +31,7 @@ void Character::Update() {
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {
+    if(damageReciever.GetAbilityInUse()) return;
     if(md.x() > 0.0f) {
         if(boxCollision.GetContact(RIGHT_COLLISION)) {
             md.set_x(0);
@@ -50,6 +52,7 @@ void Character::SetInputMovement(bn::fixed_point md) {
 }
 
 void Character::SetInputMovementX(bn::fixed x) {
+    if(damageReciever.GetAbilityInUse()) return;
     movement.SetInputMovementX(x);
     if(boxCollision.GetContact(RIGHT_COLLISION) && movement.GetVelocity().x() > 0) {
         movement.SetVelocityX(0);

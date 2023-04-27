@@ -20,7 +20,7 @@ void Enemy::Start() {
     // AddComponent(&meleeComboAb);
     // AddComponent(&input);
     damageReciever.SetCharacter(this);
-    AddComponent(&animator);
+    //AddComponent(&animator);
     AddComponent(&damageReciever);
 
     Character::Start();
@@ -33,30 +33,30 @@ void Enemy::Update() {
 
 void Enemy::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
     Character::GetDamage(atkInfo, attackPosition);
-    if(damageReciever.GetAbilityInUse()) {
-        animator.SetCurrentAnimation(1);
-    }
+    // if(damageReciever.GetAbilityInUse()) {
+    //     animator.SetCurrentAnimation(1);
+    // }
 }
 
 void Enemy::SetLayerDepth(int depth) {
     Character::SetLayerDepth(depth);
-    animator.SetLayerDepth(layerDepth);
+    // animator.SetLayerDepth(layerDepth);
 }
 
 void Enemy::SetZOrder(char z_order) {
     Character::SetZOrder(z_order);
-    animator.SetZOrder(z_order);
+    // animator.SetZOrder(z_order);
 }
 
 void Enemy::SetupAnimations() {
-    animator.SetSpriteItem(SPRITE_SHEET);
+    // animator.SetSpriteItem(SPRITE_SHEET);
 
-    bn::vector<AnimInfo<2>, 2> anims;
+    // bn::vector<AnimInfo<2>, 2> anims;
     
-    anims.emplace_back(AnimInfo<2>(bn::array<char, 2>{0,0}, 1, true));
-    anims.emplace_back(AnimInfo<2>({1,1}, 1, true));
+    // anims.emplace_back(AnimInfo<2>(bn::array<char, 2>{0,0}, 1, true));
+    // anims.emplace_back(AnimInfo<2>({1,1}, 1, true));
 
-    animator.SetAnimations(bn::move(anims));
+    // animator.SetAnimations(bn::move(anims));
 }
 
 void Enemy::SetupAttacks() {
@@ -87,7 +87,7 @@ void Enemy::Dash() {
 
 void Enemy::UpdateAnimationState() {
     //if(meleeComboAb.GetAbilityInUse()) return;
-    animator.SetFlipped(movement.GetMovementDirection() == -1);
-    if(damageReciever.GetAbilityInUse()) return;
-    animator.SetCurrentAnimation(0);
+    // animator.SetFlipped(movement.GetMovementDirection() == -1);
+    // if(damageReciever.GetAbilityInUse()) return;
+    // animator.SetCurrentAnimation(0);
 }

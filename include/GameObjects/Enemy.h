@@ -2,7 +2,6 @@
 #define BF_ENEMY_H
 
 #include "GameObjects/Character.h"
-#include "GameObjectComponents/Animator.h"
 
 class Enemy : public Character {
 
@@ -15,7 +14,7 @@ protected:
     //InputComponent input;
     //JumpAbility jumpAb; 
     //MeleeComboAbility<3> meleeComboAb;
-    Animator<2, 2> animator;
+    //Animator<2, 2> animator;
 
     virtual void SetupAnimations();
     virtual void SetupAttacks();
@@ -25,13 +24,15 @@ public:
     void Update();
 
     void Jump();
-    void Attack();
+    virtual void Attack();
     void Dash();
 
     void UpdateAnimationState();
 
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
+
+    virtual void SetPlayer(Character* p) {}
 
     virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };

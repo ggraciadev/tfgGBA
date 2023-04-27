@@ -52,7 +52,7 @@ bool MeleeComboAbility<MAX_COMBO>::UseAbility() {
     abilityDuration = attacksCombo[currentCombo].attackDuration;
     bool ret = AttackAbility::UseAbility();
     if(ret) {
-        SpawnAttack(attacksCombo[currentCombo]);
+        SpawnAttack(attacksCombo[currentCombo], true);
         character->GetMovementComponent()->AddImpulseForward(attacksCombo[currentCombo].impulseSpeed, abilityDuration);
         currentCombo++;
         if(currentCombo >= MAX_COMBO) {
