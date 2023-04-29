@@ -17,6 +17,33 @@
 #define MAX_JUMPS 2
 #define COOLDOWN_COMBO 20
 
+struct CharacterStats {
+    int maxHealth;
+    int currentHealth;
+    int str;
+    int strMulti;
+    int def;
+    int defMulti;
+
+    CharacterStats() {
+        maxHealth = 6;
+        currentHealth = 6;
+        str = 2;
+        strMulti = 1;
+        def = 2;
+        defMulti = 1;
+    }
+
+    CharacterStats(int _maxHealth, int _currentHealth, int _str, int _strMulti, int _def, int _defMulti) {
+        maxHealth = _maxHealth;
+        currentHealth = _currentHealth;
+        str = _str;
+        strMulti = _strMulti;
+        def = _def;
+        defMulti = _defMulti;
+    }
+};
+
 struct CharacterInfo {
     BoxExtension boxCollisionExtension;
     bn::fixed movementSpeed;
@@ -28,6 +55,9 @@ struct CharacterInfo {
         jumpSpeed = JUMP_SPEED;
     };
 };
+
+
+
 class Attack;
 
 class Character : public GameObject {
@@ -43,12 +73,14 @@ protected:
     DamageRecieverAbility damageReciever;
 
     CharacterInfo characterInfo;
+    CharacterStats characterStats;
 
     void SetupAnimations() {};
     void SetupAttacks() {};
 
 public:
     void Start();
+    inline CharacterStats GetCharacterStats() const { return characterStats; }
     virtual void Update();
 
     virtual void SetMapCollision(MapCollision* mc);

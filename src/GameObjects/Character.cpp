@@ -1,6 +1,7 @@
 #include "GameObjects/Character.h"
 #include "GameObjectComponents/MapCollision.h"
 #include "MeleeComboAbility.h"
+#include "utils.h"
 
 void Character::Start() {
     movement.SetCurrentMovementSpeed(characterInfo.movementSpeed);
@@ -73,6 +74,12 @@ void Character::SetInputMovementY(bn::fixed y) {
 
 void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
     bool result = damageReciever.GetDamage(atkInfo, attackPosition);
+    if(result) {
+        characterStats.currentHealth = Utils::Max(characterStats.currentHealth - Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / characterStats.def, 1), 0);
+        if(characterStats.currentHealth == 0) {
+            //DIE
+        }
+    }
 }
 
 BoxCollision* Character::GetBoxCollision() {

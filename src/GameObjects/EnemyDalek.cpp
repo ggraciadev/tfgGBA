@@ -8,6 +8,7 @@ void EnemyDalek::Start() {
     //input.SetPlayer(this);
     patrollerController.SetEnemy(this);
     patrollerController.SetAttackDist(bn::fixed_point(200, 50));
+    characterStats = CharacterStats(6, 6, 2, 1, 2, 1);
 
     // jumpAb.SetJumpSpeed(characterInfo.jumpSpeed);
     // jumpAb.SetMaxJumps(MAX_JUMPS);
@@ -71,7 +72,7 @@ void EnemyDalek::SetupAnimations() {
 }
 
 void EnemyDalek::SetupAttacks() {
-    laserAttackAb.SetAttackInfo(AttackInfo(AttackType::ATK_LASER_SHOT, 20, 1, 10, 60, 5, true));
+    laserAttackAb.SetAttackInfo(AttackInfo(AttackType::ATK_LASER_SHOT, 1, 1, 10, 60, 5, true));
     laserAttackAb.SetCharacter(this);
     laserAttackAb.SetSpawnOffset(bn::fixed_point(32, 0));
 }

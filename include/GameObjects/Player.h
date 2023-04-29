@@ -6,6 +6,7 @@
 #include "GameObjectComponents/InputComponent.h"
 #include "GameObjectComponents/JumpAbility.h"
 #include "GameObjectComponents/MeleeComboAbility.h"
+#include "GUI/WidgetHUD.h"
 
 class Player : public Character {
 
@@ -19,11 +20,16 @@ protected:
     JumpAbility jumpAb; 
     MeleeComboAbility<3> meleeComboAb;
     Animator<4, 16> animator;
+    
+    WidgetHUD* widgetHUD;
 
     virtual void SetupAnimations();
     virtual void SetupAttacks();
 
+
 public:
+    inline void SetHUD(WidgetHUD* hud) { widgetHUD = hud; }
+
     void Start();
     void Update();
 

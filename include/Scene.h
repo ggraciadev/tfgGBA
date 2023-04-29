@@ -9,6 +9,7 @@
 #include "GameObjects/EnemyDalek.h"
 #include "GameObjects/Attack.h"
 #include "Factory.h"
+#include "GUI/WidgetHUD.h"
 
 #include <bn_regular_bg_ptr.h>
 #include "bn_vector.h"
@@ -24,6 +25,7 @@ public:
 
 protected:
     Camera camera;
+    WidgetHUD widgetHUD;
     Factory<Player, 1> player;
     Factory<Character, 10> characterFactory;
     Factory<EnemyDalek, 1> enemy;

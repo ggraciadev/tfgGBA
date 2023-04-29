@@ -28,11 +28,13 @@ void Scene::Start() {
     map.SetCamera(&camera);
     map.Start();
 
+    widgetHUD.Start();
 
     Player* tmpPlayer = player.Create();
     
     tmpPlayer->SetParent(&map.mapLayer);
     tmpPlayer->SetLocalPosition(0, 0);
+    tmpPlayer->SetHUD(&widgetHUD);
     tmpPlayer->Start();
     tmpPlayer->SetLayerDepth(0);
     tmpPlayer->SetZOrder(0);

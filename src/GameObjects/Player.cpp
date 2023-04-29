@@ -1,11 +1,14 @@
 #include "GameObjects/Player.h"
 #include "GameObjectComponents/MeleeComboAbility.h"
+#include "utils.h"
 
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
 
 void Player::Start() {
     input.SetPlayer(this);
+
+    characterStats = CharacterStats(6, 6, 2, 1, 2,1);
 
     jumpAb.SetJumpSpeed(characterInfo.jumpSpeed);
     jumpAb.SetMaxJumps(MAX_JUMPS);
@@ -59,9 +62,9 @@ void Player::SetupAnimations() {
 
 void Player::SetupAttacks() {
     meleeComboAb.SetAttackCombo({
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 10, 1, 20, 25),
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 10, 1, 20, 25),
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 20, 2, 30, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 20, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 20, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 2, 2, 30, 25),
     });
 }
 
@@ -101,5 +104,14 @@ void Player::UpdateAnimationState() {
 }
 
 void Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
-    Character::GetDamage(atkInfo, attackPosition);
+    int damage = Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / (characterStats.def * characterStats.defMulti), 1);
+    bool salva = damage >= characterStats.currentHealth && characterStats.currentHealth > 1;
+    bool result = damageReciever.GetDamage(atkInfo, attackPosition);
+    if(result) {
+        characterStats.currentHealth = Utils::Max(characterStats.currentHealth - damage, (int)salva);
+        if(characterStats.currentHealth == 0) {
+            //DIE
+        }
+    }
+    widgetHUD->SetCurrentHealth(characterStats.currentHealth);
 }

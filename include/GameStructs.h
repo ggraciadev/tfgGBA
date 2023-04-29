@@ -4,6 +4,7 @@
 enum AttackType {ATK_NONE, ATK_MELEE_SLASH, ATK_LASER_SHOT};
 
 struct AttackInfo {
+    int creatorStr;
     int attackPower;
     int impulseSpeed;
     int attackDuration;
