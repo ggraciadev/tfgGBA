@@ -1,6 +1,6 @@
 #include "GameObjects/MapLayer.h"
 
-MapLayer::MapLayer() : Layer<REAL_MAP_WIDTH,REAL_MAP_HEIGHT>::Layer(){
+MapLayer::MapLayer() : TiledLayer<REAL_MAP_WIDTH,REAL_MAP_HEIGHT>::TiledLayer(){
 
 }
 
@@ -11,7 +11,7 @@ MapLayer::~MapLayer() {
 
 void MapLayer::Start(LayerType _layerType) {
     AddComponent(&mapCollision);
-    Layer::Start(_layerType);
+    TiledLayer::Start(_layerType);
 
     // GameObject::Start();
     // layerType = _layerType;

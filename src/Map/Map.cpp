@@ -1,24 +1,40 @@
 #include "Map.h"
+#include "Camera.h"
+#include "bn_regular_bg_items_sky.h"
+#include "bn_regular_bg_items_layer2.h"
+
+void Map::Start() {
+    mapLayer.SetLayerDepth(0);
+    mapLayer.SetLocalPosition(0,0);
+    mapLayer.Start(LayerType::CITY_LAYER_0);
+
+    skyLayer.SetBackgroundGraphic(bn::regular_bg_items::sky);
+    skyLayer.SetLayerDepth(3);
+    skyLayer.Start();
+
+    layer2.SetBackgroundGraphic(bn::regular_bg_items::layer2);
+    layer2.SetLayerDepth(2);
+    layer2.Start();
+}
+
+void Map::SetCamera(Camera* cam) {
+    mapLayer.SetCamera(cam);
+    skyLayer.SetCamera(cam);
+    layer2.SetCamera(cam);
+}
 
 void Map::GenerateMapGraphics() {
-    for (int i = 0; i < MAP_HEIGHT; i++) {
-        for(int j = 0; j < MAP_WIDTH; ++j) {
-            //map.backLayerComponent.SetTileIndex(j, i, 5);
-            switch(mapLayer.mapCollision.GetCollisionByCell(j, i)) {
-                case MapCollisionType::ROOM_INTERIOR:
-                    mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 0);
-                    break;
-                case MapCollisionType::COLLISION:
-                    mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 4);
-                    break;
-                case MapCollisionType::ROOM_EXTERIOR:
-                    mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 14);
-                    break;
-                case MapCollisionType::PLATFORM:
-                    mapLayer.backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, 10);
-                    break;
-            }
-        }
-    }
-    mapLayer.backLayerComponent.ReloadMap();
+    
+}
+
+void Map::Update() {
+    mapLayer.Update();
+    skyLayer.Update();
+    layer2.Update();
+}
+
+void Map::Render() {
+    mapLayer.Render();
+    skyLayer.Render();
+    layer2.Render();
 }

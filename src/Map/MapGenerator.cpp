@@ -636,7 +636,12 @@ void MapGenerator::GenerateBigWindowGraphic(int initX, int endX, int initY, int 
             }
             else {
                 if(i == endY-2) {
-                    tile = 18;
+                    if(j == (endX - initX) / 2 + initX) {
+                        tile = 46;
+                    }
+                    else {
+                        tile = 18;
+                    }
                 }
                 else if(i == endY-1) {
                     tile = 21;

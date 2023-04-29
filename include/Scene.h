@@ -4,7 +4,7 @@
 #include "GameObjects/BackgroundElement.h"
 #include "GameObjects/MapLayer.h"
 #include "GameObjects/Camera.h"
-#include "GameObjects/Layer.h"
+#include "GameObjects/TiledLayer.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/EnemyDalek.h"
 #include "GameObjects/Attack.h"
@@ -24,8 +24,6 @@ public:
 
 protected:
     Camera camera;
-    Layer<64,64> layer1;
-    Layer<64,64> layer2;
     Factory<Player, 1> player;
     Factory<Character, 10> characterFactory;
     Factory<EnemyDalek, 1> enemy;

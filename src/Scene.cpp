@@ -1,24 +1,8 @@
 #include "Scene.h"
 #include "bn_keypad.h"
 
-#include "bn_sprite_items_character.h"
-#include "bn_sprite_items_bolardo.h"
-#include "bn_sprite_items_farola.h"
 #include "bn_sprite_items_train.h"
 
-#include "bn_regular_bg_items_back.h"
-#include "bn_regular_bg_items_b0.h"
-#include "bn_regular_bg_items_b1.h"
-#include "bn_regular_bg_items_b2.h"
-
-#include "bn_sprite_items_shop_b0.h"
-#define SPRITE_SHEET_SHOP bn::sprite_items::shop_b0
-
-#include "bn_sprite_items_ai_house_b1.h"
-#define SPRITE_SHEET_HOUSE_B1 bn::sprite_items::ai_house_b1
-
-#include "bn_sprite_items_ai_house_b2.h"
-#define SPRITE_SHEET_HOUSE_B2 bn::sprite_items::ai_house_b2
 
 //#include "Actor.h"
 #include "GameManager.h"
@@ -41,18 +25,8 @@ Scene::~Scene() {
 
 void Scene::Start() {
     camera.Start();
-    map.mapLayer.SetCamera(&camera);
-    map.mapLayer.SetLayerDepth(0);
-    map.mapLayer.SetLocalPosition(0,0);
-    map.mapLayer.Start(LayerType::CITY_LAYER_0);
-
-    layer1.SetLayerDepth(1);
-    layer1.SetCamera(&camera);
-    layer1.Start(LayerType::CITY_LAYER_1);
-
-    layer2.SetLayerDepth(2);
-    layer2.SetCamera(&camera);
-    layer2.Start(LayerType::CITY_LAYER_2);
+    map.SetCamera(&camera);
+    map.Start();
 
 
     Player* tmpPlayer = player.Create();
@@ -92,9 +66,7 @@ void Scene::Start() {
 
 void Scene::Update() {
     camera.Update();
-    map.mapLayer.Update();
-    layer1.Update();
-    layer2.Update();
+    map.Update();
     for (int i = 0; i < objects.size(); ++i) {
         if(objects[i] != nullptr) {
             objects[i]->Update();
@@ -112,9 +84,7 @@ void Scene::PhysicsUpdate() {
 }
 
 void Scene::Render() {
-    map.mapLayer.Render();
-    layer1.Render();
-    layer2.Render();
+    map.Render();
     for (int i = 0; i < objects.size(); ++i) {
         if(objects[i] != nullptr) {
             objects[i]->Render();

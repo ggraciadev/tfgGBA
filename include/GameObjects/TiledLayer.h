@@ -1,5 +1,5 @@
-#ifndef BF_LAYER_H
-#define BF_LAYER_H
+#ifndef BF_TILED_LAYER_H
+#define BF_TILED_LAYER_H
 #include "GameObjects/GameObject.h"
 #include "GameObjectComponents/FollowComponent.h"
 #include "GameObjectComponents/BackgroundLayerComponent.h"
@@ -8,10 +8,10 @@
 #define TILE_HEIGHT 8
 
 template <int CELLS_X, int CELLS_Y>
-class Layer : public GameObject {
+class TiledLayer : public GameObject {
 public:
-    Layer();
-    virtual ~Layer();
+    TiledLayer();
+    virtual ~TiledLayer();
 
 protected:
 
@@ -33,18 +33,18 @@ public:
 };
 
 template <int CELLS_X, int CELLS_Y>
-Layer<CELLS_X, CELLS_Y>::Layer() : GameObject::GameObject() {
+TiledLayer<CELLS_X, CELLS_Y>::TiledLayer() : GameObject::GameObject() {
 
     
 }
 
 template <int CELLS_X, int CELLS_Y>
-Layer<CELLS_X, CELLS_Y>::~Layer() {
+TiledLayer<CELLS_X, CELLS_Y>::~TiledLayer() {
 
 }
 
 template <int CELLS_X, int CELLS_Y>
-void Layer<CELLS_X, CELLS_Y>::Start(LayerType _layerType) {
+void TiledLayer<CELLS_X, CELLS_Y>::Start(LayerType _layerType) {
     layerType = _layerType;
     followComponent.SetFollowObject(camera);
     backLayerComponent.SetLayerType(_layerType);
@@ -58,20 +58,23 @@ void Layer<CELLS_X, CELLS_Y>::Start(LayerType _layerType) {
 
 
 template <int CELLS_X, int CELLS_Y>
-void Layer<CELLS_X, CELLS_Y>::Update() {
+void TiledLayer<CELLS_X, CELLS_Y>::Update() {
     GameObject::Update();
 }
 
 template <int CELLS_X, int CELLS_Y>
-void Layer<CELLS_X, CELLS_Y>::SetLayerDepth(int depth) {
+void TiledLayer<CELLS_X, CELLS_Y>::SetLayerDepth(int depth) {
     bn::fixed speed = 1;
     
     GameObject::SetLayerDepth(depth);
     if(layerDepth == -1) {
         speed = -1.0f;
     }
+    else if(layerDepth == 0) {
+        speed = 0;
+    }
     else {
-        speed = 1 - 1.0f/(layerDepth+1);
+        speed = 1 - 1.0f/((1+layerDepth)*2);
         SetZOrder(3);
     }
     followComponent.SetAlphaOffset(speed);
@@ -80,12 +83,12 @@ void Layer<CELLS_X, CELLS_Y>::SetLayerDepth(int depth) {
 }
 
 template <int CELLS_X, int CELLS_Y>
-char Layer<CELLS_X, CELLS_Y>::GetBackgroundLayer() {
+char TiledLayer<CELLS_X, CELLS_Y>::GetBackgroundLayer() {
     return layerDepth;
 }
 
 template <int CELLS_X, int CELLS_Y>
-void Layer<CELLS_X, CELLS_Y>::SetZOrder(char z_order) {
+void TiledLayer<CELLS_X, CELLS_Y>::SetZOrder(char z_order) {
     GameObject::SetZOrder(z_order);
     backLayerComponent.SetZOrder(zOrder);
 }

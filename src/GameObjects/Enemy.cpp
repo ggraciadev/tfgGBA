@@ -1,7 +1,5 @@
 #include "GameObjects/Enemy.h"
 
-#include "bn_sprite_items_dummy.h"
-#define SPRITE_SHEET bn::sprite_items::dummy
 
 void Enemy::Start() {
     //input.SetPlayer(this);
