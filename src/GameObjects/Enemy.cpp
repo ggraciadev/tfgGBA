@@ -1,4 +1,5 @@
 #include "GameObjects/Enemy.h"
+#include "GameManager.h"
 
 
 void Enemy::Start() {
@@ -20,6 +21,7 @@ void Enemy::Start() {
     damageReciever.SetCharacter(this);
     //AddComponent(&animator);
     AddComponent(&damageReciever);
+    SetPlayer(GameManager::GetInstance()->GetCurrentScene()->GetPlayer());
 
     Character::Start();
 }
@@ -88,4 +90,10 @@ void Enemy::UpdateAnimationState() {
     // animator.SetFlipped(movement.GetMovementDirection() == -1);
     // if(damageReciever.GetAbilityInUse()) return;
     // animator.SetCurrentAnimation(0);
+}
+
+void Enemy::Die() {
+    
+    GameManager::GetInstance()->GetCurrentScene()->SpawnEnemyCollectable(GetWorldPosition() + bn::fixed_point(0, 24));
+    GameManager::GetInstance()->GetCurrentScene()->DestroyEnemy(this);
 }

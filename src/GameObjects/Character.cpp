@@ -77,7 +77,7 @@ void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& atta
     if(result) {
         characterStats.currentHealth = Utils::Max(characterStats.currentHealth - Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / characterStats.def, 1), 0);
         if(characterStats.currentHealth == 0) {
-            //DIE
+            Die();
         }
     }
 }

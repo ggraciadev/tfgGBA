@@ -6,7 +6,6 @@
 
 //#include "Actor.h"
 #include "GameManager.h"
-#include "Attack.h"
 // #include "PlayerController.h"
 // #include "Player.h"
 
@@ -30,26 +29,25 @@ void Scene::Start() {
 
     widgetHUD.Start();
 
-    Player* tmpPlayer = player.Create();
+    player = playerFactory.Create();
     
-    tmpPlayer->SetParent(&map.mapLayer);
-    tmpPlayer->SetLocalPosition(0, 0);
-    tmpPlayer->SetHUD(&widgetHUD);
-    tmpPlayer->Start();
-    tmpPlayer->SetLayerDepth(0);
-    tmpPlayer->SetZOrder(0);
-    tmpPlayer->SetCamera(&camera);
-    tmpPlayer->SetMapCollision(map.mapLayer.GetMapCollision());
-    camera.SetFollowObject(tmpPlayer);
+    player->SetParent(&map.mapLayer);
+    player->SetLocalPosition(0, 0);
+    player->SetHUD(&widgetHUD);
+    player->Start();
+    player->SetLayerDepth(0);
+    player->SetZOrder(0);
+    player->SetCamera(&camera);
+    player->SetMapCollision(map.mapLayer.GetMapCollision());
+    camera.SetFollowObject(player);
 
-    objects.push_back(tmpPlayer);
-    characters.push_back(tmpPlayer);
+    objects.push_back(player);
+    characters.push_back(player);
 
     EnemyDalek* tmpEnemy = enemy.Create();
     tmpEnemy->SetParent(&map.mapLayer);
     tmpEnemy->SetLocalPosition(64, -20);
     tmpEnemy->Start();
-    tmpEnemy->SetPlayer(tmpPlayer);
     tmpEnemy->SetLayerDepth(0);
     tmpEnemy->SetZOrder(1);
     tmpEnemy->SetCamera(&camera);
@@ -135,4 +133,45 @@ void Scene::DestroyAttack(Attack* atk) {
     }
     atk->Destroy();
     attackFactory.Destroy(atk);
+}
+
+void Scene::DestroyEnemy(Character* enemy) {
+    for(int i = objects.size()-1; i >= 0; --i) {
+        if(enemy->Equals(objects[i])) {
+            enemy->SetLocalPosition(-500, -500);
+            enemy->Render();
+            objects[i] = nullptr;
+        }
+    }
+    enemy->Destroy();
+}
+void Scene::SpawnEnemyCollectable(bn::fixed_point position) {
+    Interactuable* tmpInter = interactuableFactory.Create();
+    
+    tmpInter->SetParent(&map.mapLayer);
+    tmpInter->SetLocalPosition(position);
+    tmpInter->Start();
+    tmpInter->SetLayerDepth(0);
+    tmpInter->SetZOrder(0);
+    tmpInter->SetCamera(&camera);
+
+    auto foundPos = bn::find(objects.begin(), objects.end(), nullptr);
+    if(foundPos == objects.end()) {
+        objects.push_back(tmpInter);
+    }
+    else {
+        *foundPos = tmpInter;
+    }
+}
+
+void Scene::DestroyEnemyCollectable(Interactuable* interact) {
+    for(int i = objects.size()-1; i >= 0; --i) {
+        if(interact->Equals(objects[i])) {
+            interact->SetLocalPosition(-500, -500);
+            interact->Render();
+            objects[i] = nullptr;
+        }
+    }
+    interact->Destroy();
+    interactuableFactory.Destroy(interact);
 }

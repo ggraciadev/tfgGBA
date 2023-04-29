@@ -6,9 +6,13 @@
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_tiles_ptr.h>
 #include <bn_sprite_item.h>
+#include "GameObjects/Camera.h"
 
 #define GUI_SCREEN_WIDTH 240
 #define GUI_SCREEN_HEIGHT 160
+
+enum HUDGraphics { GUI_A_BUTTON, GUI_B_BUTTON, GUI_R_BUTTON, GUI_L_BUTTON, GUI_FULL_HEART, GUI_HALF_HEART, GUI_EMTPY_HEART, GUI_STR_POWUP, GUI_DEF_POWUP };
+
 
 class GUIWidget
 {
@@ -22,7 +26,6 @@ protected:
 
     GUIWidget* parent;
     bn::fixed_point relativePosition;
-
     bool enabled;
 
 public:
@@ -31,7 +34,7 @@ public:
     void InitGraphic();
     virtual void Render();
 
-    bn::fixed_point GetScreenPosition() const;
+    virtual bn::fixed_point GetScreenPosition() const;
     inline void SetRelativePosition(bn::fixed_point pos) { relativePosition = pos; };
     void SetSpriteItem(const bn::sprite_item& item);
     

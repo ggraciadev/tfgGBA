@@ -34,6 +34,8 @@ public:
 
     virtual void SetPlayer(Character* p) {}
 
+    virtual void Die() override;
+
     virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };
 

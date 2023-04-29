@@ -1,6 +1,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjectComponents/MeleeComboAbility.h"
 #include "utils.h"
+#include "GameObjects/Interactuable.h"
 
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
@@ -77,7 +78,10 @@ void Player::Jump() {
 
 void Player::Attack() {
     if(damageReciever.GetAbilityInUse()) return;
-    if(meleeComboAb.UseAbility()) {
+    if(currentInteractuable != nullptr) {
+        currentInteractuable->Interact();
+    }
+    else if(meleeComboAb.UseAbility()) {
         animator.SetCurrentAnimation(3);
     }
 }
@@ -110,8 +114,17 @@ void Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackP
     if(result) {
         characterStats.currentHealth = Utils::Max(characterStats.currentHealth - damage, (int)salva);
         if(characterStats.currentHealth == 0) {
-            //DIE
+            Die();
         }
     }
     widgetHUD->SetCurrentHealth(characterStats.currentHealth);
+}
+
+void Player::SetCurrentInteractuable(Interactuable* value, Interactuable* requested) { 
+    if(value == nullptr && requested != currentInteractuable) { return; }
+    if(currentInteractuable != nullptr) {
+        currentInteractuable->SetGraphicEnabled(false);
+    }
+    currentInteractuable = value; 
+    currentInteractuable->SetGraphicEnabled(true);
 }

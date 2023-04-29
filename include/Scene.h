@@ -8,6 +8,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/EnemyDalek.h"
 #include "GameObjects/Attack.h"
+#include "GameObjects/Interactuable.h"
 #include "Factory.h"
 #include "GUI/WidgetHUD.h"
 
@@ -26,15 +27,18 @@ public:
 protected:
     Camera camera;
     WidgetHUD widgetHUD;
-    Factory<Player, 1> player;
+    Player* player;
+    Factory<Player, 1> playerFactory;
     Factory<Character, 10> characterFactory;
     Factory<EnemyDalek, 1> enemy;
     Factory<BackgroundElement<4,4>, 1> bg0ElementsFactory;
     Factory<BackgroundElement<2,2>, 2> bg1ElementsFactory;
     Factory<BackgroundElement<1,1>, 5> bg2ElementsFactory;
     Factory<Attack, 10> attackFactory;
-    bn::vector<GameObject*, 20> objects;
-    bn::vector<Character*, 50> characters;
+    Factory<Interactuable, 10> interactuableFactory;
+
+    bn::vector<GameObject*, 50> objects;
+    bn::vector<Character*, 10> characters;
     int gameObjectListSize;
     Map map;
     MapGenerator mapGenerator;
@@ -51,9 +55,14 @@ public:
 
     virtual void Render();
 
+    Player* GetPlayer() { return player; }
     bn::vector<Character*, 16> GetAllInstancesCharacters();
     void SpawnAttack(GameObject* parent, Character* creator, bn::fixed_point position, int direction, AttackInfo& attackInfo);
     void DestroyAttack(Attack* atk);
+
+    void DestroyEnemy(Character* enemy);
+    void SpawnEnemyCollectable(bn::fixed_point position);
+    void DestroyEnemyCollectable(Interactuable* interact);
     
 };
 

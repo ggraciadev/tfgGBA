@@ -24,7 +24,7 @@ void EnemyDalek::Start() {
     AddComponent(&animator);
     AddComponent(&damageReciever);
 
-    Character::Start();
+    Enemy::Start();
 }
 
 void EnemyDalek::SetPlayer(Character* p) {

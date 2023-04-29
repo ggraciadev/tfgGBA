@@ -8,6 +8,8 @@
 #include "GameObjectComponents/MeleeComboAbility.h"
 #include "GUI/WidgetHUD.h"
 
+class Interactuable;
+
 class Player : public Character {
 
 public:
@@ -22,6 +24,8 @@ protected:
     Animator<4, 16> animator;
     
     WidgetHUD* widgetHUD;
+
+    Interactuable* currentInteractuable;
 
     virtual void SetupAnimations();
     virtual void SetupAttacks();
@@ -43,6 +47,8 @@ public:
     void SetZOrder(char z_order);
 
     virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
+
+    void SetCurrentInteractuable(Interactuable* value, Interactuable* requested);
 };
 
 #endif

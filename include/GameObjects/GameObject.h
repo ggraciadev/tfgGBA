@@ -50,12 +50,12 @@ private:
 
 public:
 
-    inline void SetCamera(GameObject* cam) { camera = cam; }
+    virtual void SetCamera(GameObject* cam) { camera = cam; }
 
     void Start();
     void PhysicsUpdate();
     virtual void Update();
-    void Render();
+    virtual void Render();
     void Destroy() { destroyed = true; }
 
     inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
