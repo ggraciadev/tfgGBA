@@ -42,6 +42,7 @@ protected:
 public: 
 
     virtual void Start() override;
+    void GenerateMap(unsigned seed);
 
     virtual void Update() override;
 

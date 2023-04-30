@@ -19,7 +19,10 @@ void GameScene::Start() {
     InitCharacter(tmpEnemy, &map.mapLayer, pos, 1);
 
     mapGenerator.InitMapGenerator(&map);
-    mapGenerator.GenerateMap(5);
+}
+
+void GameScene::GenerateMap(unsigned seed) {
+    mapGenerator.GenerateMap(seed);
 }
 
 void GameScene::InitGameObject(GameObject* gameObject, GameObject* parent, bn::fixed_point pos, int zOrder) {

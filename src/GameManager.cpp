@@ -32,6 +32,7 @@ void GameManager::Init() {
     //scene = new Scene();
     currentGameScene = GameScenes::SCENE_MAIN_MENU;
     InternalChangeScene();
+    initSeed = 0;
     
 
     // bn::ostringstream string_stream(printString);
@@ -41,6 +42,10 @@ void GameManager::Init() {
 }
 
 void GameManager::Update() {
+    if(currentGameScene == GameScenes::SCENE_MAIN_MENU) {
+        initSeed++;
+        initSeed = initSeed % 100;
+    }
     scene->Update();
 }
 
@@ -74,6 +79,7 @@ void GameManager::InternalChangeScene() {
             break;
         case GameScenes::SCENE_MAIN_MENU:
             scene = new MainMenuScene();
+            initSeed = 0;
             break;
         case GameScenes::SCENE_GAME:
             scene = new GameScene();
@@ -85,6 +91,9 @@ void GameManager::InternalChangeScene() {
             break;
     }
     scene->Start();
+    if(currentGameScene == GameScenes::SCENE_GAME) {
+        GetCurrentGameScene()->GenerateMap(initSeed);
+    }
     changingScene = false;
 }
 
@@ -95,6 +104,5 @@ GameScene* GameManager::GetCurrentGameScene() {
 void GameManager::ChangeScene(GameScenes sceneToGo) {
     currentGameScene = sceneToGo;
     changingScene = true;
-    
 }
 
