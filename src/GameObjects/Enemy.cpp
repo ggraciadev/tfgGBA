@@ -27,7 +27,7 @@ void Enemy::Start() {
 }
 
 void Enemy::Update() {
-    seed = seed % 100;
+    seed = (seed + 1) % 100;
     Character::Update();
     UpdateAnimationState();
 }
@@ -97,14 +97,13 @@ void Enemy::UpdateAnimationState() {
 void Enemy::Die() {
     rand.set_seed(seed);
     int random = rand.get_int(0,100);
-    random = 80;
-    if(random < 30) {
+    if(random < 45) {
         
     }
-    else if(random < 50) {
+    else if(random < 70) {
         GameManager::GetInstance()->GetCurrentGameScene()->SpawnEnemyCollectable(GetWorldPosition() + bn::fixed_point(0, 24));
     }
-    else if(random < 70) {
+    else if(random < 85) {
         GameManager::GetInstance()->GetCurrentGameScene()->SpawnAtkPowerUp(GetWorldPosition() + bn::fixed_point(0, 24));
     }
     else if(random < 100) {

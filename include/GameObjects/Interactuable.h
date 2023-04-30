@@ -18,6 +18,8 @@ protected:
     Player* player;
     BoxCollision boxCollision;
 
+    bn::fixed_point promptOffset;
+
     bn::optional<bn::sprite_ptr> sprite;
 
     bool playerTriggered;

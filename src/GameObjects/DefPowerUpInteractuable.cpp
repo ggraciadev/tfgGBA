@@ -12,7 +12,7 @@ void DefPowerUpInteractuable::Start() {
 
 void DefPowerUpInteractuable::InitSprite(const bn::sprite_item& item) {
     Interactuable::InitSprite(item);
-    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(10));
+    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(12));
 }
 
 void DefPowerUpInteractuable::Interact() {

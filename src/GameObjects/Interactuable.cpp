@@ -22,7 +22,10 @@ void Interactuable::Start() {
 void Interactuable::InitPrompt() {
     interactivePrompt.SetSpriteItem(SPRITE_SHEET);
     interactivePrompt.Start();
-    interactivePrompt.SetRelativePosition(GetWorldPosition() + bn::fixed_point(10,-10));
+
+    promptOffset = bn::fixed_point(8,-10);
+
+    interactivePrompt.SetRelativePosition(GetWorldPosition() + promptOffset);
     interactivePrompt.SetGraphic(HUDGraphics::GUI_A_BUTTON);
 }
 
@@ -50,7 +53,7 @@ void Interactuable::Update() {
     GameObject::Update();
 }
 void Interactuable::Render() {
-    interactivePrompt.SetRelativePosition(GetWorldPosition());
+    interactivePrompt.SetRelativePosition(GetWorldPosition() + promptOffset);
     interactivePrompt.Render();
     if(sprite.has_value()) {
         sprite->set_position(GetScreenPosition());

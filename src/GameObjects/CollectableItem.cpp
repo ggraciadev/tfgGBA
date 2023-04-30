@@ -12,7 +12,7 @@ void CollectableItem::Start() {
 
 void CollectableItem::InitSprite(const bn::sprite_item& item) {
     Interactuable::InitSprite(item);
-    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(11));
+    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(13));
 }
 
 void CollectableItem::Interact() {

@@ -12,7 +12,7 @@ void AtkPowerUpInteractuable::Start() {
 
 void AtkPowerUpInteractuable::InitSprite(const bn::sprite_item& item) {
     Interactuable::InitSprite(item);
-    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(9));
+    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(11));
 }
 
 void AtkPowerUpInteractuable::Interact() {
