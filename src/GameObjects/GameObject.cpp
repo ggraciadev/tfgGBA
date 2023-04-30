@@ -1,5 +1,6 @@
 #include "GameObjects/GameObject.h"
 #include "GameObjectComponents/GameObjectComponent.h"
+#include "GameManager.h"
 
 int GameObject::CURRENT_ID = 0;
 

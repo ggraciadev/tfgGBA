@@ -13,7 +13,6 @@ public:
 
 protected:
     bn::vector <GameObject*, 32> gameObjects;
-    bn::vector <GUIWidget*, 32> gameWidgets;
 public:
 
     virtual void Start();

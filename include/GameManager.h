@@ -8,6 +8,7 @@
 #include "common_variable_8x16_sprite_font.h"
 #include "bn_sprite_text_generator.h"
 #include "Scenes/Scene.h"
+
 #include "Scenes/GameScene.h"
 
 #include "Inventory.h"
@@ -19,7 +20,6 @@ class GameManager { //Singleton
 protected:
 
     static GameManager* instance;
-    GameScene gameScene;
     Scene* scene;
     Inventory inventory;
 
@@ -27,6 +27,10 @@ protected:
 
     bn::string<64> printString;
     bn::sprite_text_generator* textGen;
+
+    bool changingScene;
+
+    void InternalChangeScene();
 
     GameManager();
 

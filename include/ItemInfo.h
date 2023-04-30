@@ -17,6 +17,12 @@ protected:
 
 public:
 
+    inline void SetName(bn::string<16> n) { name = n; }
+    inline bn::string<16> GetName() const { return name; }
+
+    inline void SetDescription(bn::string<128> d) { description = d; }
+    inline bn::string<128> GetDescription() const { return description;; }
+
 };
 
 #endif

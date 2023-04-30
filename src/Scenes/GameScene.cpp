@@ -7,7 +7,6 @@ void GameScene::Start() {
     map.Start();
 
     widgetHUD.Start();
-    gameWidgets.push_back(&widgetHUD);
 
     player = playerFactory.Create();
     player->SetHUD(&widgetHUD);

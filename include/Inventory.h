@@ -40,6 +40,7 @@ public:
     void AddInventoryItem(ItemIndex index, int quant) { inventoryItems[(int)index].quantity = Utils::Max(inventoryItems[(int)index].quantity + quant, 0); }
     void SetInventoryItem(ItemIndex index, int quant) { inventoryItems[(int)index].quantity = Utils::Max(quant, 0);}
     void ResetInventory();
+    void InitInventory();
 };
 
 

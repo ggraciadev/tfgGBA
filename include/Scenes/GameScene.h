@@ -18,7 +18,7 @@
 class GameScene : public Scene {
 public:
     GameScene() = default;
-    ~GameScene() = default;
+    virtual ~GameScene() = default;
 
 protected:
     Camera camera;

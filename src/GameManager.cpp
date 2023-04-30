@@ -4,6 +4,8 @@
 #include "bn_string.h"
 
 #include "Scenes/GameScene.h"
+#include "Scenes/GameOverScene.h"
+#include "Scenes/MainMenuScene.h"
 
 
 GameManager* GameManager::instance;
@@ -28,7 +30,8 @@ GameManager* GameManager::GetInstance() {
 
 void GameManager::Init() {
     //scene = new Scene();
-    ChangeScene(GameScenes::SCENE_GAME);
+    currentGameScene = GameScenes::SCENE_MAIN_MENU;
+    InternalChangeScene();
     
 
     // bn::ostringstream string_stream(printString);
@@ -52,6 +55,10 @@ void GameManager::PlayGame() {
 
 void GameManager::Render(bn::sprite_text_generator& t) {
     scene->Render();
+
+    if(changingScene) {
+        InternalChangeScene();
+    }
     
     // bn::vector<bn::sprite_ptr, 32> text_sprites;
     // printString = "lele";
@@ -59,32 +66,35 @@ void GameManager::Render(bn::sprite_text_generator& t) {
     bn::core::update();
 }
 
-GameScene* GameManager::GetCurrentGameScene() { 
-    if(currentGameScene == GameScenes::SCENE_GAME) {
-        return &(gameScene);
-    }
-    else {
-        return nullptr;
-    }
-}
-
-void GameManager::ChangeScene(GameScenes sceneToGo) {
-    currentGameScene = sceneToGo;
-    switch (sceneToGo)
+void GameManager::InternalChangeScene() {
+    delete(scene);
+    switch (currentGameScene)
     {
         case GameScenes::SCENE_SPLASH_SCREEN:
             break;
         case GameScenes::SCENE_MAIN_MENU:
+            scene = new MainMenuScene();
             break;
         case GameScenes::SCENE_GAME:
-            //gameScene = GameScene();
-            scene = &(gameScene);
+            scene = new GameScene();
             break;
         case GameScenes::SCENE_DEATH_MENU:
+            scene = new GameOverScene();
             break;
         default:
             break;
     }
     scene->Start();
+    changingScene = false;
+}
+
+GameScene* GameManager::GetCurrentGameScene() { 
+    return (GameScene*)scene;
+}
+
+void GameManager::ChangeScene(GameScenes sceneToGo) {
+    currentGameScene = sceneToGo;
+    changingScene = true;
+    
 }
 
