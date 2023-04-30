@@ -52,8 +52,8 @@ public:
 
     virtual void SetCamera(GameObject* cam) { camera = cam; }
 
-    void Start();
-    void PhysicsUpdate();
+    virtual void Start();
+    virtual void PhysicsUpdate();
     virtual void Update();
     virtual void Render();
     void Destroy() { destroyed = true; }
@@ -78,8 +78,8 @@ public:
 
     inline char GetLayerDepth() const { return layerDepth; }
 
-    void SetLayerDepth(const int depth);
-    inline void SetZOrder(const char z_order) { zOrder = z_order; }
+    virtual void SetLayerDepth(const int depth);
+    virtual void SetZOrder(const char z_order) { zOrder = z_order; }
 
     bool GetWorldPositionDirty();
 

@@ -21,7 +21,7 @@ void Enemy::Start() {
     damageReciever.SetCharacter(this);
     //AddComponent(&animator);
     AddComponent(&damageReciever);
-    SetPlayer(GameManager::GetInstance()->GetCurrentScene()->GetPlayer());
+    SetPlayer(GameManager::GetInstance()->GetCurrentGameScene()->GetPlayer());
     seed = 0;
     Character::Start();
 }
@@ -102,15 +102,15 @@ void Enemy::Die() {
         
     }
     else if(random < 50) {
-        GameManager::GetInstance()->GetCurrentScene()->SpawnEnemyCollectable(GetWorldPosition() + bn::fixed_point(0, 24));
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnEnemyCollectable(GetWorldPosition() + bn::fixed_point(0, 24));
     }
     else if(random < 70) {
-        GameManager::GetInstance()->GetCurrentScene()->SpawnAtkPowerUp(GetWorldPosition() + bn::fixed_point(0, 24));
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnAtkPowerUp(GetWorldPosition() + bn::fixed_point(0, 24));
     }
     else if(random < 100) {
-        GameManager::GetInstance()->GetCurrentScene()->SpawnDefPowerUp(GetWorldPosition() + bn::fixed_point(0, 24));
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnDefPowerUp(GetWorldPosition() + bn::fixed_point(0, 24));
     }
 
     
-    GameManager::GetInstance()->GetCurrentScene()->DestroyEnemy(this);
+    GameManager::GetInstance()->GetCurrentGameScene()->DestroyEnemy(this);
 }

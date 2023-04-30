@@ -12,7 +12,7 @@ class Character;
 class Attack : public GameObject {
 public:
     Attack() = default;
-    ~Attack() = default;
+    virtual ~Attack() = default;
     //Character(const int posX, const int posY, GameObject* _parent = nullptr);
 
 protected:
@@ -31,9 +31,9 @@ protected:
     void SetupAnimations();
 
 public:
-    void Start();
+    virtual void Start();
 
-    void Update();
+    virtual void Update();
     void UpdateMovement();
     void SetAttackInfo(const AttackInfo& attackInfo);
     virtual void DoDamage(Character* other);

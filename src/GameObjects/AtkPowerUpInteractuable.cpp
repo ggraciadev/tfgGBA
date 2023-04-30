@@ -17,6 +17,6 @@ void AtkPowerUpInteractuable::InitSprite(const bn::sprite_item& item) {
 
 void AtkPowerUpInteractuable::Interact() {
     player->AddAtkPowerUp();
-    GameManager::GetInstance()->GetCurrentScene()->DestroyAtkPowerUp(this);
+    GameManager::GetInstance()->GetCurrentGameScene()->DestroyAtkPowerUp(this);
     Interactuable::Interact();
 }

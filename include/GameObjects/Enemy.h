@@ -8,7 +8,7 @@ class Enemy : public Character {
 
 public:
     Enemy() = default;
-    ~Enemy() = default;
+    virtual ~Enemy() = default;
 
 protected:
 
@@ -25,8 +25,8 @@ protected:
     virtual void SetupAttacks();
 
 public:
-    void Start();
-    void Update();
+    virtual void Start();
+    virtual void Update();
 
     void Jump();
     virtual void Attack();
@@ -34,8 +34,8 @@ public:
 
     void UpdateAnimationState();
 
-    void SetLayerDepth(int depth);
-    void SetZOrder(char z_order);
+    virtual void SetLayerDepth(int depth);
+    virtual void SetZOrder(char z_order);
 
     virtual void SetPlayer(Character* p) { player = p; }
 

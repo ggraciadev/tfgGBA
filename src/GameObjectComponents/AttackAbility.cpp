@@ -1,6 +1,6 @@
 #include "GameObjectComponents/AttackAbility.h"
 #include "GameManager.h"
-#include "Scene.h"
+#include "Scenes/Scene.h"
 #include "GameObjects/Attack.h"
 
 void AttackAbility::SpawnAttack(AttackInfo& attackInfo, bool attachToCreator) {
@@ -10,5 +10,5 @@ void AttackAbility::SpawnAttack(AttackInfo& attackInfo, bool attachToCreator) {
     spawnPos.set_x(spawnOffset.x() * direction);
     GameObject* parent = nullptr;
     if(attachToCreator) parent = character;
-    GameManager::GetInstance()->GetCurrentScene()->SpawnAttack(parent, character, spawnPos, direction, attackInfo);
+    GameManager::GetInstance()->GetCurrentGameScene()->SpawnAttack(parent, character, spawnPos, direction, attackInfo);
 }

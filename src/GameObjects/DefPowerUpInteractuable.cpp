@@ -17,6 +17,6 @@ void DefPowerUpInteractuable::InitSprite(const bn::sprite_item& item) {
 
 void DefPowerUpInteractuable::Interact() {
     player->AddDefPowerUp();
-    GameManager::GetInstance()->GetCurrentScene()->DestroyDefPowerUp(this);
+    GameManager::GetInstance()->GetCurrentGameScene()->DestroyDefPowerUp(this);
     Interactuable::Interact();
 }

@@ -17,6 +17,6 @@ void CollectableItem::InitSprite(const bn::sprite_item& item) {
 
 void CollectableItem::Interact() {
     GameManager::GetInstance()->GetInventory()->AddInventoryItem(ItemIndex::ITEM_BOLT, 1);
-    GameManager::GetInstance()->GetCurrentScene()->DestroyEnemyCollectable(this);
+    GameManager::GetInstance()->GetCurrentGameScene()->DestroyEnemyCollectable(this);
     Interactuable::Interact();
 }

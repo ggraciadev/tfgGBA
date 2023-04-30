@@ -7,7 +7,7 @@ class WidgetElementHUD : public GUIWidget
 {
 public:
     WidgetElementHUD() = default;
-    ~WidgetElementHUD() = default;
+    virtual ~WidgetElementHUD() = default;
 
 protected:
     HUDGraphics currentGraphic;

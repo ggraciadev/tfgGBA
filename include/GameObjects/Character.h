@@ -89,13 +89,13 @@ protected:
     void UpdatePowerUpTimers();
 
 public:
-    void Start();
+    virtual void Start() override;
     inline CharacterStats GetCharacterStats() const { return characterStats; }
-    virtual void Update();
+    virtual void Update() override;
 
     virtual void SetMapCollision(MapCollision* mc);
 
-    void SetLayerDepth(int depth);
+    virtual void SetLayerDepth(int depth);
 
     void SetInputMovement(bn::fixed_point md);
     void SetInputMovementX(bn::fixed x);

@@ -7,7 +7,7 @@
 
 
 void Interactuable::Start() {
-    player = GameManager::GetInstance()->GetCurrentScene()->GetPlayer();
+    player = GameManager::GetInstance()->GetCurrentGameScene()->GetPlayer();
     InitPrompt();
 
     boxCollision.SetIsTrigger(true);

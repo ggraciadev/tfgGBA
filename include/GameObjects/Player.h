@@ -37,8 +37,8 @@ protected:
 public:
     inline void SetHUD(WidgetHUD* hud) { widgetHUD = hud; }
 
-    void Start();
-    void Update();
+    virtual void Start();
+    virtual void Update();
 
     void Jump();
     void Attack();
@@ -48,8 +48,8 @@ public:
 
     void UpdateAnimationState();
 
-    void SetLayerDepth(int depth);
-    void SetZOrder(char z_order);
+    virtual void SetLayerDepth(int depth);
+    virtual void SetZOrder(char z_order);
 
     virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
 

@@ -18,7 +18,7 @@ class GUIWidget
 {
 public:
     GUIWidget() = default;
-    ~GUIWidget() = default;
+    virtual ~GUIWidget() = default;
 
 protected:
     bn::optional<bn::sprite_ptr> sprite;

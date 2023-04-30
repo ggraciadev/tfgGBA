@@ -13,7 +13,7 @@ class Camera;
 class Map {
 
     friend class MapGenerator;
-    friend class Scene;
+    friend class GameScene;
 
 public:
     Map() = default;

@@ -10,7 +10,7 @@ class EnemyDalek : public Enemy {
 
 public:
     EnemyDalek() = default;
-    ~EnemyDalek() = default;
+    virtual ~EnemyDalek() = default;
 
 protected:
 

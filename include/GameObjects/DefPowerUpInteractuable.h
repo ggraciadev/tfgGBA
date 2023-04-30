@@ -12,7 +12,7 @@ public:
 protected:
 
 public:
-    void Start();
+    virtual void Start();
 
     virtual void Interact();
     

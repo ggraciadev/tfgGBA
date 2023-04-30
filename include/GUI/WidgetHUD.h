@@ -10,7 +10,7 @@ class WidgetHUD : public GUIWidget
 {
 public:
     WidgetHUD() = default;
-    ~WidgetHUD() = default;
+    virtual ~WidgetHUD() = default;
 
 protected:
     bn::vector<WidgetElementHUD, MAX_HEARTS> hearts;

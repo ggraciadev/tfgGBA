@@ -23,7 +23,7 @@ protected:
     bool playerTriggered;
 
 public:
-    void Start();
+    virtual void Start();
     virtual void Update() override;
     virtual void Render() override;
     virtual void SetCamera(GameObject* cam) override;

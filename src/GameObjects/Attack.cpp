@@ -1,5 +1,5 @@
 #include "Attack.h"
-#include "Scene.h"
+#include "Scenes/Scene.h"
 #include "Character.h"
 #include "GameManager.h"
 
@@ -10,7 +10,7 @@
 #define LASER_SPRITE bn::sprite_items::laser
 
 void Attack::Start() {
-    targets = GameManager::GetInstance()->GetCurrentScene()->GetAllInstancesCharacters();
+    targets = GameManager::GetInstance()->GetCurrentGameScene()->GetAllInstancesCharacters();
     
     boxCollision.SetIsTrigger(true);
     SetupAnimations();
@@ -38,7 +38,7 @@ void Attack::Update() {
     }
     timeToLive--;
     if(timeToLive <= 0 || (damage && attackInfo.destroyOnCollision)) {
-        GameManager::GetInstance()->GetCurrentScene()->DestroyAttack(this);
+        GameManager::GetInstance()->GetCurrentGameScene()->DestroyAttack(this);
     }
 }
 
@@ -46,7 +46,7 @@ void Attack::UpdateMovement() {
     AddLocalOffset(bn::fixed_point(attackInfo.projectileSpeed * currentDirection, 0));
     bn::fixed_point currentPos = GetWorldPosition();
     if(attackInfo.destroyOnCollision && mapCollision->GetCollisionByPosition(currentPos.x().floor_integer(), currentPos.y().floor_integer())) {
-        GameManager::GetInstance()->GetCurrentScene()->DestroyAttack(this);
+        GameManager::GetInstance()->GetCurrentGameScene()->DestroyAttack(this);
     }
 }
 

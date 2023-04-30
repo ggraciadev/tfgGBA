@@ -8,7 +8,7 @@ class GUIWorldSpace : public GUIWidget {
 
 public:
     GUIWorldSpace() = default;
-    ~GUIWorldSpace() = default;
+    virtual ~GUIWorldSpace() = default;
 
 protected:
     GameObject* camera;
