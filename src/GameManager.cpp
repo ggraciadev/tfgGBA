@@ -26,7 +26,8 @@ GameManager* GameManager::GetInstance() {
 
 void GameManager::Init() {
     //scene = new Scene();
-    scene.Start();
+    ChangeScene(GameScenes::SCENE_SPLASH_SCREEN);
+    
 
     // bn::ostringstream string_stream(printString);
     // string_stream << MovementComponent::GetClassName();
@@ -42,15 +43,39 @@ void GameManager::PhysicsUpdate() {
     scene.PhysicsUpdate();
 }
 
+void GameManager::PlayGame() {
+    inventory.ResetInventory();
+    ChangeScene(GameScenes::SCENE_GAME);
+}
+
 void GameManager::Render(bn::sprite_text_generator& t) {
     scene.Render();
     
-    //bn::vector<bn::sprite_ptr, 32> text_sprites;
-    //t.generate(0, 0, printString, text_sprites);
+    // bn::vector<bn::sprite_ptr, 32> text_sprites;
+    // printString = "lele";
+    // t.generate(0, 0, printString, text_sprites);
     bn::core::update();
 }
 
 Scene* GameManager::GetCurrentScene() { 
     return &scene;
+}
+
+void GameManager::ChangeScene(GameScenes sceneToGo) {
+    currentGameScene = sceneToGo;
+    switch (sceneToGo)
+    {
+        case GameScenes::SCENE_SPLASH_SCREEN:
+            break;
+        case GameScenes::SCENE_MAIN_MENU:
+            break;
+        case GameScenes::SCENE_GAME:
+            break;
+        case GameScenes::SCENE_DEATH_MENU:
+            break;
+        default:
+            break;
+    }
+    scene.Start();
 }
 

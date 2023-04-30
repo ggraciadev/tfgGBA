@@ -17,6 +17,8 @@
 #define MAX_JUMPS 2
 #define COOLDOWN_COMBO 20
 
+#define POWER_UP_TIME 1000
+
 struct CharacterStats {
     int maxHealth;
     int currentHealth;
@@ -75,8 +77,16 @@ protected:
     CharacterInfo characterInfo;
     CharacterStats characterStats;
 
+    int atkPowerUpTime;
+    int defPowerUpTime;
+
     void SetupAnimations() {};
     void SetupAttacks() {};
+
+    virtual void SetAtkPowerUp(bool powUp);
+    virtual void SetDefPowerUp(bool powUp);
+
+    void UpdatePowerUpTimers();
 
 public:
     void Start();
@@ -98,6 +108,9 @@ public:
     virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
     virtual void Die() {}
     BoxCollision* GetBoxCollision();
+
+    void AddAtkPowerUp();
+    void AddDefPowerUp();
 
 };
 

@@ -28,7 +28,23 @@ void Character::SetLayerDepth(int depth) {
 
 void Character::Update() {
     movement.SetGrounded(boxCollision.GetContact(BOT_COLLISION));
+    UpdatePowerUpTimers();
     GameObject::Update();
+}
+
+void Character::UpdatePowerUpTimers() {
+    if(atkPowerUpTime > 0) {
+        atkPowerUpTime--;
+        if(atkPowerUpTime <= 0) {
+            SetAtkPowerUp(false);
+        }
+    }
+    if(defPowerUpTime > 0) {
+        defPowerUpTime--;
+        if(defPowerUpTime <= 0) {
+            SetDefPowerUp(false);
+        }
+    }
 }
 
 void Character::SetInputMovement(bn::fixed_point md) {
@@ -84,4 +100,32 @@ void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& atta
 
 BoxCollision* Character::GetBoxCollision() {
     return &boxCollision;
+}
+
+void Character::SetAtkPowerUp(bool powUp) {
+    if(powUp) {
+        characterStats.strMulti = 2;
+    }
+    else {
+        characterStats.strMulti = 1;
+    }
+}
+
+void Character::SetDefPowerUp(bool powUp) {
+    if(powUp) {
+        characterStats.defMulti = 2;
+    }
+    else {
+        characterStats.defMulti = 1;
+    }
+}
+
+void Character::AddAtkPowerUp() {
+    SetAtkPowerUp(true);
+    atkPowerUpTime = POWER_UP_TIME;
+}
+
+void Character::AddDefPowerUp() {
+    SetDefPowerUp(true);
+    defPowerUpTime = POWER_UP_TIME;
 }

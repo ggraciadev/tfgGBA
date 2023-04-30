@@ -19,7 +19,6 @@ protected:
     BoxCollision boxCollision;
 
     bn::optional<bn::sprite_ptr> sprite;
-    //bn::optional<bn::sprite_item> spriteItem;
 
     bool playerTriggered;
 
@@ -29,7 +28,9 @@ public:
     virtual void Render() override;
     virtual void SetCamera(GameObject* cam) override;
 
-    //void SetSpriteItem(const bn::sprite_item& item);
+    virtual void InitPrompt();
+    virtual void InitSprite(const bn::sprite_item& item);
+    void SetGraphic(HUDGraphics graphic) { interactivePrompt.SetGraphic(graphic); }
 
     inline void SetPlayer(Player* p) { player = p; }
     void OnPlayerTriggerEnter();
@@ -37,6 +38,7 @@ public:
 
     virtual void Interact();
     void SetGraphicEnabled(bool enabled);
+
 
 };
 

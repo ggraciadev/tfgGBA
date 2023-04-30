@@ -145,12 +145,8 @@ void Scene::DestroyEnemy(Character* enemy) {
     }
     enemy->Destroy();
 }
-void Scene::SpawnEnemyCollectable(bn::fixed_point position) {
-    Interactuable* tmpInter = interactuableFactory.Create();
-    
-    tmpInter->SetParent(&map.mapLayer);
-    tmpInter->SetLocalPosition(position);
-    tmpInter->Start();
+
+void Scene::SpawnInteractuable(Interactuable* tmpInter, bn::fixed_point position) {
     tmpInter->SetLayerDepth(0);
     tmpInter->SetZOrder(0);
     tmpInter->SetCamera(&camera);
@@ -164,14 +160,52 @@ void Scene::SpawnEnemyCollectable(bn::fixed_point position) {
     }
 }
 
-void Scene::DestroyEnemyCollectable(Interactuable* interact) {
+void Scene::SpawnEnemyCollectable(bn::fixed_point position) {
+    CollectableItem* tmpInter = collectableItemFactory.Create();
+    tmpInter->SetParent(&map.mapLayer);
+    tmpInter->SetLocalPosition(position);
+    tmpInter->Start();
+    SpawnInteractuable(tmpInter, position);
+}
+
+void Scene::SpawnAtkPowerUp(bn::fixed_point position) {
+    AtkPowerUpInteractuable* tmpInter = atkPowerUpFactory.Create();
+    tmpInter->SetParent(&map.mapLayer);
+    tmpInter->SetLocalPosition(position);
+    tmpInter->Start();
+    SpawnInteractuable(tmpInter, position);
+}
+
+void Scene::SpawnDefPowerUp(bn::fixed_point position) {
+    DefPowerUpInteractuable* tmpInter = defPowerUpFactory.Create();
+    tmpInter->SetParent(&map.mapLayer);
+    tmpInter->SetLocalPosition(position);
+    tmpInter->Start();
+    SpawnInteractuable(tmpInter, position);
+}
+
+void Scene::DestroyGameObject(GameObject* go) {
     for(int i = objects.size()-1; i >= 0; --i) {
-        if(interact->Equals(objects[i])) {
-            interact->SetLocalPosition(-500, -500);
-            interact->Render();
+        if(go->Equals(objects[i])) {
+            go->SetLocalPosition(-500, -500);
+            go->Render();
             objects[i] = nullptr;
         }
     }
-    interact->Destroy();
-    interactuableFactory.Destroy(interact);
+    go->Destroy();
+}
+
+void Scene::DestroyEnemyCollectable(CollectableItem* interact) {
+    DestroyGameObject(interact);
+    collectableItemFactory.Destroy(interact);
+}
+
+void Scene::DestroyAtkPowerUp(AtkPowerUpInteractuable* interact) {
+    DestroyGameObject(interact);
+    atkPowerUpFactory.Destroy(interact);
+}
+
+void Scene::DestroyDefPowerUp(DefPowerUpInteractuable* interact) {
+    DestroyGameObject(interact);
+    defPowerUpFactory.Destroy(interact);
 }

@@ -9,15 +9,21 @@
 #include "bn_sprite_text_generator.h"
 #include "Scene.h"
 
+#include "Inventory.h"
+
+enum GameScenes { SCENE_SPLASH_SCREEN, SCENE_MAIN_MENU, SCENE_GAME, SCENE_DEATH_MENU };
+
 class GameManager { //Singleton
 
 protected:
 
     static GameManager* instance;
     Scene scene;
+    Inventory inventory;
+
+    GameScenes currentGameScene;
 
     bn::string<64> printString;
-
     bn::sprite_text_generator* textGen;
 
     GameManager();
@@ -32,6 +38,11 @@ public:
     void PhysicsUpdate();
     void Render(bn::sprite_text_generator& t);
     Scene* GetCurrentScene();
+
+    Inventory* GetInventory() { return &inventory; }
+
+    void PlayGame();
+    void ChangeScene(GameScenes sceneToGo);
 
 
 };

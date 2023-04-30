@@ -2,6 +2,7 @@
 #define BF_ENEMY_H
 
 #include "GameObjects/Character.h"
+#include "bn_random.h"
 
 class Enemy : public Character {
 
@@ -15,6 +16,10 @@ protected:
     //JumpAbility jumpAb; 
     //MeleeComboAbility<3> meleeComboAb;
     //Animator<2, 2> animator;
+
+    Character* player;
+    bn::random rand;
+    int seed;
 
     virtual void SetupAnimations();
     virtual void SetupAttacks();
@@ -32,7 +37,7 @@ public:
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
 
-    virtual void SetPlayer(Character* p) {}
+    virtual void SetPlayer(Character* p) { player = p; }
 
     virtual void Die() override;
 

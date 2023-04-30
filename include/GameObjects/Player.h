@@ -30,6 +30,9 @@ protected:
     virtual void SetupAnimations();
     virtual void SetupAttacks();
 
+    virtual void SetAtkPowerUp(bool powUp);
+    virtual void SetDefPowerUp(bool powUp);
+
 
 public:
     inline void SetHUD(WidgetHUD* hud) { widgetHUD = hud; }
@@ -40,6 +43,8 @@ public:
     void Jump();
     void Attack();
     void Dash();
+
+    virtual void Die() override;
 
     void UpdateAnimationState();
 

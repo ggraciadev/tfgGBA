@@ -2,6 +2,7 @@
 #include "GameObjectComponents/MeleeComboAbility.h"
 #include "utils.h"
 #include "GameObjects/Interactuable.h"
+#include "GameManager.h"
 
 #include "bn_sprite_items_character.h"
 #define SPRITE_SHEET bn::sprite_items::character
@@ -127,4 +128,18 @@ void Player::SetCurrentInteractuable(Interactuable* value, Interactuable* reques
     }
     currentInteractuable = value; 
     currentInteractuable->SetGraphicEnabled(true);
+}
+
+void Player::SetAtkPowerUp(bool powUp) {
+    Character::SetAtkPowerUp(powUp);
+    widgetHUD->SetStrPowerUp(powUp);
+}
+
+void Player::SetDefPowerUp(bool powUp) {
+    Character::SetDefPowerUp(powUp);
+    widgetHUD->SetDefPowerUp(powUp);
+}
+
+void Player::Die() {
+    GameManager::GetInstance()->ChangeScene(GameScenes::SCENE_DEATH_MENU);
 }

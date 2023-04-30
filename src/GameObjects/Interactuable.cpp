@@ -8,24 +8,28 @@
 
 void Interactuable::Start() {
     player = GameManager::GetInstance()->GetCurrentScene()->GetPlayer();
-    interactivePrompt.SetSpriteItem(SPRITE_SHEET);
-    interactivePrompt.Start();
-    interactivePrompt.SetRelativePosition(GetWorldPosition() + bn::fixed_point(10,-10));
-    interactivePrompt.SetGraphic(HUDGraphics::GUI_A_BUTTON);
+    InitPrompt();
 
     boxCollision.SetIsTrigger(true);
     boxCollision.Setup(-16,-16,32,32);
 
-    sprite = SPRITE_SHEET.create_sprite(GetScreenPosition());
-    sprite->set_bg_priority(0);
-    sprite->set_z_order(1);
-    sprite->set_tiles(SPRITE_SHEET.tiles_item().create_tiles(11));
-
     playerTriggered = false;
-
 
     AddComponent(&boxCollision);
     GameObject::Start();
+}
+
+void Interactuable::InitPrompt() {
+    interactivePrompt.SetSpriteItem(SPRITE_SHEET);
+    interactivePrompt.Start();
+    interactivePrompt.SetRelativePosition(GetWorldPosition() + bn::fixed_point(10,-10));
+    interactivePrompt.SetGraphic(HUDGraphics::GUI_A_BUTTON);
+}
+
+void Interactuable::InitSprite(const bn::sprite_item& item) {
+    sprite = item.create_sprite(GetScreenPosition());
+    sprite->set_bg_priority(0);
+    sprite->set_z_order(1);
 }
 
 void Interactuable::SetCamera(GameObject* cam) {
@@ -46,6 +50,7 @@ void Interactuable::Update() {
     GameObject::Update();
 }
 void Interactuable::Render() {
+    interactivePrompt.SetRelativePosition(GetWorldPosition());
     interactivePrompt.Render();
     if(sprite.has_value()) {
         sprite->set_position(GetScreenPosition());
@@ -71,5 +76,4 @@ void Interactuable::SetGraphicEnabled(bool enabled) {
 
 void Interactuable::Interact() {
     player->SetCurrentInteractuable(nullptr, this);
-    GameManager::GetInstance()->GetCurrentScene()->DestroyEnemyCollectable(this);
 }
