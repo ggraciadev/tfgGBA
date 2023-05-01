@@ -7,10 +7,12 @@
 #include "GameObjects/Camera.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/EnemyDalek.h"
+#include "GameObjects/EnemyBoss.h"
 #include "GameObjects/Attack.h"
 #include "GameObjects/CollectableItem.h"
 #include "GameObjects/AtkPowerUpInteractuable.h"
 #include "GameObjects/DefPowerUpInteractuable.h"
+#include "GameObjects/DoorInteractuable.h"
 #include "../Factory.h"
 
 #include "bn_vector.h"
@@ -24,12 +26,14 @@ protected:
     Camera camera;
     WidgetHUD widgetHUD;
     Player* player;
-    Factory<Player, 1> playerFactory;
+    Factory<Player, 2> playerFactory;
     Factory<EnemyDalek, 10> enemy;
+    Factory<EnemyBoss, 2> enemyBossFactory;
     Factory<Attack, 20> attackFactory;
     Factory<CollectableItem, 10> collectableItemFactory;
     Factory<AtkPowerUpInteractuable, 10> atkPowerUpFactory;
     Factory<DefPowerUpInteractuable, 10> defPowerUpFactory;
+    Factory<DoorInteractuable, 2> doorInteractuableFactory;
 
     bn::vector<Character*, 16> characters;
     Map map;
@@ -38,6 +42,8 @@ protected:
     void InitGameObject(GameObject* character, GameObject* parent, bn::fixed_point pos, int zOrder);
     void InitCharacter(Character* character, GameObject* parent, bn::fixed_point pos, int zOrder);
     void DestroyGameObject(GameObject* go);
+
+    void ClearAllScene();
 
 public: 
 
@@ -63,6 +69,10 @@ public:
     void DestroyEnemyCollectable(CollectableItem* interact);
     void DestroyAtkPowerUp(AtkPowerUpInteractuable* interact);
     void DestroyDefPowerUp(DefPowerUpInteractuable* interact);
+
+    void SpawnBoss();
+
+    void SpawnDoorInteractuable();
 
 };
 

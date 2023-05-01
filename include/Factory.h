@@ -42,6 +42,12 @@ public:
         return result;
     }
 
+    void Clear() {
+        for(int i = instances.size() - 1; i >= 0; --i) {
+            Destroy(&instances[i]);
+        }
+    }
+
     void Destroy(T* deletedObject) {
         if(deletedObject != nullptr) {
             freeSpace.push_back(deletedObject);

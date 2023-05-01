@@ -60,6 +60,8 @@ protected:
     bn::point upRoomPlatformPosTop;
     int centralPlatformSize;
 
+    bool bossRoom;
+
 
 public:
     void InitRoom();
@@ -69,6 +71,11 @@ public:
     inline void SetRoomSize(bn::point _size) { size = _size; }
     inline void SetRoomPosition(bn::point _pos) { pos = _pos; }
 
+    inline MapRoom* GetLeftRoom() const { return leftRoom; }
+    inline MapRoom* GetRightRoom() const { return rightRoom;  }
+    inline MapRoom* GetUpRoom() const { return upRoom; }
+    inline MapRoom* GetDownRoom() const { return downRoom; }
+
     inline void SetLeftRoom(MapRoom* room) { leftRoom = room; if(room != nullptr) room->rightRoom = this; }
     inline void SetRightRoom(MapRoom* room) { rightRoom = room; if(room != nullptr) room->leftRoom = this; }
     inline void SetUpRoom(MapRoom* room) { upRoom = room; if(room != nullptr) room->downRoom = this; }
@@ -76,6 +83,11 @@ public:
 
     inline void SetCentralPlatformPos(bn::point p) { centralPlatformPos = p; }
     inline void SetCentralPlatoformSize(int s) { centralPlatformSize = s; }
+
+    inline bn::point GetPosition() const { return pos; }
+    inline bn::point GetSize() const { return size; }
+    inline bool IsBossRoom() const { return bossRoom; }
+    inline void SetBossRoom(bool boss) { bossRoom = boss; }
 
     //para generar el interior de la sala y los graficos
     void GenerateRoomInterior(MapLayer& map, bn::random& rand);

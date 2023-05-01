@@ -25,6 +25,11 @@ GameObject::~GameObject() {
 
 }
 
+void GameObject::Init() {
+    components.clear();
+    componentsSize = 0;
+}
+
 void GameObject::Start() {
     id = CURRENT_ID++;
     destroyed = false;

@@ -1,16 +1,16 @@
-#ifndef BF_ENEMY_DALEK_H
-#define BF_ENEMY_DALEK_H
+#ifndef BF_ENEMY_BOSS_H
+#define BF_ENEMY_BOSS_H
 
 #include "GameObjects/Enemy.h"
 #include "GameObjectComponents/ProjectileAttackAbility.h"
 #include "GameObjectComponents/Animator.h"
 #include "GameObjectComponents/PatrollerController.h"
 
-class EnemyDalek : public Enemy {
+class EnemyBoss : public Enemy {
 
 public:
-    EnemyDalek() = default;
-    virtual ~EnemyDalek() = default;
+    EnemyBoss() = default;
+    virtual ~EnemyBoss() = default;
 
 protected:
 
@@ -26,6 +26,8 @@ protected:
 public:
     virtual void Start();
     virtual void Update();
+
+    virtual void Die();
 
     void Jump();
     virtual void Attack();

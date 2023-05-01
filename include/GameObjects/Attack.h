@@ -20,7 +20,6 @@ protected:
     Animator<1,16> animator;
     int timeToLive = 30;
     int currentDirection = 0;
-    bool componentAdded = false;
     
     AttackInfo attackInfo;
     bn::vector<Character*, 16> targets;

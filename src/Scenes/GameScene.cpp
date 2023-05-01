@@ -9,25 +9,46 @@ void GameScene::Start() {
     widgetHUD.Start();
 
     player = playerFactory.Create();
+    InitCharacter(player, &map.mapLayer, bn::fixed_point(0,0), 0);
+    
     player->SetHUD(&widgetHUD);
-    bn::fixed_point pos(0,0);
-    InitCharacter(player, &map.mapLayer, pos, 0);
     camera.SetFollowObject(player);
+}
 
-    EnemyDalek* tmpEnemy = enemy.Create();
-    pos = bn::fixed_point(64, -20);
-    InitCharacter(tmpEnemy, &map.mapLayer, pos, 1);
-
-    mapGenerator.InitMapGenerator(&map);
+void GameScene::ClearAllScene() {
+    enemy.Clear();
+    enemyBossFactory.Clear();
+    attackFactory.Clear();
+    collectableItemFactory.Clear();
+    atkPowerUpFactory.Clear();
+    defPowerUpFactory.Clear();
+    doorInteractuableFactory.Clear();
+    characters.clear();
+    gameObjects.clear();
 }
 
 void GameScene::GenerateMap(unsigned seed) {
-    mapGenerator.GenerateMap(seed);
+    //limpieza de memoria
+    ClearAllScene();
+    mapGenerator.GenerateMap(&map, seed);
+    gameObjects.push_back(player);
+    characters.push_back(player);
+    player->SetLocalPosition(bn::fixed_point(0,0));
+    //player->SetLocalPosition(0,0);
+
+    // EnemyDalek* tmpEnemy = enemy.Create();
+    // InitCharacter(tmpEnemy, &map.mapLayer, bn::fixed_point(64, -20), 1);
+
+    SpawnBoss();
+    //place player
+    //place enemies
+    //place doors
 }
 
 void GameScene::InitGameObject(GameObject* gameObject, GameObject* parent, bn::fixed_point pos, int zOrder) {
     gameObject->SetParent(parent);
     gameObject->SetLocalPosition(pos);
+    gameObject->Init();
     gameObject->Start();
     gameObject->SetLayerDepth(0);
     gameObject->SetZOrder(zOrder);
@@ -141,4 +162,30 @@ void GameScene::DestroyAtkPowerUp(AtkPowerUpInteractuable* interact) {
 void GameScene::DestroyDefPowerUp(DefPowerUpInteractuable* interact) {
     DestroyGameObject(interact);
     defPowerUpFactory.Destroy(interact);
+}
+
+void GameScene::SpawnBoss() {
+
+    EnemyBoss* tmpEnemy = enemyBossFactory.Create();
+    bn::fixed_point position(0,0);
+    MapRoom* bossRoom = map.GetBossRoom();
+    int offsetX = MAP_WIDTH * TILE_WIDTH / 2;
+    int offsetY = MAP_HEIGHT * TILE_HEIGHT / 2;
+    position.set_x((bossRoom->GetPosition().x() + bossRoom->GetSize().x() / 2) * TILE_WIDTH - offsetX);
+    position.set_y((bossRoom->GetPosition().y() + bossRoom->GetSize().y() - 10) * TILE_HEIGHT - offsetY);
+
+    InitCharacter(tmpEnemy, &map.mapLayer, position, 1);
+    
+}
+
+void GameScene::SpawnDoorInteractuable() {
+    DoorInteractuable* tmpInter = doorInteractuableFactory.Create();
+    tmpInter->NextGameSceneSeed(map.GetNextSceneSeed());
+    bn::fixed_point position(0,0);
+    MapRoom* bossRoom = map.GetBossRoom();
+    int offsetX = MAP_WIDTH * TILE_WIDTH / 2;
+    int offsetY = MAP_HEIGHT * TILE_HEIGHT / 2;
+    position.set_x((bossRoom->GetPosition().x() + bossRoom->GetSize().x() / 2) * TILE_WIDTH - offsetX);
+    position.set_y((bossRoom->GetPosition().y() + bossRoom->GetSize().y() - 2) * TILE_HEIGHT - offsetY);
+    InitGameObject(tmpInter, &map.mapLayer, position, 0);
 }

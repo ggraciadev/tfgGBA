@@ -189,10 +189,12 @@ MapRoom* MapGenerator::GenerateMapRoomAt(bn::point position, bn::point size) {
     return result;
 }
 
-void MapGenerator::GenerateMap(unsigned seed) {
+void MapGenerator::GenerateMap(Map* map, unsigned seed) {
+    InitMapGenerator(map);
     bool finished = false;
     int temp = 2 * MAX_MAP_ROOMS;
     rand.set_seed(seed);
+    map->SetNextSceneSeed(rand.get_int(0, 100));
     //temp = 3;
     while(!finished) {
         if(temp-- <= 0) break;
@@ -200,7 +202,7 @@ void MapGenerator::GenerateMap(unsigned seed) {
     }
     ClearMapGraphics();
     for(int i = 0; i < currentRoomIndex; ++i) {
-        GenerateMapRoomInterior(&mapPtr->mapRooms[i]);
+        GenerateMapRoomInterior(&mapPtr->mapRooms[i], i == currentRoomIndex-1);
         GenerateMapRoomGraphics(&mapPtr->mapRooms[i], &mapPtr->mapLayer);
     }
     //mapPtr->GenerateMapGraphics();
@@ -220,6 +222,8 @@ void MapGenerator::InitMapGenerator(Map* map) {
     mapPtr = map;
     currentStep = 0;
     currentRoomIndex = 0;
+    MapCollision* col = mapPtr->mapLayer.GetMapCollision();
+    col->Start();
     for(int i = 0; i < MAX_MAP_ROOMS; ++i) {
         mapPtr->mapRooms[i].InitRoom();
         roomState[i] = RoomGenerationState::NOT_CREATED;
@@ -227,11 +231,14 @@ void MapGenerator::InitMapGenerator(Map* map) {
 }
 
 
- void MapGenerator::GenerateMapRoomInterior(MapRoom* room) {
+ void MapGenerator::GenerateMapRoomInterior(MapRoom* room, bool bossRoom) {
+    room->SetBossRoom(bossRoom);
     GenerateMapRoomInteriorTiles(room, &mapPtr->mapLayer.mapCollision);
     GenerateMapRoomWalls(room, &mapPtr->mapLayer.mapCollision);
     GenerateMapRoomDoors(room, &mapPtr->mapLayer.mapCollision, rand);
-    GenerateMapRoomPlatforms(room, &mapPtr->mapLayer.mapCollision, rand);
+    if(!bossRoom) {
+        GenerateMapRoomPlatforms(room, &mapPtr->mapLayer.mapCollision, rand);
+    }
  }
 
 void MapGenerator::GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* mapCollisions) {
@@ -387,8 +394,13 @@ void MapGenerator::GenerateMapRoomDoor(bn::point begin,bn::point end, MapCollisi
 void MapGenerator::GenerateMapRoomGraphics(MapRoom* room, MapLayer* mapLayer) {
     GenerateMapRoomGraphicsFirstCoat(room, mapLayer);
     GenerateMapRoomGraphicsPlatforms(room, mapLayer);
-    GenerateMapRoomGraphicsWindows(room, mapLayer);
-                    
+
+    if(room->IsBossRoom()) {
+        GenerateMapRoomDoorGraphic(room, mapLayer);
+    }
+    else {                    
+        GenerateMapRoomGraphicsWindows(room, mapLayer);
+    }
 }
 
 void MapGenerator::GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer) {
@@ -502,7 +514,6 @@ void MapGenerator::GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* map
 void MapGenerator::GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
     GenerateMapRoomPlatformGraphicsWindows(room, mapLayer);
     GenerateMapRoomGroundGraphicsWindows(room, mapLayer);
-    
 }
 
 void MapGenerator::GenerateMapRoomPlatformGraphicsWindows(MapRoom* room, MapLayer* mapLayer) {
@@ -654,6 +665,30 @@ void MapGenerator::GenerateBigWindowGraphic(int initX, int endX, int initY, int 
                 }
             }
             
+            if(tile != -1) {
+                mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
+            }
+        }
+    }
+}
+
+void MapGenerator::GenerateMapRoomDoorGraphic(MapRoom* room, MapLayer* mapLayer) {
+    int doorWidth = 4;
+    int doorHeight = 6;
+    int initX = room->pos.x() + room->size.x() / 2 - doorWidth / 2;
+    int endX = initX + doorWidth;
+    int initY = room->pos.y() + room->size.y() -2 - doorHeight;
+    int endY = room->pos.y() + room->size.y() -2;
+
+    for(int i = initY; i < endY; ++i) {
+        for(int j = initX; j < endX; ++j) {
+            int tile = -1;
+            if(i == initY) {
+                tile = 47 + (j - initX) % 2;
+            }
+            else {
+                tile = 49 + (j - initX) % 2;
+            }
             if(tile != -1) {
                 mapLayer->backLayerComponent.SetTileIndex(j + MAP_X_OFFSET, i + MAP_Y_OFFSET, tile);
             }

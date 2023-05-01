@@ -15,16 +15,11 @@ void MapCollision::Start() {
     const int end = MAP_HEIGHT;
     
     //gameObject->SetLocalPosition(15,0);
-    // for(int i = 0; i < end; ++i) {
-    //     for(int j = 0; j < MAP_WIDTH; ++j) {
-    //         if(i >= begin || i == 0 || i == MAP_HEIGHT - 1 || j == 0 || j == MAP_WIDTH - 1) {
-    //             collisions[j + i * MAP_WIDTH].collision = COLLISION;
-    //         }
-    //         else {
-    //             collisions[j + i * MAP_WIDTH].collision = NONE;
-    //         }
-    //     }
-    // }
+    for(int i = 0; i < end; ++i) {
+        for(int j = 0; j < MAP_WIDTH; ++j) {
+            collisions[j + i * MAP_WIDTH].collision = MapCollisionType::ROOM_EXTERIOR;
+        }
+    }
     GameObjectComponent::Start();
 }
 

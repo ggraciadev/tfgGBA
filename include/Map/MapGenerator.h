@@ -12,8 +12,7 @@ public:
     MapGenerator() = default;
     ~MapGenerator() = default;
     
-    void InitMapGenerator(Map* map);
-    void GenerateMap(unsigned seed);
+    void GenerateMap(Map* map, unsigned seed);
 
 protected:
     int currentStep;
@@ -22,6 +21,7 @@ protected:
     bn::random rand;
     RoomGenerationState roomState [MAX_MAP_ROOMS];
 
+    void InitMapGenerator(Map* map);
     bool GenerateMapStep();
     bn::point GenerateRoomSize(int width = 0, int height = 0);
     MapRoom* GenerateMapRoom(bn::point size, bn::point beginSearch, bn::point endSearch);
@@ -29,7 +29,7 @@ protected:
     MapRoom* GenerateMapRoomAt(bn::point position, bn::point size);
     bool GenerateAdjacentRooms(int roomIndex);
 
-    void GenerateMapRoomInterior(MapRoom* room);
+    void GenerateMapRoomInterior(MapRoom* room, bool bossRoom = false);
 
     //Para hacer los bordes de la sala
     void GenerateMapRoomInteriorTiles(MapRoom* room, MapCollision* mapCollisions);
@@ -50,11 +50,15 @@ protected:
     void GenerateMapRoomGraphicsFirstCoat(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGraphicsPlatforms(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
+    void GenerateMapRoomDoorGraphic(MapRoom* room,  MapLayer* mapLayer);
 
     void GenerateMapRoomPlatformGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
     void GenerateMapRoomGroundGraphicsWindows(MapRoom* room, MapLayer* mapLayer);
 
     void GenerateBigWindowGraphic(int initX, int endX, int initY, int endY, MapLayer* mapLayer);
+
+public:
+    
 };
 
 #endif

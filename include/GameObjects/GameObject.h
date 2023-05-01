@@ -51,7 +51,7 @@ private:
 public:
 
     virtual void SetCamera(GameObject* cam) { camera = cam; }
-
+    virtual void Init();
     virtual void Start();
     virtual void PhysicsUpdate();
     virtual void Update();

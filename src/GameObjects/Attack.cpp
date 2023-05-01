@@ -14,11 +14,8 @@ void Attack::Start() {
     
     boxCollision.SetIsTrigger(true);
     SetupAnimations();
-    if(!componentAdded) {
-        AddComponent(&boxCollision);
-        AddComponent(&animator);
-        componentAdded = true;
-    }
+    AddComponent(&boxCollision);
+    AddComponent(&animator);
     
     GameObject::Start();
 }
