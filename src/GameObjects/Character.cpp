@@ -88,7 +88,7 @@ void Character::SetInputMovementY(bn::fixed y) {
     movement.SetInputMovementY(y);
 }
 
-void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+bool Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
     bool result = damageReciever.GetDamage(atkInfo, attackPosition);
     if(result) {
         characterStats.currentHealth = Utils::Max(characterStats.currentHealth - Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / characterStats.def, 1), 0);
@@ -96,6 +96,7 @@ void Character::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& atta
             Die();
         }
     }
+    return result;
 }
 
 BoxCollision* Character::GetBoxCollision() {

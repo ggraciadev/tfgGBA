@@ -23,6 +23,7 @@ protected:
     
     AttackInfo attackInfo;
     bn::vector<Character*, 16> targets;
+    bn::vector<Character*, 16> damageDealt;
     Character* characterCreator;
 
     MapCollision* mapCollision;  
@@ -39,6 +40,8 @@ public:
     void SetCharacterCreator(Character* cc);
 
     void SetDirection(int dir);
+
+    bool HasDealtDamage(Character* character) const;
 
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);

@@ -64,9 +64,9 @@ void Player::SetupAnimations() {
 
 void Player::SetupAttacks() {
     meleeComboAb.SetAttackCombo({
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 20, 25),
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 20, 25),
-        AttackInfo(AttackType::ATK_MELEE_SLASH, 2, 2, 30, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 30, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 1, 1, 30, 25),
+        AttackInfo(AttackType::ATK_MELEE_SLASH, 2, 2, 40, 25),
     });
 }
 
@@ -108,10 +108,11 @@ void Player::UpdateAnimationState() {
     animator.SetFlipped(movement.GetMovementDirection() == -1);
 }
 
-void Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+bool Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    bool result = false;
     int damage = Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / (characterStats.def * characterStats.defMulti), 1);
     bool salva = damage >= characterStats.currentHealth && characterStats.currentHealth > 1;
-    bool result = damageReciever.GetDamage(atkInfo, attackPosition);
+    result = damageReciever.GetDamage(atkInfo, attackPosition);
     if(result) {
         characterStats.currentHealth = Utils::Max(characterStats.currentHealth - damage, (int)salva);
         if(characterStats.currentHealth == 0) {
@@ -119,6 +120,7 @@ void Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackP
         }
     }
     widgetHUD->SetCurrentHealth(characterStats.currentHealth);
+    return result;
 }
 
 void Player::SetCurrentInteractuable(Interactuable* value, Interactuable* requested) { 

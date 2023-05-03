@@ -1,7 +1,8 @@
 #include "GameObjects/EnemyDalek.h"
+#include "GameManager.h"
 
-#include "bn_sprite_items_dalek.h"
-#define SPRITE_SHEET bn::sprite_items::dalek
+#include "bn_sprite_items_mini_dalek.h"
+#define SPRITE_SHEET bn::sprite_items::mini_dalek
 
 
 void EnemyDalek::Start() {
@@ -9,6 +10,7 @@ void EnemyDalek::Start() {
     patrollerController.SetEnemy(this);
     patrollerController.SetAttackDist(bn::fixed_point(200, 50));
     characterStats = CharacterStats(6, 6, 2, 1, 2, 1);
+    characterInfo.boxCollisionExtension = BoxExtension(bn::fixed_point(-16, -20), bn::fixed_point( 32, 32));
 
     // jumpAb.SetJumpSpeed(characterInfo.jumpSpeed);
     // jumpAb.SetMaxJumps(MAX_JUMPS);
@@ -42,11 +44,12 @@ void EnemyDalek::Update() {
     UpdateAnimationState();
 }
 
-void EnemyDalek::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
-    Enemy::GetDamage(atkInfo, attackPosition);
+bool EnemyDalek::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    bool result = Enemy::GetDamage(atkInfo, attackPosition);
     if(damageReciever.GetAbilityInUse()) {
         animator.SetCurrentAnimation(2);
     }
+    return result;
 }
 
 void EnemyDalek::SetLayerDepth(int depth) {
@@ -66,7 +69,7 @@ void EnemyDalek::SetupAnimations() {
     
     anims.emplace_back(AnimInfo<8>({0,0}, 1, true));
     anims.emplace_back(AnimInfo<8>({1,1,2,2,3,3,4,4}, 8, false));
-    anims.emplace_back(AnimInfo<8>({5,5,6,6,7,7,8,8}, 8, false));
+    anims.emplace_back(AnimInfo<8>({6,6,7,7,6,6, 0,0}, 8, false));
 
     animator.SetAnimations(bn::move(anims));
 }
@@ -89,6 +92,7 @@ void EnemyDalek::Attack() {
     // if(meleeComboAb.UseAbility()) {
     //     animator.SetCurrentAnimation(3);
     // }
+    if(damageReciever.GetAbilityInUse()) return;
     Enemy::Attack();
     if(laserAttackAb.UseAbility()) {
         animator.SetCurrentAnimation(1);
@@ -106,4 +110,22 @@ void EnemyDalek::UpdateAnimationState() {
     if(!laserAttackAb.GetAbilityInUse()) {
         animator.SetCurrentAnimation(0);
     }
+}
+
+void EnemyDalek::Die() {
+    rand.set_seed(seed);
+    int random = rand.get_int(0,100);
+    if(random < 45) {
+        
+    }
+    else if(random < 70) {
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnEnemyCollectable(GetWorldPosition());
+    }
+    else if(random < 85) {
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnAtkPowerUp(GetWorldPosition());
+    }
+    else if(random < 100) {
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnDefPowerUp(GetWorldPosition());
+    }
+    Enemy::Die();
 }

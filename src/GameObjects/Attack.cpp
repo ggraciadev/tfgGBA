@@ -13,11 +13,21 @@ void Attack::Start() {
     targets = GameManager::GetInstance()->GetCurrentGameScene()->GetAllInstancesCharacters();
     
     boxCollision.SetIsTrigger(true);
+    damageDealt.clear();
     SetupAnimations();
     AddComponent(&boxCollision);
     AddComponent(&animator);
     
     GameObject::Start();
+}
+
+bool Attack::HasDealtDamage(Character* character) const {
+    for(int j = 0; j < damageDealt.size(); ++j) {
+        if(damageDealt[j] == character) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Attack::Update() {
@@ -29,8 +39,10 @@ void Attack::Update() {
     bool damage = false;
     for (int i = 0; i < targets.size(); ++i)  {
         if(targets[i] != nullptr && targets[i] != characterCreator && boxCollision.IsColliding(targets[i]->GetBoxCollision())) {
-            DoDamage(targets[i]);
-            damage = true;
+            if(!HasDealtDamage(targets[i])) {
+                DoDamage(targets[i]);
+                damage = true;
+            }
         }
     }
     timeToLive--;
@@ -90,7 +102,9 @@ void Attack::SetZOrder(char z_order) {
 }
 
 void Attack::DoDamage(Character* other) {
-    other->GetDamage(attackInfo, GetWorldPosition());
+    if(other->GetDamage(attackInfo, GetWorldPosition())) {
+        damageDealt.push_back(other);
+    }
 }
 
 void Attack::SetDirection(int dir) {

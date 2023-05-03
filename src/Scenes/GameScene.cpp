@@ -36,8 +36,8 @@ void GameScene::GenerateMap(unsigned seed) {
     player->SetLocalPosition(bn::fixed_point(0,0));
     //player->SetLocalPosition(0,0);
 
-    // EnemyDalek* tmpEnemy = enemy.Create();
-    // InitCharacter(tmpEnemy, &map.mapLayer, bn::fixed_point(64, -20), 1);
+    EnemyDalek* tmpEnemy = enemy.Create();
+    InitCharacter(tmpEnemy, &map.mapLayer, bn::fixed_point(64, -20), 1);
 
     SpawnBoss();
     //place player

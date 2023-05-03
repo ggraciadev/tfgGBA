@@ -51,7 +51,7 @@ public:
     virtual void SetLayerDepth(int depth);
     virtual void SetZOrder(char z_order);
 
-    virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
+    virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
 
     void SetCurrentInteractuable(Interactuable* value, Interactuable* requested);
 };

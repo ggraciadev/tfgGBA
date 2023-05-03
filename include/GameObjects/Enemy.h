@@ -41,7 +41,7 @@ public:
 
     virtual void Die() override;
 
-    virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
+    virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };
 
 #endif

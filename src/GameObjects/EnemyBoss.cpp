@@ -44,11 +44,12 @@ void EnemyBoss::Update() {
     UpdateAnimationState();
 }
 
-void EnemyBoss::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
-    Enemy::GetDamage(atkInfo, attackPosition);
+bool EnemyBoss::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
+    bool result = Enemy::GetDamage(atkInfo, attackPosition);
     if(damageReciever.GetAbilityInUse()) {
         animator.SetCurrentAnimation(2);
     }
+    return result;
 }
 
 void EnemyBoss::SetLayerDepth(int depth) {
@@ -68,7 +69,7 @@ void EnemyBoss::SetupAnimations() {
     
     anims.emplace_back(AnimInfo<8>({0,0}, 1, true));
     anims.emplace_back(AnimInfo<8>({1,1,2,2,3,3,4,4}, 8, false));
-    anims.emplace_back(AnimInfo<8>({5,5,6,6,7,7,8,8}, 8, false));
+    anims.emplace_back(AnimInfo<8>({6,6,7,7,8,8,0,0}, 8, false));
 
     animator.SetAnimations(bn::move(anims));
 }
@@ -91,6 +92,7 @@ void EnemyBoss::Attack() {
     // if(meleeComboAb.UseAbility()) {
     //     animator.SetCurrentAnimation(3);
     // }
+    if(damageReciever.GetAbilityInUse()) return;
     Enemy::Attack();
     if(laserAttackAb.UseAbility()) {
         animator.SetCurrentAnimation(1);
@@ -103,7 +105,7 @@ void EnemyBoss::Dash() {
 
 void EnemyBoss::Die() {
     GameManager::GetInstance()->GetCurrentGameScene()->SpawnDoorInteractuable();
-    GameManager::GetInstance()->GetCurrentGameScene()->DestroyEnemy(this);
+    Enemy::Die();
 }
 
 void EnemyBoss::UpdateAnimationState() {

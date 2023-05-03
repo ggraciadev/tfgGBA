@@ -33,13 +33,14 @@ public:
 
     void UpdateAnimationState();
     virtual void SetPlayer(Character* p);
+    virtual void Die();
 
     virtual void SetMapCollision(MapCollision* mc);
 
     void SetLayerDepth(int depth);
     void SetZOrder(char z_order);
 
-    virtual void GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
+    virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };
 
 #endif
