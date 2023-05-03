@@ -123,6 +123,11 @@ bool Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackP
     return result;
 }
 
+void Player::SetFullHealth() {
+    Character::SetFullHealth();
+    widgetHUD->SetCurrentHealth(characterStats.currentHealth);
+}
+
 void Player::SetCurrentInteractuable(Interactuable* value, Interactuable* requested) { 
     if(value == nullptr && requested != currentInteractuable) { return; }
     if(currentInteractuable != nullptr) {

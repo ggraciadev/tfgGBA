@@ -116,8 +116,11 @@ void EnemyDalek::UpdateAnimationState() {
 void EnemyDalek::Die() {
     rand.set_seed(seed);
     int random = rand.get_int(0,100);
-    if(random < 45) {
+    if(random < 30) {
         
+    }
+    else if(random < 50) {
+        GameManager::GetInstance()->GetCurrentGameScene()->SpawnHealthRecovery(GetWorldPosition());
     }
     else if(random < 70) {
         GameManager::GetInstance()->GetCurrentGameScene()->SpawnEnemyCollectable(GetWorldPosition());

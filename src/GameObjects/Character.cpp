@@ -130,3 +130,7 @@ void Character::AddDefPowerUp() {
     SetDefPowerUp(true);
     defPowerUpTime = POWER_UP_TIME;
 }
+
+void Character::SetFullHealth() {
+    characterStats.currentHealth = characterStats.maxHealth;
+}

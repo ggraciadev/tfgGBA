@@ -105,6 +105,7 @@ void EnemyBoss::Dash() {
 
 void EnemyBoss::Die() {
     GameManager::GetInstance()->GetCurrentGameScene()->SpawnDoorInteractuable();
+    GameManager::GetInstance()->GetCurrentGameScene()->SpawnHealthRecovery(GetWorldPosition() + bn::fixed_point(0,32));
     Enemy::Die();
 }
 

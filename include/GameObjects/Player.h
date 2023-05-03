@@ -54,6 +54,8 @@ public:
     virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition);
 
     void SetCurrentInteractuable(Interactuable* value, Interactuable* requested);
+
+    virtual void SetFullHealth();
 };
 
 #endif

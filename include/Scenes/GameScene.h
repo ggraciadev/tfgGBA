@@ -13,6 +13,7 @@
 #include "GameObjects/AtkPowerUpInteractuable.h"
 #include "GameObjects/DefPowerUpInteractuable.h"
 #include "GameObjects/DoorInteractuable.h"
+#include "GameObjects/HealthInteractuable.h"
 #include "../Factory.h"
 
 #include "bn_vector.h"
@@ -34,6 +35,7 @@ protected:
     Factory<AtkPowerUpInteractuable, 10> atkPowerUpFactory;
     Factory<DefPowerUpInteractuable, 10> defPowerUpFactory;
     Factory<DoorInteractuable, 2> doorInteractuableFactory;
+    Factory<HealthInteractuable, 10> healthInteractuableFactory;
 
     bool enemyDefeated[MAX_MAP_ROOMS];
     Enemy* enemiesInRoom [MAX_MAP_ROOMS];
@@ -77,10 +79,12 @@ public:
     void SpawnEnemyCollectable(bn::fixed_point position);
     void SpawnAtkPowerUp(bn::fixed_point position);
     void SpawnDefPowerUp(bn::fixed_point position);
+    void SpawnHealthRecovery(bn::fixed_point position);
 
     void DestroyEnemyCollectable(CollectableItem* interact);
     void DestroyAtkPowerUp(AtkPowerUpInteractuable* interact);
     void DestroyDefPowerUp(DefPowerUpInteractuable* interact);
+    void DestroyHealthRecovery(HealthInteractuable* interact);
 
     void SpawnBoss();
 

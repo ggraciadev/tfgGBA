@@ -111,6 +111,7 @@ public:
 
     void AddAtkPowerUp();
     void AddDefPowerUp();
+    virtual void SetFullHealth();
 
 };
 

@@ -302,3 +302,13 @@ void GameScene::SpawnDoorInteractuable() {
     position.set_y((bossRoom->GetPosition().y() + bossRoom->GetSize().y() - 2) * TILE_HEIGHT - offsetY);
     InitGameObject(tmpInter, &map.mapLayer, position, 0);
 }
+
+void GameScene::SpawnHealthRecovery(bn::fixed_point position) {
+    HealthInteractuable* tmpInter = healthInteractuableFactory.Create();
+    InitGameObject(tmpInter, &map.mapLayer, position, 0);
+}
+
+void GameScene::DestroyHealthRecovery(HealthInteractuable* interact) {
+    DestroyGameObject(interact);
+    healthInteractuableFactory.Destroy(interact);
+}
