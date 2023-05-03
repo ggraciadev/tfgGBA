@@ -27,7 +27,10 @@ public:
     void SetCamera(Camera* cam);
 
     inline MapRoom* GetRoomByIndex(int index) { return &mapRooms[index]; }
+    int GetRoomIndex (const MapRoom* room) const;
     MapRoom* GetRoomByPosition(bn::fixed_point position);  
+    int GetRoomIndexByPosition(bn::fixed_point position);
+    void GetAdjacentRoomIndex(int roomIndex, bn::vector<int,4>& adjacent);
     MapRoom* GetBossRoom(); 
 
     inline int GetNextSceneSeed() const { return nextSceneSeed;}

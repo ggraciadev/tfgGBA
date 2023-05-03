@@ -84,6 +84,9 @@ public:
     inline void SetCentralPlatformPos(bn::point p) { centralPlatformPos = p; }
     inline void SetCentralPlatoformSize(int s) { centralPlatformSize = s; }
 
+    inline bn::point GetCentralPlatformPos() { return centralPlatformPos; }
+    inline int GetCentralPlatoformSize() { return centralPlatformSize; }
+
     inline bn::point GetPosition() const { return pos; }
     inline bn::point GetSize() const { return size; }
     inline bool IsBossRoom() const { return bossRoom; }

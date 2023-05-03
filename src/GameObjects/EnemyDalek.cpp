@@ -9,6 +9,7 @@ void EnemyDalek::Start() {
     //input.SetPlayer(this);
     patrollerController.SetEnemy(this);
     patrollerController.SetAttackDist(bn::fixed_point(200, 50));
+    patrollerController.SetCheckGroundHeight(16);
     characterStats = CharacterStats(6, 6, 2, 1, 2, 1);
     characterInfo.boxCollisionExtension = BoxExtension(bn::fixed_point(-16, -20), bn::fixed_point( 32, 32));
 

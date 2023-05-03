@@ -16,7 +16,7 @@ void GameScene::Start() {
 }
 
 void GameScene::ClearAllScene() {
-    enemy.Clear();
+    enemyFactory.Clear();
     enemyBossFactory.Clear();
     attackFactory.Clear();
     collectableItemFactory.Clear();
@@ -25,6 +25,14 @@ void GameScene::ClearAllScene() {
     doorInteractuableFactory.Clear();
     characters.clear();
     gameObjects.clear();
+    currentRoom = -1;
+    lastRoom = -1;
+
+    for(int i = 0; i < MAX_MAP_ROOMS; ++i) {
+        enemyDefeated[i] = false;
+        enemiesInRoom[i] = nullptr;
+    }
+    enemyDefeated[0] = true;
 }
 
 void GameScene::GenerateMap(unsigned seed) {
@@ -33,13 +41,22 @@ void GameScene::GenerateMap(unsigned seed) {
     mapGenerator.GenerateMap(&map, seed);
     gameObjects.push_back(player);
     characters.push_back(player);
-    player->SetLocalPosition(bn::fixed_point(0,0));
+    MapRoom* first = map.GetRoomByIndex(0);
+    int offsetX = MAP_WIDTH * TILE_WIDTH / 2;
+    int offsetY = MAP_HEIGHT * TILE_HEIGHT / 2;
+    bn::fixed_point playerPos = first->GetCentralPlatformPos();
+    playerPos.set_x((playerPos.x() + first->GetCentralPlatoformSize() / 2)* TILE_WIDTH - offsetX);
+    playerPos.set_y((playerPos.y() -6)* TILE_WIDTH - offsetY);
+    
+    player->SetLocalPosition(playerPos);
     //player->SetLocalPosition(0,0);
 
-    EnemyDalek* tmpEnemy = enemy.Create();
-    InitCharacter(tmpEnemy, &map.mapLayer, bn::fixed_point(64, -20), 1);
-
-    SpawnBoss();
+    // EnemyDalek* tmpEnemy = enemy.Create();
+    // InitCharacter(tmpEnemy, &map.mapLayer, bn::fixed_point(64, -20), 1);
+    currentRoom = 0;
+    lastRoom = 0;
+    SpawnAdjacentRoomsEnemies();
+    //SpawnBoss();
     //place player
     //place enemies
     //place doors
@@ -72,7 +89,18 @@ void GameScene::InitCharacter(Character* character, GameObject* parent, bn::fixe
 void GameScene::Update() {
     camera.Update();
     Scene::Update();
+    CheckPlayerRoom();
     map.Update();
+}
+
+void GameScene::CheckPlayerRoom() {
+    int roomIndex = map.GetRoomIndexByPosition(player->GetWorldPosition());
+    if(roomIndex != currentRoom) {
+        lastRoom = currentRoom;
+        currentRoom = roomIndex;
+        DespawnPreviousEnemies();
+        SpawnAdjacentRoomsEnemies();
+    }
 }
 
 void GameScene::PhysicsUpdate() {
@@ -112,13 +140,95 @@ void GameScene::DestroyAttack(Attack* atk) {
     attackFactory.Destroy(atk);
 }
 
-void GameScene::DestroyEnemy(Character* enemy) {
+void GameScene::DespawnPreviousEnemies() {
+    bn::vector<int,4> prevAdjacent;
+    for(int i = 0; i < 4; ++i) {
+        prevAdjacent.push_back(-1);
+    }
+    bn::vector<int,4> currentAdjacent;
+    for(int i = 0; i < 4; ++i) {
+        currentAdjacent.push_back(-1);
+    }
+
+    map.GetAdjacentRoomIndex(lastRoom, prevAdjacent);
+    map.GetAdjacentRoomIndex(currentRoom, currentAdjacent);
+
+    int toDespawnRooms[4] = {-1,-1,-1,-1};
+    for(int i = 0; i < 4; ++i) {
+        bool found = false;
+        for(int j = 0; j < 4 && !found; ++j) {
+            if(prevAdjacent[i] == currentAdjacent[j] || prevAdjacent[i] == currentRoom) {
+                found = true;
+            }
+        }
+        if(!found) {
+            toDespawnRooms[i] = prevAdjacent[i];
+        }
+    }
+
+    for(int i = 0; i < 4; ++i) {
+        if(toDespawnRooms[i] != -1 && enemiesInRoom[toDespawnRooms[i]] != nullptr) {
+            DespawnEnemy(enemiesInRoom[toDespawnRooms[i]]);
+            enemiesInRoom[toDespawnRooms[i]] = nullptr;
+        }
+    }
+}
+
+void GameScene::SpawnAdjacentRoomsEnemies() {
+    bn::vector<int, 4> currentAdjacent;
+    for(int i = 0; i < 4; ++i) {
+        currentAdjacent.push_back(-1);
+    }
+    map.GetAdjacentRoomIndex(currentRoom, currentAdjacent);
+
+    for(int i = 0; i < 4; ++i) {
+        if(enemiesInRoom[currentAdjacent[i]] == nullptr && !enemyDefeated[currentAdjacent[i]]) {
+            SpawnEnemy(currentAdjacent[i]);
+        }
+    }
+}
+
+
+
+void GameScene::SpawnEnemy(int roomIndex) {
+    MapRoom* mapRoom = map.GetRoomByIndex(roomIndex);
+    if(mapRoom->IsBossRoom()) {
+        SpawnBoss();
+        return;
+    }
+
+    bn::fixed_point position(0,0);
+    int offsetX = MAP_WIDTH * TILE_WIDTH / 2;
+    int offsetY = MAP_HEIGHT * TILE_HEIGHT / 2;
+
+    position.set_x((mapRoom->GetCentralPlatformPos().x() + mapRoom->GetCentralPlatoformSize() / 2) * TILE_WIDTH - offsetX);
+    position.set_y((mapRoom->GetCentralPlatformPos().y() - 6) * TILE_HEIGHT - offsetY);
+
+    EnemyDalek* tmpEnemy = enemyFactory.Create();
+    InitCharacter(tmpEnemy, &map.mapLayer, position, 1);
+    enemiesInRoom[roomIndex] = tmpEnemy;
+    
+}
+
+void GameScene::DespawnEnemy(Character* enemy) {
     for(int i = gameObjects.size()-1; i >= 0; --i) {
         if(enemy->Equals(gameObjects[i])) {
             enemy->SetLocalPosition(-500, -500);
             enemy->Render();
             gameObjects[i] = nullptr;
+            break;
         }
+    }
+    enemyFactory.Destroy((EnemyDalek*)enemy);
+    enemy->SetDestroyed(true);
+}
+
+void GameScene::DestroyEnemy(Character* enemy) {
+    DespawnEnemy(enemy);
+    int roomIndex = map.GetRoomIndexByPosition(enemy->GetWorldPosition());
+    if(roomIndex != -1) {
+        enemyDefeated[roomIndex] = true;
+        enemiesInRoom[roomIndex] = nullptr;
     }
     enemy->Destroy();
 }
@@ -144,6 +254,7 @@ void GameScene::DestroyGameObject(GameObject* go) {
             go->SetLocalPosition(-500, -500);
             go->Render();
             gameObjects[i] = nullptr;
+            break;
         }
     }
     go->Destroy();
@@ -175,6 +286,8 @@ void GameScene::SpawnBoss() {
     position.set_y((bossRoom->GetPosition().y() + bossRoom->GetSize().y() - 10) * TILE_HEIGHT - offsetY);
 
     InitCharacter(tmpEnemy, &map.mapLayer, position, 1);
+    
+    enemiesInRoom[map.GetRoomIndex(bossRoom)] = tmpEnemy;
     
 }
 

@@ -26,14 +26,19 @@ protected:
     Camera camera;
     WidgetHUD widgetHUD;
     Player* player;
-    Factory<Player, 2> playerFactory;
-    Factory<EnemyDalek, 10> enemy;
-    Factory<EnemyBoss, 2> enemyBossFactory;
+    Factory<Player, 1> playerFactory;
+    Factory<EnemyDalek, 5> enemyFactory;
+    Factory<EnemyBoss, 1> enemyBossFactory;
     Factory<Attack, 20> attackFactory;
     Factory<CollectableItem, 10> collectableItemFactory;
     Factory<AtkPowerUpInteractuable, 10> atkPowerUpFactory;
     Factory<DefPowerUpInteractuable, 10> defPowerUpFactory;
     Factory<DoorInteractuable, 2> doorInteractuableFactory;
+
+    bool enemyDefeated[MAX_MAP_ROOMS];
+    Enemy* enemiesInRoom [MAX_MAP_ROOMS];
+    int currentRoom;
+    int lastRoom;
 
     bn::vector<Character*, 16> characters;
     Map map;
@@ -44,6 +49,8 @@ protected:
     void DestroyGameObject(GameObject* go);
 
     void ClearAllScene();
+
+    void CheckPlayerRoom();
 
 public: 
 
@@ -61,7 +68,12 @@ public:
     void SpawnAttack(GameObject* parent, Character* creator, bn::fixed_point position, int direction, AttackInfo& attackInfo);
     void DestroyAttack(Attack* atk);
 
+    void SpawnAdjacentRoomsEnemies();
+    void DespawnPreviousEnemies();
+    void SpawnEnemy(int roomIndex);
+    void DespawnEnemy(Character* enemy);
     void DestroyEnemy(Character* enemy);
+
     void SpawnEnemyCollectable(bn::fixed_point position);
     void SpawnAtkPowerUp(bn::fixed_point position);
     void SpawnDefPowerUp(bn::fixed_point position);

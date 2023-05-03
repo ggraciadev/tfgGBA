@@ -24,6 +24,8 @@ protected:
 
     bool stopped;
 
+    int checkGroundHeight = 32;
+
     bn::fixed_point attackDist;
     MapCollision* mapCollision;
 
@@ -38,6 +40,7 @@ public:
     bool CheckToMove();
     void Move();
     void ChangeDirection();
+    inline void SetCheckGroundHeight(int height) { checkGroundHeight = height; }
 
     inline void SetAttackDist(bn::fixed_point dist) { attackDist = dist; }
 

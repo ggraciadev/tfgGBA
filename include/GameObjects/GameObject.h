@@ -57,6 +57,8 @@ public:
     virtual void Update();
     virtual void Render();
     void Destroy() { destroyed = true; }
+    void SetDestroyed(bool d) { destroyed = true; }
+    bool GetDestroyed() { return destroyed; }
 
     inline const bn::fixed_point GetRelativePosition() { return relativePosition; }
     bn::fixed_point GetWorldPosition() const;

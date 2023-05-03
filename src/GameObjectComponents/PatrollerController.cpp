@@ -75,7 +75,7 @@ bool PatrollerController::CheckToMove() {
     }
     if(result) {
         //miramos el tile de abajo del anterior para ver si hay suelo
-        pos.set_y(pos.y() + 32);
+        pos.set_y(pos.y() + checkGroundHeight);
 
         if(mapCollision->GetCollisionByPosition(pos.x().floor_integer(), pos.y().floor_integer()) == MapCollisionType::ROOM_INTERIOR) {
             result = false;
