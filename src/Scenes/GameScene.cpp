@@ -16,6 +16,13 @@ void GameScene::Start() {
 }
 
 void GameScene::ClearAllScene() {
+    for(int i = 0; i < MAX_MAP_ROOMS; ++i) {
+        enemyDefeated[i] = false;
+        if(enemiesInRoom[i] != nullptr) {
+            DespawnEnemy(enemiesInRoom[i]);
+            enemiesInRoom[i] = nullptr;
+        }
+    }
     enemyFactory.Clear();
     enemyBossFactory.Clear();
     attackFactory.Clear();
@@ -28,10 +35,6 @@ void GameScene::ClearAllScene() {
     currentRoom = -1;
     lastRoom = -1;
 
-    for(int i = 0; i < MAX_MAP_ROOMS; ++i) {
-        enemyDefeated[i] = false;
-        enemiesInRoom[i] = nullptr;
-    }
     enemyDefeated[0] = true;
 }
 

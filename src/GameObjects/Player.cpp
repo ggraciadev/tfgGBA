@@ -109,7 +109,6 @@ void Player::UpdateAnimationState() {
 }
 
 bool Player::GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) {
-    return false;
     bool result = false;
     int damage = Utils::Max((atkInfo.creatorStr + atkInfo.attackPower) / (characterStats.def * characterStats.defMulti), 1);
     bool salva = damage >= characterStats.currentHealth && characterStats.currentHealth > 1;

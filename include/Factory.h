@@ -46,9 +46,9 @@ public:
     }
 
     void Clear() {
-        for(int i = instances.size() - 1; i >= 0; --i) {
-            Destroy(&instances[i]);
-        }
+        instances.clear();
+        freeSpace.clear();
+        instancesSize = 0;
     }
 
     void Destroy(T* deletedObject) {
