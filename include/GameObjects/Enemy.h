@@ -20,6 +20,7 @@ protected:
     Character* player;
     bn::random rand;
     int seed;
+    int room;
 
     virtual void SetupAnimations();
     virtual void SetupAttacks();
@@ -40,6 +41,9 @@ public:
     virtual void SetPlayer(Character* p) { player = p; }
 
     virtual void Die() override;
+
+    inline void SetRoom(int roomIndex) { room = roomIndex;}
+    inline int GetRoom() const { return room; }
 
     virtual bool GetDamage(const AttackInfo& atkInfo, const bn::fixed_point& attackPosition) override;
 };

@@ -205,12 +205,13 @@ void GameScene::SpawnEnemy(int roomIndex) {
     position.set_y((mapRoom->GetCentralPlatformPos().y() - 6) * TILE_HEIGHT - offsetY);
 
     EnemyDalek* tmpEnemy = enemyFactory.Create();
+    tmpEnemy->SetRoom(roomIndex);
     InitCharacter(tmpEnemy, &map.mapLayer, position, 1);
     enemiesInRoom[roomIndex] = tmpEnemy;
     
 }
 
-void GameScene::DespawnEnemy(Character* enemy) {
+void GameScene::DespawnEnemy(Enemy* enemy) {
     for(int i = gameObjects.size()-1; i >= 0; --i) {
         if(enemy->Equals(gameObjects[i])) {
             enemy->SetLocalPosition(-500, -500);
@@ -223,9 +224,9 @@ void GameScene::DespawnEnemy(Character* enemy) {
     enemy->SetDestroyed(true);
 }
 
-void GameScene::DestroyEnemy(Character* enemy) {
+void GameScene::DestroyEnemy(Enemy* enemy) {
     DespawnEnemy(enemy);
-    int roomIndex = map.GetRoomIndexByPosition(enemy->GetWorldPosition());
+    int roomIndex = enemy->GetRoom();
     if(roomIndex != -1) {
         enemyDefeated[roomIndex] = true;
         enemiesInRoom[roomIndex] = nullptr;

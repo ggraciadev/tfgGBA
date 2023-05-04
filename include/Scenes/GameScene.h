@@ -73,8 +73,8 @@ public:
     void SpawnAdjacentRoomsEnemies();
     void DespawnPreviousEnemies();
     void SpawnEnemy(int roomIndex);
-    void DespawnEnemy(Character* enemy);
-    void DestroyEnemy(Character* enemy);
+    void DespawnEnemy(Enemy* enemy);
+    void DestroyEnemy(Enemy* enemy);
 
     void SpawnEnemyCollectable(bn::fixed_point position);
     void SpawnAtkPowerUp(bn::fixed_point position);
