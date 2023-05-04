@@ -42,7 +42,7 @@ protected:
     int currentRoom;
     int lastRoom;
 
-    bn::vector<Character*, 16> characters;
+    bn::vector<Character*, 7> characters;
     Map map;
     MapGenerator mapGenerator;
 

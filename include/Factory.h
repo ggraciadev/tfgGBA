@@ -34,10 +34,13 @@ public:
             result = freeSpace[freeSpace.size() - 1];
             freeSpace.pop_back();
         }
-        else {
+        else if(instancesSize < MAX_INSTANCES){
             instances.push_back(T());
             result = &instances[instancesSize];
             instancesSize++;
+        }
+        else {
+            result = nullptr;
         }
         return result;
     }

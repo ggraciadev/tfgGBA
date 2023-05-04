@@ -10,7 +10,7 @@ void EnemyBoss::Start() {
     //input.SetPlayer(this);
     patrollerController.SetEnemy(this);
     patrollerController.SetAttackDist(bn::fixed_point(200, 50));
-    characterStats = CharacterStats(6, 6, 2, 1, 2, 1);
+    characterStats = CharacterStats(10, 10, 3, 1, 2, 1);
 
     // jumpAb.SetJumpSpeed(characterInfo.jumpSpeed);
     // jumpAb.SetMaxJumps(MAX_JUMPS);
