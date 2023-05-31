@@ -27,7 +27,6 @@ protected:
     bn::vector<GameObjectComponent*, MAX_COMPONENTS> components;
     
     bn::fixed_point relativePosition;
-    bn::fixed_point worldPosition;
 
     GameObject* parent;
     GameObject* camera;
@@ -42,7 +41,6 @@ protected:
     char lastRenderIndex;
     char componentsSize;
 
-    bool worldPositionDirty;
     bool destroyed;
 
 private:
@@ -83,7 +81,6 @@ public:
     virtual void SetLayerDepth(const int depth);
     virtual void SetZOrder(const char z_order) { zOrder = z_order; }
 
-    bool GetWorldPositionDirty();
 
 };
 

@@ -47,7 +47,7 @@ template <int CELLS_X, int CELLS_Y>
 void TiledLayer<CELLS_X, CELLS_Y>::Start(LayerType _layerType) {
     layerType = _layerType;
     followComponent.SetFollowObject(camera);
-    backLayerComponent.SetLayerType(_layerType);
+    //backLayerComponent.SetLayerType(_layerType);
     AddComponent(&followComponent);
     AddComponent(&backLayerComponent);
     

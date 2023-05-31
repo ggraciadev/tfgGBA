@@ -31,26 +31,6 @@ public:
 
 protected:
 
-    LayerType layerType;
-
-    const char START_Y_POSITION [3] = {54,16,12};
-    const char LAYER_HEIGHT [3] = {8, 10, 10};
-
-    const char BLOCK_WIDTH [3] = {3,2,2};
-
-    const char START_TOP_TILES [3] = {1,16,22};
-    const char END_TOP_TILES [3] = {3,17,23};
-
-    const char START_MID_TILES [3] = {4,18,24};
-    const char END_MID_TILES [3] = {9,21,25};
-
-    const char LOOP_MID_QUANTITY_TILES [3] = {2,1,2};
-
-    const char START_BOT_TILES [3] = {10,18,26};
-    const char END_BOT_TILES [3] = {12,21,26};
-    const char BOT_LOOP_TILES [3] = {13,18,26};
-    const char END_BOT_LOOP_TILES [3] = {15,21,26};
-
     alignas(int) bn::regular_bg_map_cell cells[CELLS_X * CELLS_Y];
     bn::optional<bn::regular_bg_map_item> map_item;
     bn::optional<bn::regular_bg_ptr> bg;
@@ -67,7 +47,7 @@ public:
     void SetTileIndex(int cellX, int cellY, int tileIndex);
     inline void ReloadMap() { bg_map->reload_cells_ref(); }
 
-    inline void SetLayerType(LayerType _layerType) { layerType = _layerType; }
+    //inline void SetLayerType(LayerType _layerType) { layerType = _layerType; }
 
     inline virtual void SetLayerDepth(int depth) {
         if(bg.has_value()) {
@@ -110,54 +90,6 @@ void BackgroundLayerComponent<CELLS_X, CELLS_Y>::SetTileIndex(int cellX, int cel
 template <int CELLS_X, int CELLS_Y>
 void BackgroundLayerComponent<CELLS_X, CELLS_Y>::Start() {
     
-    bn::regular_bg_map_cell* current_cell;
-
-    const int begin = START_Y_POSITION[(int)layerType];
-    const int end = begin + LAYER_HEIGHT[(int)layerType];
-
-    const int startTopTiles = START_TOP_TILES[(int)layerType];
-    const int endTopTiles = END_TOP_TILES[(int)layerType];
-
-    const int startMidTiles = START_MID_TILES[(int)layerType];
-    const int endMidTiles = END_MID_TILES[(int)layerType];
-    const int loopMidTilesNum = LOOP_MID_QUANTITY_TILES[(int)layerType];
-
-    const int startBotTiles = START_BOT_TILES[(int)layerType];
-    const int endBotTiles = END_BOT_TILES[(int)layerType];
-    const int botLoopStartTile = BOT_LOOP_TILES[(int)layerType];
-    const int botLoopEndTile = END_BOT_LOOP_TILES[(int)layerType];
-
-    const int blockWidth = BLOCK_WIDTH[(int)layerType];
-    const int blockTopHeight = (endTopTiles - startTopTiles) / blockWidth + 1;
-    const int blockMidHeight = (endMidTiles - startMidTiles) / blockWidth + 1;
-    
-    const int blockBotHeight = (endBotTiles - startBotTiles) / blockWidth + 1;
-    const int blockBotLoopHeight = (botLoopEndTile - botLoopStartTile) / blockWidth + 1;
-    
-
-    for(int i = begin; i < end; ++i) {
-        for(int j = 0; j < CELLS_X; ++j) {
-            current_cell = &cells[map_item->cell_index(j, i)];
-            bn::regular_bg_map_cell_info current_cell_info(*current_cell);
-
-            if(i - begin < blockTopHeight) {
-                current_cell_info.set_tile_index(j % (blockWidth) + startTopTiles + blockWidth * ((i - begin) % blockTopHeight));
-                //current_cell_info.set_tile_index(2);
-            }
-            else if(i - begin < blockTopHeight + loopMidTilesNum) {
-                current_cell_info.set_tile_index(j % (blockWidth) + startMidTiles + blockWidth * ((i - begin - blockTopHeight) % blockMidHeight));
-            }
-            else if(i == begin + blockTopHeight + loopMidTilesNum) {
-                current_cell_info.set_tile_index(j % (blockWidth) + startBotTiles + blockWidth * ((i - begin - blockTopHeight - loopMidTilesNum) % blockBotHeight));
-            }
-            else {
-                current_cell_info.set_tile_index(j % (blockWidth) + botLoopStartTile + blockWidth * ((end - i) % blockBotLoopHeight));
-            }
-
-            *current_cell = current_cell_info.cell();
-        }
-    }
-    bg_map->reload_cells_ref();
 }
     
 template <int CELLS_X, int CELLS_Y>

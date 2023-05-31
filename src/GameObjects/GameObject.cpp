@@ -137,9 +137,3 @@ void GameObject::SetLayerDepth(const int depth) {
     }
 
 }
-
-bool GameObject::GetWorldPositionDirty() {
-    if(parent != nullptr) 
-        worldPositionDirty = parent->GetWorldPositionDirty(); 
-    return worldPositionDirty;
-}
