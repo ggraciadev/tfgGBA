@@ -24,7 +24,10 @@ void Player::Start() {
 
     SetupAnimations();
 
+    dashAb.SetCharacter(this);
+
     AddComponent(&jumpAb);
+    AddComponent(&dashAb);
     AddComponent(&meleeComboAb);
     AddComponent(&input);
     AddComponent(&animator);
@@ -88,7 +91,8 @@ void Player::Attack() {
 }
 
 void Player::Dash() {
-
+    if(damageReciever.GetAbilityInUse() || meleeComboAb.GetAbilityInUse()) return;
+    dashAb.UseAbility();
 }
 
 void Player::UpdateAnimationState() {

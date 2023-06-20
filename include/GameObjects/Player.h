@@ -5,6 +5,7 @@
 #include "GameObjectComponents/Animator.h"
 #include "GameObjectComponents/InputComponent.h"
 #include "GameObjectComponents/JumpAbility.h"
+#include "GameObjectComponents/DashAbility.h"
 #include "GameObjectComponents/MeleeComboAbility.h"
 #include "GUI/WidgetHUD.h"
 
@@ -20,6 +21,7 @@ protected:
 
     InputComponent input;
     JumpAbility jumpAb; 
+    DashAbility dashAb;
     MeleeComboAbility<3> meleeComboAb;
     Animator<4, 16> animator;
     
