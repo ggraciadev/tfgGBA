@@ -105,7 +105,8 @@ void EnemyBoss::Dash() {
 
 void EnemyBoss::Die() {
     GameManager::GetInstance()->GetCurrentGameScene()->SpawnDoorInteractuable();
-    GameManager::GetInstance()->GetCurrentGameScene()->SpawnHealthRecovery(GetWorldPosition() + bn::fixed_point(0,32));
+    GameManager::GetInstance()->GetCurrentGameScene()->SpawnHealthRecovery(GetWorldPosition() + bn::fixed_point(0,16));
+    GameManager::GetInstance()->GetCurrentGameScene()->SpawnDashAbilityObtainer(GetWorldPosition() + bn::fixed_point(32,16));
     Enemy::Die();
 }
 

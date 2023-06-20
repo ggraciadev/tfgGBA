@@ -279,6 +279,7 @@ void GameScene::DestroyDefPowerUp(DefPowerUpInteractuable* interact) {
     defPowerUpFactory.Destroy(interact);
 }
 
+
 void GameScene::SpawnBoss() {
 
     EnemyBoss* tmpEnemy = enemyBossFactory.Create();
@@ -318,4 +319,15 @@ void GameScene::SpawnHealthRecovery(bn::fixed_point position) {
 void GameScene::DestroyHealthRecovery(HealthInteractuable* interact) {
     DestroyGameObject(interact);
     healthInteractuableFactory.Destroy(interact);
+}
+
+
+void GameScene::SpawnDashAbilityObtainer(bn::fixed_point position) {
+    DashAbilityObtainer* tmpInter = dashAbilityObtainerFactory.Create();
+    InitGameObject(tmpInter, &map.mapLayer, position, 0);
+}
+
+void GameScene::DestroyDashAbilityObtainer(DashAbilityObtainer* interact) {
+    DestroyGameObject(interact);
+    dashAbilityObtainerFactory.Destroy(interact);
 }

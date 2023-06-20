@@ -19,6 +19,9 @@ public:
 
 protected:
 
+    bool dashAbailable;
+    bool isInmune;
+
     InputComponent input;
     JumpAbility jumpAb; 
     DashAbility dashAb;
@@ -58,6 +61,11 @@ public:
     void SetCurrentInteractuable(Interactuable* value, Interactuable* requested);
 
     virtual void SetFullHealth();
+
+    inline void SetIsInmune(bool inmune) { isInmune = inmune; }
+    inline bool GetIsInmune() { return isInmune; }
+
+    inline void SetDashAvailable(bool available) { dashAbailable = available; }
 };
 
 #endif

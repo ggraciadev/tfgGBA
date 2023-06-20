@@ -34,6 +34,9 @@ void InputComponent::Update() {
     else if(bn::keypad::r_pressed()) {
         player->Dash();
     }
+    else if(bn::keypad::select_pressed()) {
+        player->SetIsInmune(!player->GetIsInmune());
+    }
 
 }
 
